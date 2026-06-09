@@ -1,0 +1,1200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Renewed Day</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0D0D0D; --card: #141414; --card2: #1A1A1A; --border: #252525;
+    --gold: #C9A84C; --gold-dim: #7a6330; --gold-glow: rgba(201,168,76,0.18);
+    --text: #E8E4DC; --text-dim: #888;
+    --red: #8B2020; --red-bright: #e05252; --red-glow: rgba(139,32,32,0.2);
+    --copper: #B87333; --copper-glow: rgba(184,115,51,0.2);
+    --green: #2a5a3a; --green-bright: #4abf7a;
+  }
+  html, body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; min-height: 100vh; font-size: 15px; line-height: 1.5; }
+
+  .app { max-width: 480px; margin: 0 auto; padding: 0 0 80px 0; }
+
+  /* ── TABS ── */
+  .tab-bar {
+    position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+    width: 100%; max-width: 480px;
+    background: #111; border-top: 1px solid var(--border);
+    display: flex; z-index: 50;
+  }
+  .tab-btn {
+    flex: 1; padding: 14px 4px 16px; background: none; border: none;
+    color: var(--text-dim); font-family: 'Inter', sans-serif;
+    font-size: 22px; line-height: 1;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    transition: color 0.15s;
+  }
+  .tab-btn.active { color: var(--gold); }
+
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* ── VERSE SPLASH ── */
+  .verse-splash {
+    display: none; position: fixed; inset: 0; background: #080808; z-index: 300;
+    flex-direction: column; align-items: center; justify-content: center;
+    padding: 40px 32px; text-align: center;
+  }
+  .verse-splash.open { display: flex; animation: fade-in 0.5s ease forwards; }
+  @keyframes fade-in { from { opacity:0; } to { opacity:1; } }
+  .verse-race { font-family: 'Oswald', sans-serif; font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold-dim); margin-bottom: 4px; }
+  .verse-rank { font-family: 'Oswald', sans-serif; font-size: 22px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold); margin-bottom: 32px; }
+  .verse-text { font-size: 17px; font-weight: 300; color: var(--text); line-height: 1.7; max-width: 340px; font-style: italic; margin-bottom: 14px; }
+  .verse-ref { font-family: 'Oswald', sans-serif; font-size: 13px; letter-spacing: 0.1em; color: var(--gold-dim); margin-bottom: 56px; }
+  .verse-dismiss {
+    background: none; border: 1px solid var(--gold-dim); color: var(--gold);
+    font-family: 'Oswald', sans-serif; font-size: 12px; letter-spacing: 0.14em;
+    text-transform: uppercase; padding: 10px 28px; border-radius: 6px; cursor: pointer;
+  }
+
+  /* ── HEADER ── */
+  .header { padding: 26px 20px 14px; border-bottom: 1px solid var(--border); }
+  .header-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 2px; }
+  .logo { font-family: 'Oswald', sans-serif; font-size: 20px; font-weight: 700; letter-spacing: 0.16em; color: var(--gold); text-transform: uppercase; }
+  .logo-sub { font-size: 12px; color: #a08060; letter-spacing: 0.14em; font-style: italic; margin-top: 2px; font-family: 'Oswald', sans-serif; font-weight: 400; }
+  .date-label { font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.08em; text-align: right; }
+
+  /* ── RANK CARD ── */
+  .rank-card { margin: 14px 20px; background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 16px 18px 14px; }
+  .rank-row { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 10px; }
+  .rank-labels { flex: 1; }
+  .race-eyebrow {
+    font-size: 13px;
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    margin-bottom: 4px;
+    font-family: 'Oswald', sans-serif;
+    font-weight: 600;
+    transition: text-shadow 0.6s ease;
+  }
+  .rank-name { font-family: 'Oswald', sans-serif; font-size: 24px; font-weight: 700; color: var(--gold); letter-spacing: 0.06em; text-transform: uppercase; line-height: 1; margin-bottom: 3px; }
+  .rank-level { font-size: 11px; color: var(--text-dim); }
+  .rank-badge { width: 48px; height: 48px; border-radius: 50%; border: 2px solid var(--gold-dim); display: flex; align-items: center; justify-content: center; font-size: 20px; background: var(--card2); flex-shrink: 0; }
+  .xp-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
+  .xp-label { font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.08em; }
+  .xp-nums { font-family: 'Oswald', sans-serif; font-size: 13px; color: var(--gold); }
+  .xp-track { height: 7px; background: var(--border); border-radius: 4px; overflow: visible; position: relative; }
+  .xp-fill { height: 100%; background: linear-gradient(90deg, var(--gold-dim), var(--gold)); border-radius: 4px; transition: width 0.6s cubic-bezier(0.4,0,0.2,1); position: relative; }
+  .xp-fill.pulse::after { content:''; position:absolute; right:-1px; top:-3px; width:13px; height:13px; border-radius:50%; background:var(--gold); box-shadow:0 0 10px 3px var(--gold-glow); animation:xp-pulse 1.2s ease-out forwards; }
+  @keyframes xp-pulse { 0%{opacity:1;transform:scale(1);}100%{opacity:0;transform:scale(2.5);} }
+
+  /* ── STATS ── */
+  .stats-row { display: flex; gap: 8px; margin: 10px 20px 0; }
+  .stat-box { flex:1; background:var(--card); border:1px solid var(--border); border-radius:8px; padding:10px 8px; text-align:center; }
+  .stat-val { font-family:'Oswald',sans-serif; font-size:22px; font-weight:600; color:var(--gold); line-height:1; }
+  .stat-lbl { font-size:9px; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.08em; margin-top:3px; }
+  .streak-danger { color:var(--red-bright)!important; }
+  .points-val { color: var(--copper) !important; }
+
+  /* ── SECTION ── */
+  .section-header { display:flex; align-items:center; justify-content:space-between; padding:16px 20px 8px; }
+  .section-title { font-family:'Oswald',sans-serif; font-size:13px; font-weight:600; text-transform:uppercase; letter-spacing:0.14em; color:var(--text-dim); }
+  .add-btn { background:none; border:1px solid var(--gold-dim); color:var(--gold); border-radius:6px; padding:4px 12px; font-size:11px; font-family:'Oswald',sans-serif; letter-spacing:0.08em; text-transform:uppercase; cursor:pointer; transition:background 0.15s; }
+  .add-btn:hover { background:var(--gold-glow); }
+
+  /* ── DAILY PROGRESS ── */
+  .daily-progress { margin:4px 20px 0; background:var(--card); border:1px solid var(--border); border-radius:8px; padding:10px 14px; }
+  .dp-row { display:flex; justify-content:space-between; align-items:center; margin-bottom:7px; }
+  .dp-label { font-size:12px; color:var(--text-dim); }
+  .dp-pct { font-family:'Oswald',sans-serif; font-size:15px; font-weight:600; color:var(--gold); }
+  .dp-track { height:5px; background:var(--border); border-radius:3px; overflow:hidden; }
+  .dp-fill { height:100%; background:linear-gradient(90deg,var(--gold-dim),var(--gold)); border-radius:3px; transition:width 0.4s ease; }
+
+  /* ── HABIT ITEMS ── */
+  .habits-list { padding:0 20px; display:flex; flex-direction:column; gap:8px; }
+  .habit-item {
+    background:var(--card); border:1px solid var(--border); border-radius:9px;
+    display:flex; align-items:center; padding:12px 13px; gap:12px;
+    cursor:pointer; transition:border-color 0.15s,background 0.15s;
+    user-select:none; position:relative; overflow:hidden;
+  }
+  .habit-item:hover { border-color:#333; }
+  .habit-item.done { border-color:var(--gold-dim); background:linear-gradient(135deg,#141414,#1a1608); }
+  .habit-item.done::before { content:''; position:absolute; inset:0; background:linear-gradient(90deg,transparent,rgba(201,168,76,0.04)); pointer-events:none; }
+  .habit-item.onetime { border-color: #1a2a3a; }
+  .habit-item.onetime .habit-xp { color: var(--blue-bright); }
+  .habit-item.onetime .habit-name { color: #a0c0e0; }
+  .habit-item.onetime-badge { font-size:9px; background:#1a2a3a; color:var(--blue-bright); border-radius:3px; padding:1px 5px; letter-spacing:0.06em; text-transform:uppercase; font-family:'Oswald',sans-serif; flex-shrink:0; }
+  .habit-item.penalty { border-color:#2a1414; }
+  .habit-item.penalty:hover { border-color:#3a1a1a; }
+  .habit-item.penalty.done { border-color:var(--red); background:linear-gradient(135deg,#141414,#1a0808); }
+  .habit-item.penalty .habit-check { border-color:#3a2020; }
+  .habit-item.penalty.done .habit-check { background:var(--red); border-color:var(--red); color:#fff; }
+  .habit-item.penalty .habit-xp { color:#5a2a2a; }
+  .habit-item.penalty.done .habit-xp { color:var(--red-bright); }
+  .habit-item.penalty .habit-name { color:#a08080; }
+  .habit-item.penalty.done .habit-name { color:var(--red-bright); }
+  .habit-check { width:24px; height:24px; border-radius:6px; border:2px solid var(--border); display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:all 0.18s; font-size:13px; }
+  .habit-item.done .habit-check { background:var(--gold); border-color:var(--gold); color:#0D0D0D; }
+  .habit-info { flex:1; min-width:0; }
+  .habit-name { font-size:14px; font-weight:500; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .habit-item.done .habit-name { color:var(--gold); }
+  .habit-meta { font-size:11px; color:var(--text-dim); margin-top:1px; }
+  .habit-xp { font-family:'Oswald',sans-serif; font-size:13px; font-weight:600; color:var(--gold-dim); letter-spacing:0.04em; flex-shrink:0; transition:color 0.18s; }
+  .habit-item.done .habit-xp { color:var(--gold); }
+  .habit-del { background:none; border:none; color:#444; font-size:16px; cursor:pointer; padding:2px 4px; border-radius:4px; flex-shrink:0; transition:color 0.15s; line-height:1; }
+  .habit-del:hover { color:var(--red-bright); }
+
+  /* ── ACCOUNTABILITY ── */
+  .accountability-note { margin:0 20px; font-size:11px; color:#5a4040; font-style:italic; line-height:1.5; padding:6px 12px; border-left:2px solid #2a1414; }
+
+  /* ── RANK LADDER ── */
+  .rank-ladder-toggle {
+    margin-top: 12px;
+    width: 100%;
+    background: none;
+    border: none;
+    border-top: 1px solid var(--border);
+    padding-top: 10px;
+    color: var(--text-dim);
+    font-family: 'Oswald', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: color 0.15s;
+  }
+  .rank-ladder-toggle:hover { color: var(--gold); }
+  .rank-ladder-toggle .arrow { transition: transform 0.2s; font-size: 10px; }
+  .rank-ladder-toggle.open .arrow { transform: rotate(180deg); }
+  .rank-ladder {
+    display: none;
+    flex-direction: column;
+    gap: 4px;
+    margin-top: 10px;
+  }
+  .rank-ladder.open { display: flex; }
+  .rank-ladder-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 4px;
+    border-radius: 5px;
+  }
+  .rli-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .rli-dot.done { background: var(--gold); }
+  .rli-dot.current { background: var(--gold); box-shadow: 0 0 6px 2px var(--gold-glow); }
+  .rli-dot.future { background: #333; }
+  .rli-rank-name {
+    font-family: 'Oswald', sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .rli-rank-name.done { color: var(--gold-dim); }
+  .rli-rank-name.current { color: var(--gold); font-weight: 600; }
+  .rli-rank-name.future { color: #444; }
+  .rli-check { font-size: 10px; color: var(--gold-dim); margin-left: auto; }
+  .rewards-points-banner {
+    margin: 14px 20px; background: linear-gradient(135deg, #0e1a10, #0d1a0d);
+    border: 1px solid #2a4a2a; border-radius: 10px; padding: 16px 18px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .rpb-label { font-size: 11px; color: #8a6030; text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 2px; }
+  .rpb-val { font-family: 'Oswald', sans-serif; font-size: 36px; font-weight: 700; color: var(--copper); line-height: 1; }
+  .rpb-sub { font-size: 11px; color: #6a5030; margin-top: 2px; }
+  .rpb-icon { font-size: 36px; opacity: 0.5; }
+
+  .rewards-list { padding: 0 20px; display: flex; flex-direction: column; gap: 8px; }
+  .reward-item {
+    background: var(--card); border: 1px solid var(--border); border-radius: 9px;
+    display: flex; align-items: center; padding: 12px 14px; gap: 12px;
+  }
+  .reward-info { flex: 1; min-width: 0; }
+  .reward-name { font-size: 14px; font-weight: 500; color: var(--text); }
+  .reward-cost { font-size: 11px; color: var(--copper); margin-top: 1px; }
+  .reward-redeem {
+    background: none; border: 1px solid #2a4a2a; color: var(--green-bright);
+    border-radius: 6px; padding: 5px 12px; font-family: 'Oswald', sans-serif;
+    font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer;
+    transition: background 0.15s; flex-shrink: 0;
+  }
+  .reward-redeem:hover { background: rgba(74,191,122,0.1); }
+  .reward-redeem:disabled { opacity: 0.3; cursor: not-allowed; }
+  .reward-del { background:none; border:none; color:#444; font-size:16px; cursor:pointer; padding:2px 4px; flex-shrink:0; line-height:1; }
+  .reward-del:hover { color:var(--red-bright); }
+
+  /* ── REWARD LOG ── */
+  .reward-log-list { padding: 0 20px; display: flex; flex-direction: column; gap: 6px; }
+  .reward-log-item {
+    background: var(--card); border: 1px solid var(--border); border-radius: 8px;
+    padding: 9px 14px; display: flex; align-items: center; justify-content: space-between;
+  }
+  .rli-name { font-size: 13px; color: var(--text); }
+  .rli-right { text-align: right; }
+  .rli-cost { font-family: 'Oswald', sans-serif; font-size: 12px; color: var(--copper); }
+  .rli-date { font-size: 10px; color: var(--text-dim); margin-top: 1px; }
+
+  /* ── HISTORY ── */
+  .history-list { padding:0 20px; display:flex; flex-direction:column; gap:6px; }
+  .history-day { background:var(--card); border:1px solid var(--border); border-radius:8px; padding:10px 14px; display:flex; align-items:center; justify-content:space-between; }
+  .history-date { font-size:12px; color:var(--text-dim); flex:0 0 90px; }
+  .history-bar-wrap { flex:1; margin:0 12px; height:5px; background:var(--border); border-radius:3px; overflow:hidden; }
+  .history-bar { height:100%; border-radius:3px; background:linear-gradient(90deg,var(--gold-dim),var(--gold)); }
+  .history-xp { font-family:'Oswald',sans-serif; font-size:12px; color:var(--gold); flex:0 0 56px; text-align:right; }
+
+  /* ── DIVIDER ── */
+  .divider { height:1px; background:var(--border); margin:18px 20px 0; }
+
+  /* ── MODAL ── */
+  .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.75); z-index:100; align-items:flex-end; justify-content:center; }
+  .modal-overlay.open { display:flex; }
+  .modal { background:var(--card2); border:1px solid var(--border); border-radius:16px 16px 0 0; padding:22px 20px 34px; width:100%; max-width:480px; animation:slide-up 0.22s ease; }
+  @keyframes slide-up { from{transform:translateY(40px);opacity:0;}to{transform:translateY(0);opacity:1;} }
+  .modal-title { font-family:'Oswald',sans-serif; font-size:17px; font-weight:600; text-transform:uppercase; letter-spacing:0.1em; color:var(--gold); margin-bottom:16px; }
+  .field-label { font-size:11px; text-transform:uppercase; letter-spacing:0.08em; color:var(--text-dim); margin-bottom:5px; }
+  .field-input { width:100%; background:var(--card); border:1px solid var(--border); border-radius:7px; color:var(--text); font-family:'Inter',sans-serif; font-size:14px; padding:10px 13px; outline:none; transition:border-color 0.15s; margin-bottom:13px; }
+  .field-input:focus { border-color:var(--gold-dim); }
+  .field-row { display:flex; gap:10px; }
+  .modal-actions { display:flex; gap:10px; margin-top:6px; }
+  .btn-primary { flex:1; background:var(--gold); color:#0D0D0D; border:none; border-radius:7px; font-family:'Oswald',sans-serif; font-size:14px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; padding:12px; cursor:pointer; }
+  .btn-cancel { flex:0 0 80px; background:none; border:1px solid var(--border); color:var(--text-dim); border-radius:7px; font-size:13px; padding:12px; cursor:pointer; }
+  .toggle-row { display:flex; align-items:center; justify-content:space-between; margin-bottom:13px; padding:10px 13px; background:var(--card); border:1px solid var(--border); border-radius:7px; }
+  .toggle-label { font-size:13px; color:var(--text); }
+  .toggle-sub { font-size:11px; color:var(--text-dim); margin-top:1px; }
+  .toggle-switch { width:40px; height:22px; background:var(--border); border-radius:11px; position:relative; cursor:pointer; transition:background 0.2s; flex-shrink:0; }
+  .toggle-switch.on { background:var(--gold); }
+  .toggle-switch::after { content:''; position:absolute; top:3px; left:3px; width:16px; height:16px; background:#fff; border-radius:50%; transition:transform 0.2s; }
+  .toggle-switch.on::after { transform:translateX(18px); }
+
+  /* ── CONFIRM MODAL ── */
+  .confirm-modal { background:var(--card2); border:1px solid var(--border); border-radius:14px; padding:24px 22px; width:calc(100% - 40px); max-width:400px; animation:pop-in 0.25s ease; text-align:center; }
+  .confirm-title { font-family:'Oswald',sans-serif; font-size:16px; font-weight:600; text-transform:uppercase; letter-spacing:0.1em; color:var(--gold); margin-bottom:8px; }
+  .confirm-body { font-size:13px; color:var(--text-dim); margin-bottom:20px; line-height:1.5; }
+  .confirm-actions { display:flex; gap:10px; }
+  #confirmModal { align-items:center; justify-content:center; }
+
+  /* ── RANK UP SCREEN ── */
+  .rankup-screen {
+    display: none;
+    position: fixed; inset: 0;
+    background: #000;
+    z-index: 400;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 32px;
+    text-align: center;
+  }
+  .rankup-screen.show { display: flex; }
+  .rankup-fade-in { animation: rankup-appear 0.7s ease forwards; }
+  .rankup-fade-in-delay { animation: rankup-appear 0.7s ease 0.6s both; }
+  .rankup-fade-in-delay2 { animation: rankup-appear 0.7s ease 1.1s both; }
+  .rankup-fade-in-delay3 { animation: rankup-appear 0.7s ease 1.6s both; }
+  .rankup-race-change { animation: rankup-appear 0.9s ease forwards; }
+  @keyframes rankup-appear {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .rankup-is-race .rankup-race-label {
+    font-family: 'Oswald', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--gold-dim);
+    margin-bottom: 6px;
+  }
+  .rankup-race-name-big {
+    font-family: 'Oswald', sans-serif;
+    font-size: 42px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gold);
+    line-height: 1;
+    margin-bottom: 10px;
+  }
+  .rankup-race-divider {
+    width: 48px; height: 1px;
+    background: var(--gold-dim);
+    margin: 0 auto 32px;
+  }
+  .rankup-eyebrow {
+    font-family: 'Oswald', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--gold-dim);
+    margin-bottom: 4px;
+  }
+  .rankup-rank-name {
+    font-family: 'Oswald', sans-serif;
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gold);
+    line-height: 1;
+    margin-bottom: 36px;
+  }
+  .rankup-verse {
+    font-size: 16px;
+    font-weight: 300;
+    color: var(--text);
+    line-height: 1.75;
+    max-width: 340px;
+    font-style: italic;
+    margin-bottom: 14px;
+  }
+  .rankup-ref {
+    font-family: 'Oswald', sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.1em;
+    color: var(--gold-dim);
+    margin-bottom: 52px;
+  }
+  .rankup-pts {
+    font-size: 12px;
+    color: var(--copper);
+    letter-spacing: 0.08em;
+    margin-bottom: 28px;
+    font-family: 'Oswald', sans-serif;
+  }
+  .rankup-dismiss {
+    background: none;
+    border: 1px solid var(--gold-dim);
+    color: var(--gold);
+    font-family: 'Oswald', sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 10px 28px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .rankup-dismiss:hover { background: var(--gold-glow); }
+
+  .empty-state { text-align:center; padding:24px 20px; color:var(--text-dim); font-size:13px; }
+  .empty-state strong { display:block; font-family:'Oswald',sans-serif; font-size:14px; letter-spacing:0.1em; text-transform:uppercase; color:#555; margin-bottom:5px; }
+
+  ::-webkit-scrollbar { width:4px; }
+  ::-webkit-scrollbar-track { background:transparent; }
+  ::-webkit-scrollbar-thumb { background:#2a2a2a; border-radius:2px; }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-top">
+      <div>
+        <div class="logo">Renewed Day</div>
+        <div class="logo-sub">The Imago Protocol</div>
+      </div>
+      <div class="date-label" id="dateLabel"></div>
+    </div>
+  </div>
+
+  <!-- TAB: TODAY -->
+  <div class="tab-panel active" id="tab-today">
+    <div class="rank-card">
+      <div class="rank-row">
+        <div class="rank-labels">
+          <div class="race-eyebrow" id="raceEyebrow">Race I — Apprentice</div>
+          <div class="rank-name" id="rankName">Unformed</div>
+          <div class="rank-level" id="rankLevel">Level 1 of 70</div>
+        </div>
+        <div class="rank-badge" id="rankBadge">🌾</div>
+      </div>
+      <div class="xp-row">
+        <div class="xp-label">XP Progress</div>
+        <div class="xp-nums"><span id="currentXP">0</span> / <span id="nextXP">100</span> XP</div>
+      </div>
+      <div class="xp-track"><div class="xp-fill" id="xpFill" style="width:0%"></div></div>
+      <button class="rank-ladder-toggle" id="ladderToggle" onclick="toggleLadder()">
+        <span>Race Progress</span><span class="arrow">▼</span>
+      </button>
+      <div class="rank-ladder" id="rankLadder"></div>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-box"><div class="stat-val" id="streakVal">0</div><div class="stat-lbl" id="streakLbl">Streak</div></div>
+      <div class="stat-box"><div class="stat-val" id="totalXPVal">0</div><div class="stat-lbl">Total XP</div></div>
+      <div class="stat-box"><div class="stat-val points-val" id="pointsVal">0</div><div class="stat-lbl">✧ Points</div></div>
+    </div>
+
+    <div class="section-header" style="padding-bottom:6px;"><div class="section-title">Today's Progress</div></div>
+    <div class="daily-progress">
+      <div class="dp-row">
+        <div class="dp-label" id="dpLabel">0 of 0 completed</div>
+        <div class="dp-pct" id="dpPct">0%</div>
+      </div>
+      <div class="dp-track"><div class="dp-fill" id="dpFill" style="width:0%"></div></div>
+    </div>
+
+    <div class="section-header">
+      <div class="section-title">Daily Habits</div>
+      <button class="add-btn" onclick="openAddModal(false)">+ Add</button>
+    </div>
+    <div class="habits-list" id="habitsList"></div>
+
+    <div class="divider"></div>
+    <div class="section-header">
+      <div class="section-title" style="color:#5a3a3a;">Accountability</div>
+      <button class="add-btn" style="border-color:#3a2020;color:#a05050;" onclick="openAddModal('penalty')">+ Add</button>
+    </div>
+    <div class="accountability-note">Log honestly. No penalty for skipping — only for checking.</div>
+    <div class="habits-list" id="penaltyList" style="margin-top:8px;"></div>
+
+    <div class="divider"></div>
+    <div class="section-header"><div class="section-title">Recent History</div></div>
+    <div class="history-list" id="historyList"></div>
+  </div>
+
+  <!-- TAB: REWARDS -->
+  <div class="tab-panel" id="tab-rewards">
+    <div class="rewards-points-banner">
+      <div>
+        <div class="rpb-label">Available Points</div>
+        <div class="rpb-val" id="rewardPointsVal">0</div>
+        <div class="rpb-sub">Earned through discipline</div>
+      </div>
+      <div class="rpb-icon">✧</div>
+    </div>
+
+    <div class="section-header">
+      <div class="section-title">Rewards</div>
+      <button class="add-btn" onclick="openRewardModal()">+ Add</button>
+    </div>
+    <div class="rewards-list" id="rewardsList"></div>
+
+    <div class="divider"></div>
+    <div class="section-header"><div class="section-title">Redeemed</div></div>
+    <div class="reward-log-list" id="rewardLogList"></div>
+  </div>
+
+</div>
+
+<!-- TAB BAR -->
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="switchTab('today', this)">⊕</button>
+  <button class="tab-btn" onclick="switchTab('rewards', this)">✦</button>
+</div>
+
+<!-- ADD HABIT MODAL -->
+<div class="modal-overlay" id="addModal">
+  <div class="modal">
+    <div class="modal-title" id="modalTitle">New Habit</div>
+    <div class="field-label">Name</div>
+    <input class="field-input" id="habitNameInput" type="text" placeholder="e.g. Morning workout" maxlength="48">
+    <div class="field-row">
+      <div style="flex:1">
+        <div class="field-label">Category</div>
+        <select class="field-input" id="habitCatInput" style="appearance:none;cursor:pointer;">
+          <option value="Physical">💪 Physical</option>
+          <option value="Mental">🧠 Mental</option>
+          <option value="Emotional">🤍 Emotional</option>
+          <option value="Spiritual">🙏 Spiritual</option>
+          <option value="Business">💼 Business</option>
+          <option value="Social">🤝 Social</option>
+        </select>
+      </div>
+      <div style="flex:0 0 95px">
+        <div class="field-label">XP Value</div>
+        <input class="field-input" id="habitXPInput" type="number" min="5" max="500" value="25">
+      </div>
+    </div>
+    <div class="toggle-row" id="onetimeToggleRow">
+      <div>
+        <div class="toggle-label">One-time goal</div>
+        <div class="toggle-sub">Double XP · 2 pts · clears at midnight</div>
+      </div>
+      <div class="toggle-switch" id="onetimeToggle" onclick="toggleOnetime()"></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeAddModal()">Cancel</button>
+      <button class="btn-primary" onclick="addHabit()">Add</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD REWARD MODAL -->
+<div class="modal-overlay" id="rewardModal">
+  <div class="modal">
+    <div class="modal-title">New Reward</div>
+    <div class="field-label">Reward Name</div>
+    <input class="field-input" id="rewardNameInput" type="text" placeholder="e.g. New chisel" maxlength="48">
+    <div class="field-label">Point Cost</div>
+    <input class="field-input" id="rewardCostInput" type="number" min="1" max="9999" value="20">
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeRewardModal()">Cancel</button>
+      <button class="btn-primary" onclick="addReward()">Add Reward</button>
+    </div>
+  </div>
+</div>
+
+<!-- CONFIRM MODAL -->
+<div class="modal-overlay" id="confirmModal">
+  <div class="confirm-modal">
+    <div class="confirm-title" id="confirmTitle">Redeem Reward?</div>
+    <div class="confirm-body" id="confirmBody"></div>
+    <div class="confirm-actions">
+      <button class="btn-cancel" style="flex:1" onclick="closeConfirm()">Cancel</button>
+      <button class="btn-primary" id="confirmOkBtn">Redeem</button>
+    </div>
+  </div>
+</div>
+
+<!-- VERSE SPLASH -->
+<div class="verse-splash" id="verseSplash">
+  <div class="verse-race" id="verseRace"></div>
+  <div class="verse-rank" id="verseRank"></div>
+  <div class="verse-text" id="verseText"></div>
+  <div class="verse-ref" id="verseRef"></div>
+  <button class="verse-dismiss" onclick="dismissVerse()">Enter the Day</button>
+</div>
+
+<!-- RANK UP SCREEN -->
+<div class="rankup-screen" id="rankupScreen">
+  <div id="rankupInner"></div>
+</div>
+
+<script>
+// ══════════════════════════════════════════
+// RACE & RANK DATA
+// ══════════════════════════════════════════
+const RACES = [
+  { name:'Apprentice', emoji:'🌾', raceNum:'I', xpPerRank:100,
+    ranks:[
+      {name:'Unformed',             verse:'The earth was without form and void, and darkness was over the face of the deep.',                                 ref:'Genesis 1:2'},
+      {name:'Called by Name',       verse:'Before I formed you in the womb I knew you, and before you were born I consecrated you.',                         ref:'Jeremiah 1:5'},
+      {name:'Watching the Master',  verse:'The Son can do nothing of his own accord, but only what he sees the Father doing.',                               ref:'John 5:19'},
+      {name:'Ears to Hear',         verse:'He who has ears, let him hear.',                                                                                  ref:'Matthew 13:9'},
+      {name:'Given a Task',         verse:'Whatever your hand finds to do, do it with your might.',                                                          ref:'Ecclesiastes 9:10'},
+      {name:'Under Authority',      verse:'A servant is not greater than his master, nor is a messenger greater than the one who sent him.',                 ref:'John 13:16'},
+      {name:'Faithful in Little',   verse:'One who is faithful in a very little is also faithful in much.',                                                  ref:'Luke 16:10'},
+      {name:'The Lesson Stayed',    verse:'I have stored up your word in my heart, that I might not sin against you.',                                       ref:'Psalm 119:11'},
+      {name:'Tried and Not Broken', verse:'For you, O God, have tested us; you have tried us as silver is tried.',                                           ref:'Psalm 66:10'},
+      {name:'Released',             verse:'Go, and the Lord be with you.',                                                                                   ref:'1 Samuel 17:37'},
+    ]},
+  { name:'Journeyman', emoji:'🛤️', raceNum:'II', xpPerRank:180,
+    ranks:[
+      {name:'On the Road',              verse:'A man was going down from Jerusalem to Jericho, and he fell among robbers.',                                  ref:'Luke 10:30'},
+      {name:'No Bag for the Journey',   verse:'Take nothing for your journey, no staff, nor bag, nor bread, nor money.',                                     ref:'Luke 9:3'},
+      {name:'Tested in the Wilderness', verse:'Jesus was led up by the Spirit into the wilderness to be tempted by the devil.',                              ref:'Matthew 4:1'},
+      {name:'Bread in the Desert',      verse:'Man shall not live by bread alone, but by every word that comes from the mouth of God.',                      ref:'Matthew 4:4'},
+      {name:'The Wound That Taught Me', verse:'The Lord disciplines the one he loves, and chastises every son whom he receives.',                            ref:'Hebrews 12:6'},
+      {name:'I Did Not Turn Back',      verse:'No one who puts his hand to the plow and looks back is fit for the kingdom of God.',                          ref:'Luke 9:62'},
+      {name:'Marked by the Road',       verse:'I bear on my body the marks of Jesus.',                                                                       ref:'Galatians 6:17'},
+      {name:'Others Were Watching',     verse:'Therefore, since we are surrounded by so great a cloud of witnesses, let us run with endurance.',             ref:'Hebrews 12:1'},
+      {name:'The Road Made Me',         verse:'We also glory in our sufferings, because we know that suffering produces perseverance.',                       ref:'Romans 5:3'},
+      {name:'Forged',                   verse:'But he knows the way that I take; when he has tried me, I shall come out as gold.',                           ref:'Job 23:10'},
+    ]},
+  { name:'Craftsman', emoji:'🪵', raceNum:'III', xpPerRank:280,
+    ranks:[
+      {name:'Uncut',                    verse:'If you make me an altar of stone, you shall not build it of hewn stones.',                                    ref:'Exodus 20:25'},
+      {name:'First Blood of the Blade', verse:'For the word of God is living and active, sharper than any two-edged sword.',                                 ref:'Hebrews 4:12'},
+      {name:'Hands That Remember',      verse:'With upright heart he shepherded them and guided them with his skillful hand.',                               ref:'Psalm 78:72'},
+      {name:'True to the Grain',        verse:'Buy truth and do not sell it; buy wisdom, instruction, and understanding.',                                   ref:'Proverbs 23:23'},
+      {name:'Nothing Wasted',           verse:'Gather up the leftover fragments, that nothing may be lost.',                                                 ref:'John 6:12'},
+      {name:'Fitted and Joined',        verse:'The whole body, joined and held together by every joint with which it is equipped.',                          ref:'Ephesians 4:16'},
+      {name:'The Mark Is Mine',         verse:'See what large letters I use as I write to you with my own hand.',                                            ref:'Galatians 6:11'},
+      {name:'Worn Into Beauty',         verse:'To grant to those who mourn — a beautiful headdress instead of ashes, the oil of gladness instead of mourning.', ref:'Isaiah 61:3'},
+      {name:'They Know the Work',       verse:'You will recognize them by their fruits.',                                                                    ref:'Matthew 7:16'},
+      {name:'One Thing, Completely',    verse:'But one thing I do: forgetting what lies behind and straining forward to what lies ahead.',                   ref:'Philippians 3:13'},
+    ]},
+  { name:'Builder', emoji:'🪨', raceNum:'IV', xpPerRank:420,
+    ranks:[
+      {name:'Ground Broken by Blood',          verse:'For no one can lay a foundation other than that which is laid, which is Jesus Christ.',               ref:'1 Corinthians 3:11'},
+      {name:'Stone Upon Stone',                verse:'You yourselves like living stones are being built up as a spiritual house.',                           ref:'1 Peter 2:5'},
+      {name:'What Will Not Move',              verse:'For the righteous will never be moved; he will be remembered forever.',                               ref:'Psalm 112:6'},
+      {name:'The Weight Was Mine to Carry',    verse:'Take my yoke upon you, and learn from me, for I am gentle and lowly in heart.',                       ref:'Matthew 11:29'},
+      {name:'Plumb in the Storm',              verse:'This is what he showed me: behold, the Lord was standing beside a wall built with a plumb line.',     ref:'Amos 7:7'},
+      {name:'Corners That Hold',               verse:'The stone that the builders rejected has become the cornerstone.',                                    ref:'Psalm 118:22'},
+      {name:'Built While Others Slept',        verse:'He who keeps Israel will neither slumber nor sleep.',                                                 ref:'Psalm 121:4'},
+      {name:'The Structure Outlasts the Builder', verse:'Unless the Lord builds the house, those who build it labor in vain.',                              ref:'Psalm 127:1'},
+      {name:'Still Standing',                  verse:'And when you have done everything, stand firm.',                                                      ref:'Ephesians 6:13'},
+      {name:'Nothing Left to Prove',           verse:'It is finished.',                                                                                    ref:'John 19:30'},
+    ]},
+  { name:'Architect', emoji:'📐', raceNum:'V', xpPerRank:600,
+    ranks:[
+      {name:'The First Line',           verse:'In the beginning was the Word, and the Word was with God, and the Word was God.',                            ref:'John 1:1'},
+      {name:'What No One Else Saw',     verse:'Now faith is the assurance of things hoped for, the conviction of things not seen.',                         ref:'Hebrews 11:1'},
+      {name:'Given the Commission',     verse:'Go therefore and make disciples of all nations.',                                                            ref:'Matthew 28:19'},
+      {name:'I Read the Land',          verse:'The sons of Issachar had understanding of the times, to know what Israel ought to do.',                      ref:'1 Chronicles 12:32'},
+      {name:'The Vision Held',          verse:'Write the vision; make it plain on tablets, so he may run who reads it.',                                    ref:'Habakkuk 2:2'},
+      {name:'Deep Into the Blueprint',  verse:'They serve a copy and shadow of the heavenly things, as Moses was instructed: see that you make everything according to the pattern.', ref:'Hebrews 8:5'},
+      {name:'Every Stone Accounted For',verse:'As for these things that you see, the days will come when there will not be left here one stone upon another.', ref:'Luke 21:6'},
+      {name:'It Will Outlive Me',       verse:'For we know that if the tent that is our earthly home is destroyed, we have a building from God, a house not made with hands, eternal in the heavens.', ref:'2 Corinthians 5:1'},
+      {name:'Signed in Full',           verse:'In him you also, when you heard the word of truth, were sealed with the promised Holy Spirit.',              ref:'Ephesians 1:13'},
+      {name:'It Was Already Written',   verse:'He chose us in him before the foundation of the world.',                                                    ref:'Ephesians 1:4'},
+    ]},
+  { name:'Watchman', emoji:'🔦', raceNum:'VI', xpPerRank:860,
+    ranks:[
+      {name:'Posted at the Edge',               verse:'Son of man, I have made you a watchman for the house of Israel.',                                    ref:'Ezekiel 33:7'},
+      {name:'Eyes That Do Not Close',           verse:'He who keeps you will not slumber.',                                                                 ref:'Psalm 121:3'},
+      {name:'I Heard It Before the Others',     verse:'Speak, Lord, for your servant hears.',                                                               ref:'1 Samuel 3:10'},
+      {name:'The Dark Did Not Move Me',         verse:'Even though I walk through the valley of the shadow of death, I will fear no evil.',                 ref:'Psalm 23:4'},
+      {name:'Holding What Was Entrusted',       verse:'By the Holy Spirit who dwells within us, guard the good deposit entrusted to you.',                  ref:'2 Timothy 1:14'},
+      {name:'Tested at the Gate',               verse:'Lift up your heads, O gates! And be lifted up, O ancient doors, that the King of glory may come in.',ref:'Psalm 24:7'},
+      {name:'They Came and I Did Not Fall',     verse:'They surrounded me, surrounded me on every side; in the name of the Lord I cut them off.',           ref:'Psalm 118:11'},
+      {name:'Faithful When No One Was Watching',verse:'Your Father who sees in secret will reward you.',                                                    ref:'Matthew 6:4'},
+      {name:'Known by Name in High Places',     verse:'Fear not, for I have redeemed you; I have called you by name, you are mine.',                        ref:'Isaiah 43:1'},
+      {name:'Sent',                             verse:'As the Father has sent me, even so I am sending you.',                                               ref:'John 20:21'},
+    ]},
+  { name:'Consecrated', emoji:'🔥', raceNum:'VII', xpPerRank:99999,
+    ranks:[
+      {name:'Kadosh', verse:'You shall be holy, for I the Lord your God am holy.', ref:'Leviticus 19:2'},
+    ]},
+];
+
+// Race change point bonuses
+const RACE_BONUSES = [0, 50, 75, 100, 125, 150, 175];
+
+// Flatten all ranks
+const ALL_RANKS = [];
+let _level = 1, _xp = 0;
+for (let ri = 0; ri < RACES.length; ri++) {
+  const race = RACES[ri];
+  for (let rk = 0; rk < race.ranks.length; rk++) {
+    ALL_RANKS.push({
+      globalLevel: _level,
+      raceIndex: ri,
+      raceName: race.name,
+      raceNum: race.raceNum,
+      raceEmoji: race.emoji,
+      rankName: race.ranks[rk].name,
+      verse: race.ranks[rk].verse,
+      ref: race.ranks[rk].ref,
+      xpRequired: _xp,
+      xpToNext: race.xpPerRank,
+    });
+    _xp += race.xpPerRank;
+    _level++;
+  }
+}
+
+function getCurrentRank(xp) {
+  let cur = ALL_RANKS[0];
+  for (const r of ALL_RANKS) { if (xp >= r.xpRequired) cur = r; else break; }
+  return cur;
+}
+function getNextRank(xp) {
+  for (const r of ALL_RANKS) { if (xp < r.xpRequired) return r; }
+  return null;
+}
+
+// ══════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════
+const DEFAULT_STATE = {
+  habits: [], penalties: [], rewards: [], rewardLog: [],
+  today: {}, totalXP: 0, points: 0, streak: 0,
+  lastDate: null, history: [], verseSeenDate: null,
+};
+
+let state = { ...DEFAULT_STATE };
+let addingMode = false; // false = habit, 'penalty' = penalty
+let onetimeOn = false;
+let pendingRedeemId = null;
+
+function save() { localStorage.setItem('rd_state_v1', JSON.stringify(state)); }
+
+function load() {
+  const raw = localStorage.getItem('rd_state_v1');
+  if (raw) { try { state = { ...DEFAULT_STATE, ...JSON.parse(raw) }; } catch(e) {} }
+
+  if (!state.habits || state.habits.length === 0) {
+    state.habits = [
+      {id:uid(),name:'Morning workout',             category:'Physical',  xp:30,  onetime:false},
+      {id:uid(),name:'Took pills / supplements',    category:'Physical',  xp:15,  onetime:false},
+      {id:uid(),name:'7+ hours of sleep',           category:'Physical',  xp:20,  onetime:false},
+      {id:uid(),name:'Prayed',                      category:'Spiritual', xp:25,  onetime:false},
+      {id:uid(),name:'Read Bible or listened to sermon', category:'Spiritual', xp:25, onetime:false},
+      {id:uid(),name:'Posted social content',       category:'Business',  xp:40,  onetime:false},
+      {id:uid(),name:'Did schoolwork',              category:'Mental',    xp:30,  onetime:false},
+    ];
+  }
+  if (!state.penalties || state.penalties.length === 0) {
+    state.penalties = [
+      {id:uid(),name:'Scrolled 30+ minutes', category:'Mental',  xp:25,  penalty:true},
+      {id:uid(),name:'Wasted money',          category:'Mental',  xp:35,  penalty:true},
+      {id:uid(),name:'Viewed pornography',    category:'Mental',  xp:150, penalty:true, resetStreak:true},
+    ];
+  }
+  if (!state.rewards || state.rewards.length === 0) {
+    state.rewards = [
+      {id:uid(), name:'Eat out',          cost:15},
+      {id:uid(), name:'Binge night',      cost:20},
+      {id:uid(), name:'New tool or gear', cost:50},
+      {id:uid(), name:'Full day off',     cost:40},
+    ];
+  }
+  if (!state.rewardLog) state.rewardLog = [];
+}
+
+function uid() { return Math.random().toString(36).slice(2,9); }
+function todayStr() { return new Date().toLocaleDateString('en-CA'); }
+
+// ══════════════════════════════════════════
+// DAY RESET
+// ══════════════════════════════════════════
+function checkDayReset() {
+  const today = todayStr();
+  if (state.lastDate && state.lastDate !== today) {
+    const habitsDone = state.habits.filter(h => state.today[h.id]).length;
+    const xpEarned = state.habits.filter(h => state.today[h.id]).reduce((s,h) => s + (h.onetime ? h.xp*2 : h.xp), 0);
+    const penaltyLost = state.penalties.filter(p => state.today[p.id]).reduce((s,p) => s+p.xp, 0);
+    state.history.unshift({date:state.lastDate, completed:habitsDone, total:state.habits.filter(h=>!h.onetime).length, xpEarned:xpEarned-penaltyLost});
+    if (state.history.length > 14) state.history = state.history.slice(0,14);
+    const yesterday = new Date(); yesterday.setDate(yesterday.getDate()-1);
+    const yStr = yesterday.toLocaleDateString('en-CA');
+    if (state.lastDate === yStr && habitsDone > 0) state.streak++;
+    else if (state.lastDate !== yStr) state.streak = 0;
+    // Clear one-time habits
+    state.habits = state.habits.filter(h => !h.onetime);
+    state.today = {};
+  }
+  state.lastDate = today;
+  save();
+}
+
+// ══════════════════════════════════════════
+// TABS
+// ══════════════════════════════════════════
+function switchTab(name, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  btn.classList.add('active');
+}
+
+// ══════════════════════════════════════════
+// VERSE SPLASH
+// ══════════════════════════════════════════
+function showVerseSplash() {
+  const today = todayStr();
+  if (state.verseSeenDate === today) return;
+  const rank = getCurrentRank(state.totalXP);
+  document.getElementById('verseRace').textContent = `Race ${rank.raceNum} — ${rank.raceName}`;
+  document.getElementById('verseRank').textContent = rank.rankName;
+  document.getElementById('verseText').textContent = `"${rank.verse}"`;
+  document.getElementById('verseRef').textContent = rank.ref;
+  document.getElementById('verseSplash').classList.add('open');
+}
+function dismissVerse() {
+  state.verseSeenDate = todayStr(); save();
+  document.getElementById('verseSplash').classList.remove('open');
+}
+
+// ══════════════════════════════════════════
+// RENDER
+// ══════════════════════════════════════════
+function render() {
+  const now = new Date();
+  document.getElementById('dateLabel').textContent =
+    now.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'}).toUpperCase();
+
+  const rank = getCurrentRank(state.totalXP);
+  const next = getNextRank(state.totalXP);
+  document.getElementById('raceEyebrow').textContent = `Race ${rank.raceNum} — ${rank.raceName}`;
+
+  // Glow intensity builds across 10 ranks within the race (rank 1 = none, rank 10 = full blaze)
+  const raceRanks = ALL_RANKS.filter(r => r.raceIndex === rank.raceIndex);
+  const rankPosInRace = raceRanks.findIndex(r => r.globalLevel === rank.globalLevel); // 0–9
+  const glowProgress = rankPosInRace / Math.max(raceRanks.length - 1, 1); // 0.0 – 1.0
+  const a1 = (0.08 + glowProgress * 0.62).toFixed(2);
+  const a2 = (0.04 + glowProgress * 0.36).toFixed(2);
+  const a3 = (0.0  + glowProgress * 0.18).toFixed(2);
+  const spread1 = Math.round(4  + glowProgress * 20);
+  const spread2 = Math.round(8  + glowProgress * 32);
+  const spread3 = Math.round(12 + glowProgress * 48);
+  document.getElementById('raceEyebrow').style.textShadow =
+    `0 0 ${spread1}px rgba(201,168,76,${a1}), 0 0 ${spread2}px rgba(201,168,76,${a2}), 0 0 ${spread3}px rgba(201,168,76,${a3})`;
+  document.getElementById('rankName').textContent = rank.rankName;
+  document.getElementById('rankLevel').textContent = `Level ${rank.globalLevel} of 61`;
+  document.getElementById('rankBadge').textContent = rank.raceEmoji;
+
+  const xpIntoRank = state.totalXP - rank.xpRequired;
+  const xpPct = Math.min(100, (xpIntoRank / rank.xpToNext) * 100);
+  document.getElementById('currentXP').textContent = xpIntoRank;
+  document.getElementById('nextXP').textContent = next ? rank.xpToNext : '–';
+  document.getElementById('xpFill').style.width = xpPct + '%';
+
+  document.getElementById('totalXPVal').textContent = state.totalXP;
+  document.getElementById('pointsVal').textContent = state.points;
+  document.getElementById('rewardPointsVal').textContent = state.points;
+
+  const streakEl = document.getElementById('streakVal');
+  streakEl.textContent = state.streak;
+  streakEl.className = 'stat-val' + (state.streak === 0 ? ' streak-danger' : '');
+  document.getElementById('streakLbl').textContent = state.streak > 10 ? '🔥 Streak' : 'Streak';
+
+  const doneCount = state.habits.filter(h => state.today[h.id]).length;
+
+  const regularHabits = state.habits.filter(h => !h.onetime);
+  const pct = regularHabits.length === 0 ? 0 : Math.round((state.habits.filter(h=>!h.onetime&&state.today[h.id]).length / regularHabits.length)*100);
+  document.getElementById('dpLabel').textContent = `${doneCount} of ${state.habits.length} completed`;
+  document.getElementById('dpPct').textContent = pct + '%';
+  document.getElementById('dpFill').style.width = pct + '%';
+
+  renderLadder();
+  renderHabits('habitsList', state.habits, false);
+  renderHabits('penaltyList', state.penalties, true);
+  renderHistory();
+  renderRewards();
+  renderRewardLog();
+}
+
+function renderHabits(listId, habits, isPenalty) {
+  const list = document.getElementById(listId);
+  if (!habits || habits.length === 0) {
+    list.innerHTML = `<div class="empty-state"><strong>None Added</strong>Tap "+ Add" above.</div>`; return;
+  }
+  list.innerHTML = '';
+  for (const h of habits) {
+    const done = !!state.today[h.id];
+    const isOnetime = !isPenalty && h.onetime;
+    const div = document.createElement('div');
+    let cls = 'habit-item';
+    if (isPenalty) cls += ' penalty';
+    if (isOnetime) cls += ' onetime';
+    if (done) cls += ' done';
+    div.className = cls;
+    const sign = isPenalty ? '−' : '+';
+    const xpDisplay = isOnetime ? `+${h.xp*2} XP` : `${sign}${h.xp} XP`;
+    const badge = isOnetime ? `<span class="onetime-badge">1×</span>` : '';
+    div.innerHTML = `
+      <div class="habit-check">${done ? '✓' : ''}</div>
+      <div class="habit-info">
+        <div class="habit-name">${h.name}</div>
+        <div class="habit-meta">${h.category}${isOnetime ? ' · One-time' : ''}</div>
+      </div>
+      ${badge}
+      <div class="habit-xp">${xpDisplay}</div>
+      <button class="habit-del" title="Remove">×</button>
+    `;
+    div.addEventListener('click', e => { if (e.target.classList.contains('habit-del')) return; toggleHabit(h.id, isPenalty); });
+    div.querySelector('.habit-del').addEventListener('click', e => { e.stopPropagation(); deleteHabit(h.id, isPenalty); });
+    list.appendChild(div);
+  }
+}
+
+function toggleLadder() {
+  const ladder = document.getElementById('rankLadder');
+  const btn = document.getElementById('ladderToggle');
+  ladder.classList.toggle('open');
+  btn.classList.toggle('open');
+}
+
+function renderLadder() {
+  const ladder = document.getElementById('rankLadder');
+  const currentRank = getCurrentRank(state.totalXP);
+  const raceRanks = ALL_RANKS.filter(r => r.raceIndex === currentRank.raceIndex);
+  ladder.innerHTML = '';
+  for (const r of raceRanks) {
+    const isDone = state.totalXP >= r.xpRequired + r.xpToNext;
+    const isCurrent = r.globalLevel === currentRank.globalLevel;
+    const isFuture = !isDone && !isCurrent;
+    const item = document.createElement('div');
+    item.className = 'rank-ladder-item';
+    item.innerHTML = `
+      <div class="rli-dot ${isCurrent ? 'current' : isDone ? 'done' : 'future'}"></div>
+      <div class="rli-rank-name ${isCurrent ? 'current' : isDone ? 'done' : 'future'}">${r.rankName}</div>
+      ${isDone ? '<span class="rli-check">✓</span>' : ''}
+    `;
+    ladder.appendChild(item);
+  }
+}
+
+function renderHistory() {
+  const histList = document.getElementById('historyList');
+  if (!state.history || state.history.length === 0) {
+    histList.innerHTML = `<div class="empty-state" style="padding:16px 20px;"><strong>No History Yet</strong>Complete habits to start.</div>`; return;
+  }
+  histList.innerHTML = '';
+  for (const day of state.history.slice(0,7)) {
+    const pctDay = day.total === 0 ? 0 : Math.round((day.completed/day.total)*100);
+    const dateObj = new Date(day.date+'T12:00:00');
+    const dateStr = dateObj.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
+    const d = document.createElement('div');
+    d.className = 'history-day';
+    d.innerHTML = `
+      <div class="history-date">${dateStr}</div>
+      <div class="history-bar-wrap"><div class="history-bar" style="width:${pctDay}%"></div></div>
+      <div class="history-xp">${day.xpEarned >= 0 ? '+' : ''}${day.xpEarned} XP</div>
+    `;
+    histList.appendChild(d);
+  }
+}
+
+function renderRewards() {
+  const list = document.getElementById('rewardsList');
+  if (!state.rewards || state.rewards.length === 0) {
+    list.innerHTML = `<div class="empty-state"><strong>No Rewards Yet</strong>Tap "+ Add" to create one.</div>`; return;
+  }
+  list.innerHTML = '';
+  for (const r of state.rewards) {
+    const canAfford = state.points >= r.cost;
+    const div = document.createElement('div');
+    div.className = 'reward-item';
+    div.innerHTML = `
+      <div class="reward-info">
+        <div class="reward-name">${r.name}</div>
+        <div class="reward-cost">✧ ${r.cost} points</div>
+      </div>
+      <button class="reward-redeem" ${canAfford?'':'disabled'} data-id="${r.id}">Redeem</button>
+      <button class="reward-del" data-id="${r.id}">×</button>
+    `;
+    div.querySelector('.reward-redeem').addEventListener('click', () => { if(canAfford) openConfirm(r.id); });
+    div.querySelector('.reward-del').addEventListener('click', () => deleteReward(r.id));
+    list.appendChild(div);
+  }
+}
+
+function renderRewardLog() {
+  const list = document.getElementById('rewardLogList');
+  if (!state.rewardLog || state.rewardLog.length === 0) {
+    list.innerHTML = `<div class="empty-state" style="padding:16px 20px;"><strong>Nothing Redeemed Yet</strong>Earn points and treat yourself.</div>`; return;
+  }
+  list.innerHTML = '';
+  for (const entry of state.rewardLog.slice(0,20)) {
+    const d = document.createElement('div');
+    d.className = 'reward-log-item';
+    d.innerHTML = `
+      <div class="rli-name">${entry.name}</div>
+      <div class="rli-right">
+        <div class="rli-cost">−${entry.cost} pts</div>
+        <div class="rli-date">${entry.date}</div>
+      </div>
+    `;
+    list.appendChild(d);
+  }
+}
+
+// ══════════════════════════════════════════
+// TOGGLE HABIT
+// ══════════════════════════════════════════
+function toggleHabit(id, isPenalty) {
+  const list = isPenalty ? state.penalties : state.habits;
+  const habit = list.find(h => h.id === id);
+  if (!habit) return;
+
+  const rankBefore = getCurrentRank(state.totalXP);
+
+  if (state.today[id]) {
+    // Uncheck
+    state.today[id] = false;
+    if (isPenalty) {
+      state.totalXP += habit.xp;
+    } else {
+      const xpVal = habit.onetime ? habit.xp * 2 : habit.xp;
+      state.totalXP = Math.max(0, state.totalXP - xpVal);
+      state.points = Math.max(0, state.points - (habit.onetime ? 2 : 1));
+    }
+  } else {
+    // Check
+    state.today[id] = true;
+    if (isPenalty) {
+      state.totalXP = Math.max(0, state.totalXP - habit.xp);
+      if (habit.resetStreak) state.streak = 0;
+    } else {
+      const xpVal = habit.onetime ? habit.xp * 2 : habit.xp;
+      state.totalXP += xpVal;
+      state.points += habit.onetime ? 2 : 1;
+      triggerXPPulse();
+    }
+  }
+
+  if (!isPenalty && state.today[id]) {
+    const rankAfter = getCurrentRank(state.totalXP);
+    let bonusPts = 0;
+    let isRaceChange = false;
+
+    if (rankAfter.globalLevel !== rankBefore.globalLevel) {
+      bonusPts += 10; // rank up bonus
+      if (rankAfter.raceIndex !== rankBefore.raceIndex) {
+        bonusPts += RACE_BONUSES[rankAfter.raceIndex] || 0;
+        isRaceChange = true;
+      }
+      state.points += bonusPts;
+      showRankUp(rankAfter, bonusPts, isRaceChange);
+    }
+  }
+
+  save();
+  render();
+}
+
+function triggerXPPulse() {
+  const fill = document.getElementById('xpFill');
+  fill.classList.remove('pulse'); void fill.offsetWidth; fill.classList.add('pulse');
+  setTimeout(() => fill.classList.remove('pulse'), 1300);
+}
+
+function showRankUp(rank, bonusPts, isRaceChange) {
+  const screen = document.getElementById('rankupScreen');
+  const inner = document.getElementById('rankupInner');
+
+  // Fade app to black first
+  screen.style.opacity = '0';
+  screen.classList.add('show');
+  setTimeout(() => {
+    screen.style.transition = 'opacity 0.5s ease';
+    screen.style.opacity = '1';
+  }, 10);
+
+  if (isRaceChange) {
+    inner.innerHTML = `
+      <div class="rankup-race-label rankup-race-change" style="font-family:'Oswald',sans-serif;font-size:11px;letter-spacing:0.28em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:6px;">New Race Unlocked</div>
+      <div class="rankup-race-name-big rankup-race-change" style="text-shadow:0 0 30px rgba(201,168,76,0.6),0 0 60px rgba(201,168,76,0.3);">${rank.raceName}</div>
+      <div class="rankup-race-divider rankup-fade-in-delay"></div>
+      <div class="rankup-eyebrow rankup-fade-in-delay">Race ${rank.raceNum} — Rank I</div>
+      <div class="rankup-rank-name rankup-fade-in-delay">${rank.rankName}</div>
+      <div class="rankup-verse rankup-fade-in-delay2">"${rank.verse}"</div>
+      <div class="rankup-ref rankup-fade-in-delay2">${rank.ref}</div>
+      ${bonusPts > 0 ? `<div class="rankup-pts rankup-fade-in-delay3">+${bonusPts} points awarded</div>` : ''}
+      <button class="rankup-dismiss rankup-fade-in-delay3" onclick="dismissRankUp()">Receive It</button>
+    `;
+  } else {
+    inner.innerHTML = `
+      <div class="rankup-eyebrow rankup-fade-in">Rank Achieved</div>
+      <div class="rankup-eyebrow rankup-fade-in" style="margin-bottom:8px;">Race ${rank.raceNum} — ${rank.raceName}</div>
+      <div class="rankup-rank-name rankup-fade-in-delay">${rank.rankName}</div>
+      <div class="rankup-verse rankup-fade-in-delay2">"${rank.verse}"</div>
+      <div class="rankup-ref rankup-fade-in-delay2">${rank.ref}</div>
+      ${bonusPts > 0 ? `<div class="rankup-pts rankup-fade-in-delay3">+${bonusPts} points awarded</div>` : ''}
+      <button class="rankup-dismiss rankup-fade-in-delay3" onclick="dismissRankUp()">Receive It</button>
+    `;
+  }
+}
+
+function dismissRankUp() {
+  const screen = document.getElementById('rankupScreen');
+  screen.style.transition = 'opacity 0.4s ease';
+  screen.style.opacity = '0';
+  setTimeout(() => {
+    screen.classList.remove('show');
+    screen.style.opacity = '';
+    screen.style.transition = '';
+  }, 420);
+}
+
+function deleteHabit(id, isPenalty) {
+  const list = isPenalty ? state.penalties : state.habits;
+  const habit = list.find(h => h.id === id);
+  if (state.today[id] && habit) {
+    if (isPenalty) state.totalXP = Math.min(999999, state.totalXP + habit.xp);
+    else {
+      const xpVal = habit.onetime ? habit.xp * 2 : habit.xp;
+      state.totalXP = Math.max(0, state.totalXP - xpVal);
+      state.points = Math.max(0, state.points - (habit.onetime ? 2 : 1));
+    }
+  }
+  if (isPenalty) state.penalties = state.penalties.filter(h => h.id !== id);
+  else state.habits = state.habits.filter(h => h.id !== id);
+  delete state.today[id];
+  save(); render();
+}
+
+// ══════════════════════════════════════════
+// ADD HABIT MODAL
+// ══════════════════════════════════════════
+function openAddModal(mode) {
+  addingMode = mode;
+  onetimeOn = false;
+  document.getElementById('onetimeToggle').classList.remove('on');
+  document.getElementById('onetimeToggleRow').style.display = mode === 'penalty' ? 'none' : 'flex';
+  document.getElementById('modalTitle').textContent = mode === 'penalty' ? 'New Accountability Item' : 'New Habit';
+  document.getElementById('habitNameInput').value = '';
+  document.getElementById('habitXPInput').value = '25';
+  document.getElementById('addModal').classList.add('open');
+  setTimeout(() => document.getElementById('habitNameInput').focus(), 100);
+}
+function closeAddModal() { document.getElementById('addModal').classList.remove('open'); }
+function toggleOnetime() {
+  onetimeOn = !onetimeOn;
+  document.getElementById('onetimeToggle').classList.toggle('on', onetimeOn);
+}
+function addHabit() {
+  const name = document.getElementById('habitNameInput').value.trim();
+  if (!name) { document.getElementById('habitNameInput').focus(); return; }
+  const category = document.getElementById('habitCatInput').value;
+  const xp = Math.max(5, Math.min(500, parseInt(document.getElementById('habitXPInput').value)||25));
+  if (addingMode === 'penalty') {
+    state.penalties.push({id:uid(), name, category, xp, penalty:true});
+  } else {
+    state.habits.push({id:uid(), name, category, xp, onetime:onetimeOn});
+  }
+  save(); closeAddModal(); render();
+}
+document.getElementById('addModal').addEventListener('click', e => { if(e.target===e.currentTarget) closeAddModal(); });
+document.getElementById('habitNameInput').addEventListener('keydown', e => { if(e.key==='Enter') addHabit(); });
+
+// ══════════════════════════════════════════
+// REWARDS
+// ══════════════════════════════════════════
+function openRewardModal() {
+  document.getElementById('rewardNameInput').value = '';
+  document.getElementById('rewardCostInput').value = '20';
+  document.getElementById('rewardModal').classList.add('open');
+  setTimeout(() => document.getElementById('rewardNameInput').focus(), 100);
+}
+function closeRewardModal() { document.getElementById('rewardModal').classList.remove('open'); }
+function addReward() {
+  const name = document.getElementById('rewardNameInput').value.trim();
+  if (!name) { document.getElementById('rewardNameInput').focus(); return; }
+  const cost = Math.max(1, parseInt(document.getElementById('rewardCostInput').value)||20);
+  state.rewards.push({id:uid(), name, cost});
+  save(); closeRewardModal(); render();
+}
+document.getElementById('rewardModal').addEventListener('click', e => { if(e.target===e.currentTarget) closeRewardModal(); });
+document.getElementById('rewardNameInput').addEventListener('keydown', e => { if(e.key==='Enter') addReward(); });
+
+function deleteReward(id) {
+  state.rewards = state.rewards.filter(r => r.id !== id);
+  save(); render();
+}
+
+function openConfirm(rewardId) {
+  const reward = state.rewards.find(r => r.id === rewardId);
+  if (!reward) return;
+  pendingRedeemId = rewardId;
+  document.getElementById('confirmTitle').textContent = 'Redeem Reward?';
+  document.getElementById('confirmBody').textContent = `Spend ${reward.cost} points on "${reward.name}"? You have ${state.points} points.`;
+  document.getElementById('confirmOkBtn').onclick = () => redeemReward(rewardId);
+  document.getElementById('confirmModal').classList.add('open');
+}
+function closeConfirm() { document.getElementById('confirmModal').classList.remove('open'); pendingRedeemId = null; }
+function redeemReward(id) {
+  const reward = state.rewards.find(r => r.id === id);
+  if (!reward || state.points < reward.cost) return;
+  state.points -= reward.cost;
+  const dateStr = new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+  state.rewardLog.unshift({name:reward.name, cost:reward.cost, date:dateStr});
+  if (state.rewardLog.length > 50) state.rewardLog = state.rewardLog.slice(0,50);
+  save(); closeConfirm(); render();
+}
+document.getElementById('confirmModal').addEventListener('click', e => { if(e.target===e.currentTarget) closeConfirm(); });
+
+// ══════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════
+load();
+checkDayReset();
+render();
+showVerseSplash();
+setInterval(() => { checkDayReset(); render(); }, 60000);
+</script>
+</body>
+</html>
