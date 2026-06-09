@@ -74,19 +74,19 @@
   .date-label { font-size:11px; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.08em; text-align:right; }
 
   /* ── INLINE VERSE ── */
-  .inline-verse { margin:14px 20px 0; background:var(--card); border:1px solid var(--border); border-left:2px solid var(--gold-dim); border-radius:8px; padding:14px 16px; }
+  .inline-verse { margin:14px 20px 0; background:var(--card); border:1px solid var(--gold-dim); border-left:3px solid var(--gold); border-radius:8px; padding:14px 16px; cursor:pointer; transition:background 0.15s; }
+  .inline-verse:hover { background:linear-gradient(135deg,#141414,#1a1608); }
   .iv-eyebrow { font-family:'Oswald',sans-serif; font-size:10px; letter-spacing:0.18em; text-transform:uppercase; color:var(--gold-dim); margin-bottom:8px; }
-  .iv-verse { font-size:13px; font-weight:300; color:var(--text-dim); line-height:1.65; font-style:italic; margin-bottom:6px; }
+  .iv-verse { font-size:13px; font-weight:300; color:#c0a870; line-height:1.65; font-style:italic; margin-bottom:6px; }
   .iv-ref { font-family:'Oswald',sans-serif; font-size:11px; letter-spacing:0.08em; color:var(--gold-dim); }
 
   /* ── RANK CARD ── */
   .rank-card { margin:14px 20px; background:var(--card); border:1px solid var(--border); border-radius:10px; padding:16px 18px 14px; }
-  .rank-row { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:10px; }
+  .rank-row { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:10px; gap:10px; }
   .rank-labels { flex:1; }
   .race-eyebrow { font-size:13px; color:var(--gold); text-transform:uppercase; letter-spacing:0.18em; margin-bottom:4px; font-family:'Oswald',sans-serif; font-weight:600; transition:text-shadow 0.6s ease; }
   .rank-name { font-family:'Oswald',sans-serif; font-size:24px; font-weight:700; color:var(--gold); letter-spacing:0.06em; text-transform:uppercase; line-height:1; margin-bottom:3px; }
-  .rank-level { font-size:11px; color:var(--text-dim); }
-  .rank-badge { width:48px; height:48px; border-radius:50%; border:2px solid var(--gold-dim); display:flex; align-items:center; justify-content:center; font-size:20px; background:var(--card2); flex-shrink:0; }
+  .rank-badge { width:44px; height:44px; border-radius:50%; border:2px solid var(--gold-dim); display:flex; align-items:center; justify-content:center; font-size:26px; background:var(--card2); flex-shrink:0; font-family:'Times New Roman',serif; color:var(--gold); line-height:1; align-self:flex-start; margin-top:1px; }
   .xp-row { display:flex; justify-content:space-between; align-items:center; margin-bottom:5px; }
   .xp-label { font-size:11px; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.08em; }
   .xp-nums { font-family:'Oswald',sans-serif; font-size:13px; color:var(--gold); }
@@ -111,7 +111,6 @@
   .rli-rank-name.done { color:var(--gold-dim); }
   .rli-rank-name.current { color:var(--gold); font-weight:600; }
   .rli-rank-name.future { color:#444; }
-  .rli-check { font-size:10px; color:var(--gold-dim); margin-left:auto; }
 
   /* ── STATS ── */
   .stats-row { display:flex; gap:8px; margin:10px 20px 0; }
@@ -249,9 +248,85 @@
   .confirm-actions { display:flex; gap:10px; }
   #confirmModal { align-items:center; justify-content:center; }
 
-  .empty-state { text-align:center; padding:24px 20px; color:var(--text-dim); font-size:13px; }
+  /* ── RACE COVENANT SCREEN ── */
+  .covenant-screen { display:none; position:fixed; inset:0; background:#080808; z-index:420; flex-direction:column; align-items:center; justify-content:center; padding:40px 32px; text-align:center; }
+  .covenant-screen.open { display:flex; animation:fade-in 0.6s ease forwards; }
+  .cov-eyebrow { font-family:'Oswald',sans-serif; font-size:11px; letter-spacing:0.28em; text-transform:uppercase; color:var(--gold-dim); margin-bottom:6px; animation:ru-appear 0.7s ease forwards; }
+  .cov-title { font-family:'Oswald',sans-serif; font-size:13px; letter-spacing:0.2em; text-transform:uppercase; color:var(--gold-dim); margin-bottom:20px; animation:ru-appear 0.7s ease 0.3s both; }
+  .cov-verse { font-size:20px; font-weight:300; color:var(--text); line-height:1.7; max-width:340px; font-style:italic; margin-bottom:12px; animation:ru-appear 0.7s ease 0.6s both; }
+  .cov-ref { font-family:'Oswald',sans-serif; font-size:13px; letter-spacing:0.1em; color:var(--gold-dim); margin-bottom:52px; animation:ru-appear 0.7s ease 0.9s both; }
+  .cov-actions { display:flex; gap:12px; animation:ru-appear 0.7s ease 1.2s both; }
+  .cov-keep { background:none; border:1px solid var(--gold-dim); color:var(--gold); font-family:'Oswald',sans-serif; font-size:12px; letter-spacing:0.14em; text-transform:uppercase; padding:12px 24px; border-radius:6px; cursor:pointer; transition:background 0.15s; }
+  .cov-keep:hover { background:var(--gold-glow); }
+  .cov-return { background:none; border:1px solid #3a2a14; color:var(--copper); font-family:'Oswald',sans-serif; font-size:12px; letter-spacing:0.14em; text-transform:uppercase; padding:12px 24px; border-radius:6px; cursor:pointer; transition:background 0.15s; }
+  .cov-return:hover { background:var(--copper-glow); }
+
+  /* ── RACE COVENANT CARD ── */
+  .covenant-card { margin:0 20px; background:linear-gradient(135deg,#100e08,#12100a); border:1px solid var(--gold-dim); border-radius:9px; padding:13px 16px; }
+  .cov-card-eyebrow { font-family:'Oswald',sans-serif; font-size:10px; letter-spacing:0.18em; text-transform:uppercase; color:var(--gold-dim); margin-bottom:4px; }
+  .cov-card-text { font-size:13px; font-style:italic; color:#c0a870; line-height:1.5; margin-bottom:4px; }
+  .cov-card-ref { font-family:'Oswald',sans-serif; font-size:10px; color:var(--gold-dim); letter-spacing:0.06em; }
+
+  /* ── SEASONAL RITES ── */
+  .rite-active-banner { margin:10px 20px 0; border-radius:9px; padding:14px 16px; border:1px solid; }
+  .rite-active-banner.active { background:linear-gradient(135deg,#0a1018,#0c1420); border-color:#1a3a5a; }
+  .rite-active-banner.inactive { background:var(--card); border-color:var(--border); }
+  .rab-eyebrow { font-family:'Oswald',sans-serif; font-size:10px; letter-spacing:0.18em; text-transform:uppercase; color:#4a7aaa; margin-bottom:4px; }
+  .rab-name { font-family:'Oswald',sans-serif; font-size:16px; font-weight:700; color:#7ab8e8; letter-spacing:0.08em; text-transform:uppercase; margin-bottom:6px; }
+  .rab-verse { font-size:12px; font-style:italic; color:#6090b0; line-height:1.5; margin-bottom:4px; }
+  .rab-ref { font-family:'Oswald',sans-serif; font-size:10px; color:#4a7aaa; letter-spacing:0.06em; }
+  .rab-countdown { font-family:'Oswald',sans-serif; font-size:11px; color:#4a7aaa; margin-top:6px; letter-spacing:0.06em; }
+  .rab-none { font-size:12px; color:var(--text-dim); font-style:italic; }
+
+  /* ── RITES TAB ── */
+  .rite-item { background:var(--card); border:1px solid var(--border); border-radius:9px; padding:14px 16px; margin-bottom:8px; }
+  .rite-item.running { border-color:#1a3a5a; background:linear-gradient(135deg,#0a0f14,#0c1420); }
+  .rite-item.completed { opacity:0.5; }
+  .rite-header { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:3px; gap:8px; }
+  .rite-name { font-family:'Oswald',sans-serif; font-size:16px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--text); line-height:1.1; }
+  .rite-item.running .rite-name { color:#7ab8e8; }
+  .rite-status { font-family:'Oswald',sans-serif; font-size:9px; letter-spacing:0.1em; text-transform:uppercase; padding:2px 8px; border-radius:3px; flex-shrink:0; margin-top:3px; }
+  .rite-status.running { background:#1a3a5a; color:#7ab8e8; }
+  .rite-status.upcoming { background:#2a2a1a; color:#a0a060; }
+  .rite-status.completed { background:#1a2a1a; color:#4a8a4a; }
+  .rite-discipline { font-family:'Oswald',sans-serif; font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:#4a7aaa; margin-bottom:8px; }
+  .rite-verse { font-size:13px; font-style:italic; color:#8090a0; line-height:1.6; margin-bottom:3px; }
+  .rite-meta { font-family:'Oswald',sans-serif; font-size:10px; letter-spacing:0.06em; color:#3a5060; margin-bottom:10px; text-transform:uppercase; }
+  .rite-bonus { font-size:12px; color:var(--copper); margin-bottom:10px; line-height:1.5; }
+  .rite-challenge-label { font-family:'Oswald',sans-serif; font-size:10px; letter-spacing:0.14em; text-transform:uppercase; color:#3a4858; margin-bottom:6px; }
+  .rite-challenge-text { font-size:13px; color:#7a8890; line-height:1.65; margin-bottom:12px; }
+  .rite-complete-btn { background:none; border:1px solid #1a3a5a; color:#4a7aaa; font-family:'Oswald',sans-serif; font-size:11px; letter-spacing:0.1em; text-transform:uppercase; padding:7px 14px; border-radius:6px; cursor:pointer; }
+  .rite-del { background:none; border:none; color:#444; font-size:14px; cursor:pointer; padding:2px 4px; }
+  .rite-del:hover { color:var(--red-bright); }
   .empty-state strong { display:block; font-family:'Oswald',sans-serif; font-size:14px; letter-spacing:0.1em; text-transform:uppercase; color:#555; margin-bottom:5px; }
 
+  
+  /* ── TITLE SYSTEM ── */
+  .active-title-badge { font-family:'Oswald',sans-serif; font-size:11px; color:var(--copper); letter-spacing:0.08em; text-transform:uppercase; cursor:pointer; border-bottom:1px dotted var(--copper); display:inline-block; margin-bottom:3px; }
+  .title-dropdown { display:none; background:var(--card2); border:1px solid var(--border); border-radius:8px; padding:8px; margin-top:6px; flex-direction:column; gap:4px; }
+  .title-dropdown.open { display:flex; }
+  .title-option { font-family:'Oswald',sans-serif; font-size:11px; letter-spacing:0.06em; text-transform:uppercase; padding:7px 10px; border-radius:5px; cursor:pointer; color:var(--text-dim); display:flex; align-items:center; justify-content:space-between; gap:8px; }
+  .title-option:hover { background:var(--card); color:var(--gold); }
+  .title-option.equipped { color:var(--copper); }
+  .title-option-bonus { font-size:9px; color:#555; text-transform:none; font-family:'Inter',sans-serif; flex-shrink:0; }
+
+
+
+  /* ── RITE COMPLETE SCREEN ── */
+  .ritecomplete-screen { display:none; position:fixed; inset:0; background:#080808; z-index:380; flex-direction:column; align-items:center; justify-content:center; padding:40px 32px; text-align:center; }
+  .ritecomplete-screen.open { display:flex; animation:fade-in 0.5s ease forwards; }
+  .rc-eyebrow { font-family:'Oswald',sans-serif; font-size:11px; letter-spacing:0.28em; text-transform:uppercase; color:#4a7aaa; margin-bottom:8px; animation:ru-appear 0.6s ease forwards; }
+  .rc-title { font-family:'Oswald',sans-serif; font-size:32px; font-weight:700; color:#7ab8e8; margin-bottom:8px; animation:ru-appear 0.6s ease forwards; text-shadow:0 0 30px rgba(122,184,232,0.4); }
+  .rc-name { font-family:'Oswald',sans-serif; font-size:18px; color:var(--gold); letter-spacing:0.06em; margin-bottom:32px; animation:ru-appear 0.6s ease 0.3s both; }
+  .rc-pts { font-size:14px; color:var(--copper); font-family:'Oswald',sans-serif; margin-bottom:48px; animation:ru-appear 0.6s ease 0.6s both; }
+
+  .habit-item.rite-task { border-color:#1a3a5a; }
+  .habit-item.rite-task .habit-name { color:#a0c8e8; }
+  .habit-item.rite-task .habit-xp { color:#4a7aaa; }
+  .habit-item.rite-task.done { border-color:var(--gold-dim); background:linear-gradient(135deg,#141414,#1a1608); }
+  .habit-item.rite-task.done .habit-name { color:var(--gold); }
+  .habit-item.rite-task.done .habit-xp { color:var(--gold); }
+  .habit-item.rite-task.done .habit-check { background:var(--gold); border-color:var(--gold); color:#0D0D0D; }
   ::-webkit-scrollbar { width:4px; }
   ::-webkit-scrollbar-track { background:transparent; }
   ::-webkit-scrollbar-thumb { background:#2a2a2a; border-radius:2px; }
@@ -272,8 +347,8 @@
   <div class="tab-panel active" id="tab-today">
 
     <!-- Inline verse -->
-    <div class="inline-verse">
-      <div class="iv-eyebrow">Rank Inscription</div>
+    <div class="inline-verse" onclick="showCovenantSplash()">
+      <div class="iv-eyebrow">Race Covenant</div>
       <div class="iv-verse" id="ivVerse"></div>
       <div class="iv-ref" id="ivRef"></div>
     </div>
@@ -283,7 +358,8 @@
         <div class="rank-labels">
           <div class="race-eyebrow" id="raceEyebrow">Race I — Apprentice</div>
           <div class="rank-name" id="rankName">Unformed</div>
-          <div class="rank-level" id="rankLevel">Level 1 of 61</div>
+          <div id="activeTitleBadge" class="active-title-badge" onclick="toggleTitleDropdown()" style="display:none;"></div>
+          <div class="title-dropdown" id="titleDropdown"></div>
         </div>
         <div class="rank-badge" id="rankBadge">🌾</div>
       </div>
@@ -297,6 +373,12 @@
       </button>
       <div class="rank-ladder" id="rankLadder"></div>
     </div>
+
+    <!-- Active Seasonal Rite Banner -->
+    <div class="rite-active-banner inactive" id="riteActiveBanner">
+      <div class="rab-none">No active Seasonal Rite</div>
+    </div>
+
 
     <div class="stats-row">
       <div class="stat-box"><div class="stat-val" id="streakVal">0</div><div class="stat-lbl" id="streakLbl">Streak</div></div>
@@ -313,6 +395,13 @@
     <div class="daily-progress">
       <div class="dp-row"><div class="dp-label" id="dpLabel">0 of 0 completed</div><div class="dp-pct" id="dpPct">0%</div></div>
       <div class="dp-track"><div class="dp-fill" id="dpFill" style="width:0%"></div></div>
+    </div>
+
+    <!-- RITE DISCIPLINES SECTION -->
+    <div id="riteDisciplinesSection" style="display:none;">
+      <div class="section-header" id="riteDisciplinesHeader" style="padding-bottom:6px;display:flex;align-items:center;justify-content:space-between;padding:16px 20px 8px;"></div>
+      <div class="habits-list" id="riteDisciplinesList"></div>
+      <div class="divider" style="margin-bottom:0;"></div>
     </div>
 
     <div class="section-header">
@@ -350,6 +439,12 @@
     <div class="habits-list" id="timedTaskList"></div>
   </div>
 
+  <!-- TAB: RITES -->
+  <div class="tab-panel" id="tab-rites">
+    <div class="section-header"><div class="section-title">Seasonal Rites</div></div>
+    <div style="padding:0 20px;" id="ritesList"></div>
+  </div>
+
   <!-- TAB: REWARDS -->
   <div class="tab-panel" id="tab-rewards">
     <div class="rewards-points-banner">
@@ -376,7 +471,29 @@
 <div class="tab-bar">
   <button class="tab-btn active" onclick="switchTab('today',this)">⊕</button>
   <button class="tab-btn" onclick="switchTab('tasks',this)">◎</button>
+  <button class="tab-btn" onclick="switchTab('rites',this)">☽</button>
   <button class="tab-btn" onclick="switchTab('rewards',this)">✦</button>
+</div>
+
+<!-- RACE COVENANT SCREEN -->
+<div class="covenant-screen" id="covenantScreen">
+  <div class="cov-eyebrow" id="covRace"></div>
+  <div class="cov-title">Race Covenant</div>
+  <div class="cov-verse" id="covVerse"></div>
+  <div class="cov-ref" id="covRef"></div>
+  <div class="cov-actions">
+    <button class="cov-return" onclick="returnToAltar()">Return to the Altar</button>
+    <button class="cov-keep" onclick="keepCovenant()">I Have Kept This Covenant</button>
+  </div>
+</div>
+
+<!-- RITE COMPLETE SCREEN -->
+<div class="ritecomplete-screen" id="riteCompleteScreen">
+  <div class="rc-eyebrow">Seasonal Rite Complete</div>
+  <div class="rc-title" id="rcTitle"></div>
+  <div class="rc-name" id="rcDiscipline"></div>
+  <div class="rc-pts" id="rcPts"></div>
+  <button class="fs-btn" style="animation:ru-appear 0.6s ease 0.9s both;" onclick="dismissRiteComplete()">Receive It</button>
 </div>
 
 <!-- VERSE SPLASH -->
@@ -535,7 +652,7 @@
 // RACE & RANK DATA
 // ══════════════════════════════════════════
 const RACES = [
-  { name:'Apprentice', emoji:'🌾', raceNum:'I', xpPerRank:100, ranks:[
+  { name:'Apprentice', emoji:'י', raceNum:'I', xpPerRank:825, ranks:[
     {name:'Unformed',             verse:'The earth was without form and void, and darkness was over the face of the deep.',                                 ref:'Genesis 1:2'},
     {name:'Called by Name',       verse:'Before I formed you in the womb I knew you, and before you were born I consecrated you.',                         ref:'Jeremiah 1:5'},
     {name:'Watching the Master',  verse:'The Son can do nothing of his own accord, but only what he sees the Father doing.',                               ref:'John 5:19'},
@@ -547,7 +664,7 @@ const RACES = [
     {name:'Tried and Not Broken', verse:'For you, O God, have tested us; you have tried us as silver is tried.',                                           ref:'Psalm 66:10'},
     {name:'Released',             verse:'Go, and the Lord be with you.',                                                                                   ref:'1 Samuel 17:37'},
   ]},
-  { name:'Journeyman', emoji:'🛤️', raceNum:'II', xpPerRank:180, ranks:[
+  { name:'Journeyman', emoji:'ו', raceNum:'II', xpPerRank:1750, ranks:[
     {name:'On the Road',               verse:'A man was going down from Jerusalem to Jericho, and he fell among robbers.',                                 ref:'Luke 10:30'},
     {name:'No Bag for the Journey',    verse:'Take nothing for your journey, no staff, nor bag, nor bread, nor money.',                                    ref:'Luke 9:3'},
     {name:'Tested in the Wilderness',  verse:'Jesus was led up by the Spirit into the wilderness to be tempted by the devil.',                             ref:'Matthew 4:1'},
@@ -559,7 +676,7 @@ const RACES = [
     {name:'The Road Made Me',          verse:'We also glory in our sufferings, because we know that suffering produces perseverance.',                      ref:'Romans 5:3'},
     {name:'Forged',                    verse:'But he knows the way that I take; when he has tried me, I shall come out as gold.',                          ref:'Job 23:10'},
   ]},
-  { name:'Craftsman', emoji:'🪵', raceNum:'III', xpPerRank:280, ranks:[
+  { name:'Craftsman', emoji:'ד', raceNum:'III', xpPerRank:3000, ranks:[
     {name:'Uncut',                     verse:'If you make me an altar of stone, you shall not build it of hewn stones.',                                   ref:'Exodus 20:25'},
     {name:'First Blood of the Blade',  verse:'For the word of God is living and active, sharper than any two-edged sword.',                                ref:'Hebrews 4:12'},
     {name:'Hands That Remember',       verse:'With upright heart he shepherded them and guided them with his skillful hand.',                               ref:'Psalm 78:72'},
@@ -571,7 +688,7 @@ const RACES = [
     {name:'They Know the Work',        verse:'You will recognize them by their fruits.',                                                                   ref:'Matthew 7:16'},
     {name:'One Thing, Completely',     verse:'But one thing I do: forgetting what lies behind and straining forward to what lies ahead.',                  ref:'Philippians 3:13'},
   ]},
-  { name:'Builder', emoji:'🪨', raceNum:'IV', xpPerRank:420, ranks:[
+  { name:'Builder', emoji:'ח', raceNum:'IV', xpPerRank:4750, ranks:[
     {name:'Ground Broken by Blood',           verse:'For no one can lay a foundation other than that which is laid, which is Jesus Christ.',               ref:'1 Corinthians 3:11'},
     {name:'Stone Upon Stone',                 verse:'You yourselves like living stones are being built up as a spiritual house.',                           ref:'1 Peter 2:5'},
     {name:'What Will Not Move',               verse:'For the righteous will never be moved; he will be remembered forever.',                               ref:'Psalm 112:6'},
@@ -583,7 +700,7 @@ const RACES = [
     {name:'Still Standing',                   verse:'And when you have done everything, stand firm.',                                                      ref:'Ephesians 6:13'},
     {name:'Nothing Left to Prove',            verse:'It is finished.',                                                                                    ref:'John 19:30'},
   ]},
-  { name:'Architect', emoji:'📐', raceNum:'V', xpPerRank:600, ranks:[
+  { name:'Architect', emoji:'ע', raceNum:'V', xpPerRank:7000, ranks:[
     {name:'The First Line',            verse:'In the beginning was the Word, and the Word was with God, and the Word was God.',                            ref:'John 1:1'},
     {name:'What No One Else Saw',      verse:'Now faith is the assurance of things hoped for, the conviction of things not seen.',                         ref:'Hebrews 11:1'},
     {name:'Given the Commission',      verse:'Go therefore and make disciples of all nations.',                                                            ref:'Matthew 28:19'},
@@ -595,7 +712,7 @@ const RACES = [
     {name:'Signed in Full',            verse:'In him you also, when you heard the word of truth, were sealed with the promised Holy Spirit.',              ref:'Ephesians 1:13'},
     {name:'It Was Already Written',    verse:'He chose us in him before the foundation of the world.',                                                    ref:'Ephesians 1:4'},
   ]},
-  { name:'Watchman', emoji:'🔦', raceNum:'VI', xpPerRank:860, ranks:[
+  { name:'Watchman', emoji:'צ', raceNum:'VI', xpPerRank:13250, ranks:[
     {name:'Posted at the Edge',                verse:'Son of man, I have made you a watchman for the house of Israel.',                                    ref:'Ezekiel 33:7'},
     {name:'Eyes That Do Not Close',            verse:'He who keeps you will not slumber.',                                                                 ref:'Psalm 121:3'},
     {name:'I Heard It Before the Others',      verse:'Speak, Lord, for your servant hears.',                                                               ref:'1 Samuel 3:10'},
@@ -607,12 +724,156 @@ const RACES = [
     {name:'Known by Name in High Places',      verse:'Fear not, for I have redeemed you; I have called you by name, you are mine.',                        ref:'Isaiah 43:1'},
     {name:'Sent',                              verse:'As the Father has sent me, even so I am sending you.',                                               ref:'John 20:21'},
   ]},
-  { name:'Consecrated', emoji:'🔥', raceNum:'VII', xpPerRank:99999, ranks:[
+  { name:'Consecrated', emoji:'ק', raceNum:'VII', xpPerRank:99999, ranks:[
     {name:'Kadosh', verse:'You shall be holy, for I the Lord your God am holy.', ref:'Leviticus 19:2'},
   ]},
 ];
 
 const RACE_BONUSES = [0,50,75,100,125,150,175];
+
+const RACE_COVENANTS = [
+  {verse:'Whatever your hand finds to do, do it with your might.',                        ref:'Ecclesiastes 9:10'},
+  {verse:'No one who puts his hand to the plow and looks back is fit for the kingdom of God.', ref:'Luke 9:62'},
+  {verse:'Whatever you do, work heartily, as for the Lord and not for men.',              ref:'Colossians 3:23'},
+  {verse:'Unless the Lord builds the house, those who build it labor in vain.',           ref:'Psalm 127:1'},
+  {verse:'Write the vision; make it plain on tablets, so he may run who reads it.',       ref:'Habakkuk 2:2'},
+  {verse:'Son of man, I have made you a watchman. Give them warning from me.',            ref:'Ezekiel 33:7'},
+  {verse:'Be holy, for I the Lord your God am holy.',                                     ref:'Leviticus 19:2'},
+];
+
+const RACE_TITLES = [
+  {name:'Of Willing Hands',   bonus:'Physical +5 XP',    raceIndex:0, effect:{type:'flat', category:'Physical', xp:5}},
+  {name:'Eyes Forward',       bonus:'+5 XP all habits after full completion day', raceIndex:1, effect:{type:'momentum'}},
+  {name:'True to the Grain',  bonus:'Business +10 XP',   raceIndex:2, effect:{type:'flat', category:'Business', xp:10}},
+  {name:'Load Bearer',        bonus:'2x XP on 100% days',raceIndex:3, effect:{type:'fullday_double'}},
+  {name:'Commissioned',       bonus:'2x XP Business & Social', raceIndex:4, effect:{type:'double_cat', categories:['Business','Social']}},
+  {name:'Keeper of the Gate', bonus:'+15 XP Spiritual & 2x Spiritual/Emotional', raceIndex:5, effect:{type:'watchman'}},
+  {name:'Kadosh',             bonus:'All titles stack + 2x all habits', raceIndex:6, effect:{type:'kadosh'}},
+];
+
+const RITE_DATA = [
+  {
+    id:'rite-prayer', name:'The Lenten Watch', discipline:'Prayer',
+    verse:'When you pray, go into your room and shut the door and pray to your Father who is in secret.',
+    ref:'Matthew 6:6', start:'02-18', end:'04-05',
+    bonus:'+10 XP on Spiritual habits', bonusEffect:{type:'flat',category:'Spiritual',xp:10}, pointReward:150,
+    challenges:[
+      'Pray every day for 21 days. No minimum length. Just show up.',
+      'Pray every day for 40 days. Include one specific confession each day.',
+      'Pray every day for 40 days. Keep a voice memo of one prayer request and how God answered it.',
+      'Pray every day for 40 days. Include intercession for at least three people daily.',
+      'Pray every day for 40 days. Fast one meal per week and replace it with prayer.',
+      'Pray every day for 40 days. Include a daily hour of intercession for your church and community.',
+      'Pray without ceasing for 40 days. Morning, midday, and evening structured prayer. Share one insight with a trusted person weekly.',
+    ],
+    riteTasks:[{name:'Morning prayer', xp:20},{name:'Intercede for one person', xp:15}],
+    completionGates:[21,40,40,40,40,40,40]
+  },
+  {
+    id:'rite-bible', name:'Advent Reading', discipline:'Bible Reading',
+    verse:'Your word is a lamp to my feet and a light to my path.',
+    ref:'Psalm 119:105', start:'12-01', end:'12-24',
+    bonus:'+10 XP on Spiritual habits', bonusEffect:{type:'flat',category:'Spiritual',xp:10}, pointReward:150,
+    challenges:[
+      'Read one chapter of the Gospel of John every day for 21 days.',
+      'Read the Gospel of Mark in full. Share one observation per chapter with a trusted person.',
+      'Read the Gospel of Luke in full. Share a reflection per chapter with someone.',
+      'Read the Gospel of John and Romans in full during Advent.',
+      'Read Isaiah 1-40 and the four nativity accounts. Share a synthesis with someone.',
+      'Read Isaiah in full. Share how each section connects to the coming of Christ with a trusted person.',
+      'Read Isaiah, all four Gospels, and Revelation 1-5. Share a theological reflection with your church community.',
+    ],
+    riteTasks:[{name:'Read Advent scripture', xp:20},{name:'Meditate on one verse', xp:15}],
+    completionGates:[18,21,21,21,21,21,21]
+  },
+  {
+    id:'rite-fast', name:'The Summer Forge', discipline:'Fasting',
+    verse:'When you fast, anoint your head and wash your face, that your fasting may not be seen by others.',
+    ref:'Matthew 6:17-18', start:'07-01', end:'08-31',
+    bonus:'+15 XP on Spiritual and Physical habits', bonusEffect:{type:'flat_multi',categories:['Spiritual','Physical'],xp:15}, pointReward:200,
+    challenges:[
+      'Fast one meal per week for four weeks. Replace each meal with prayer.',
+      'Fast one full day per week for six weeks. Share the experience with one person each time.',
+      'Fast two days per week for four weeks. No food from sunrise to sunset.',
+      'Complete a three-day water fast. Share one reflection on dependence with a trusted person.',
+      'Complete a seven-day partial fast - one meal per day, no meat. Daily scripture and prayer.',
+      'Complete a twenty-one day Daniel fast. Share findings with someone after it ends.',
+      'Complete a forty-day modified fast - one meal per day, no entertainment, structured prayer morning and night. Share the full experience with your church community.',
+    ],
+    riteTasks:[{name:'Fast a meal', xp:25},{name:'Fasting prayer session', xp:20}],
+    completionGates:[4,6,8,3,7,21,40]
+  },
+  {
+    id:'rite-giving', name:'First Fruits', discipline:'Giving',
+    verse:'Honor the Lord with your wealth and with the firstfruits of all your produce.',
+    ref:'Proverbs 3:9', start:'04-01', end:'04-30',
+    bonus:'+2 pts on every completed habit', bonusEffect:{type:'pts_per_habit',pts:2}, pointReward:125,
+    challenges:[
+      'Give something away - money, time, or a possession - once per week for four weeks.',
+      'Tithe faithfully for the entire month. Share one observation about giving with a trusted person.',
+      'Give financially and sacrificially once - something that costs you. Share why with someone.',
+      'Identify a specific need in your church or community and meet it fully during April.',
+      'Give 15% of your income during April. Volunteer at least twice. Share the impact.',
+      'Give sacrificially in three categories - money, time, and skill - and share the impact of each with someone.',
+      'Design and execute a giving initiative that involves others. Lead people to give, not just give yourself.',
+    ],
+    riteTasks:[{name:'Act of giving today', xp:20},{name:'Pray over your giving', xp:15}],
+    completionGates:[4,4,4,8,10,12,1]
+  },
+  {
+    id:'rite-repent', name:'The New Year Reckoning', discipline:'Repentance',
+    verse:'Return to me with all your heart.',
+    ref:'Joel 2:12', start:'01-01', end:'01-21',
+    bonus:'Penalty XP reduced by 50%', bonusEffect:{type:'penalty_reduction',pct:0.5}, pointReward:125,
+    challenges:[
+      'Write down three patterns you want to leave behind. Pray over them daily for 21 days.',
+      'Identify one persistent sin. Confess it to God and one trusted person. Track your response for 21 days.',
+      'Write a full personal inventory of patterns and failures. Bring each before God in prayer.',
+      'Complete a structured daily examination of conscience for 21 days. Share one insight per week with someone.',
+      'Identify and make right any broken relationships or unresolved wrongs. Share the process with a trusted person.',
+      'For all 21 days, examine your conscience and identify one person in your community who is drifting — spiritually, relationally, or morally. Pray for them daily. On day 21, reach out to them directly.',
+      'Produce a reflection on repentance drawn from your own life. Share it with your church community.',
+    ],
+    riteTasks:[{name:'Daily examination of conscience', xp:20},{name:'Confession and release', xp:20}],
+    completionGates:[21,21,14,21,10,21,1]
+  },
+  {
+    id:'rite-sabbath', name:'The Harvest Rest', discipline:'Sabbath',
+    verse:'Remember the Sabbath day, to keep it holy.',
+    ref:'Exodus 20:8', start:'09-01', end:'10-31',
+    bonus:'+10 XP on Spiritual and Emotional habits', bonusEffect:{type:'flat_multi',categories:['Spiritual','Emotional'],xp:10}, pointReward:150,
+    challenges:[
+      'Choose one day per week for eight weeks where you stop all work by sundown. No business, no hustle.',
+      'Keep one full Sabbath day per week for eight weeks. No work, no phone after noon. Attend worship. Share what rest felt like with one person.',
+      'Keep one complete Sabbath per week for eight weeks. Phone off from sundown to sundown. No consumption, no output. Share one reflection per week with a trusted person.',
+      'Keep a structured Sabbath every week for eight weeks - morning worship, afternoon rest, evening gratitude. Zero work or business. Share one insight per week.',
+      'Keep a full covenantal Sabbath every week for eight weeks. Phone off, no entertainment, structured worship morning and evening. Share with one person weekly.',
+      'Keep a complete Sabbath every week for eight weeks. Fast from sundown Friday to sundown Saturday. Structured prayer morning and evening. Share a weekly reflection with your accountability partner.',
+      'Keep a full Sabbath every week for eight weeks and one extended two-day Sabbath retreat. Complete digital silence. Structured worship, prayer, and rest. Share what God revealed with your church community.',
+    ],
+    riteTasks:[{name:'Sabbath - no work today', xp:25},{name:'Structured rest and worship', xp:20}],
+    completionGates:[8,8,8,8,8,8,8]
+  },
+  {
+    id:'rite-solitude', name:'Winter Arc', discipline:'Solitude',
+    verse:'Be still, and know that I am God.',
+    ref:'Psalm 46:10', start:'11-01', end:'11-30',
+    bonus:'+10 XP on Spiritual and Emotional habits', bonusEffect:{type:'flat_multi',categories:['Spiritual','Emotional'],xp:10}, pointReward:150,
+    challenges:[
+      'Spend 10 minutes in silence before God every day for 30 days. No phone. No music.',
+      'Spend 30 minutes in silence and prayer every day for 30 days. Share what surfaces with one trusted person.',
+      'Complete one full day of solitude during November. No phone, no people, only God and scripture.',
+      'Complete two full days of solitude during November. Fast and pray during each one. Share one insight with someone.',
+      'Complete a three-day silent retreat - structured prayer, scripture. No outside input. Share the experience with one trusted person.',
+      'Complete a seven-day solitude practice - one hour minimum per day, one full day of silence per week. Share weekly with your accountability partner.',
+      'Complete a ten-day solitude and fasting retreat. Share what God revealed with your church community.',
+    ],
+    riteTasks:[{name:'10 min silence before God', xp:20},{name:'Solitude prayer session', xp:20}],
+    completionGates:[30,30,1,2,1,7,1]
+  },
+];
+
+
 
 const ALL_RANKS = [];
 let _lvl=1, _xp=0;
@@ -634,8 +895,9 @@ const DEFAULT_STATE = {
   habits:[], penalties:[], tasks:[], rewards:[], rewardLog:[],
   today:{}, totalXP:0, points:0, streak:0,
   lastDate:null, history:[], verseSeenDate:null,
-  todayTasksCompleted:0, // for multiplier tracking
-  failedTasks:[], // tasks that expired and need failure screen
+  todayTasksCompleted:0, failedTasks:[], pendingCovenant:false,
+  earnedTitles:[], equippedTitle:null, completedRites:{}, riteTaskCounts:{},
+  yesterdayFullCompletion:false,
 };
 let state = {...DEFAULT_STATE};
 let currentTaskType = 'onetime';
@@ -675,7 +937,12 @@ function load(){
   if(!state.tasks) state.tasks=[];
   if(!state.rewardLog) state.rewardLog=[];
   if(!state.failedTasks) state.failedTasks=[];
+  if(!state.earnedTitles) state.earnedTitles=[];
+  if(!state.completedRites) state.completedRites={};
+  if(!state.riteTaskCounts) state.riteTaskCounts={};
   if(state.todayTasksCompleted===undefined) state.todayTasksCompleted=0;
+  if(state.pendingCovenant===undefined) state.pendingCovenant=false;
+  if(state.yesterdayFullCompletion===undefined) state.yesterdayFullCompletion=false;
 }
 function uid(){return Math.random().toString(36).slice(2,9);}
 function todayStr(){return new Date().toLocaleDateString('en-CA');}
@@ -704,6 +971,7 @@ function checkDayReset(){
     });
 
     const habitsDone=state.habits.filter(h=>state.today[h.id]).length;
+    state.yesterdayFullCompletion=(habitsDone===state.habits.length&&state.habits.length>0);
     const mult=Math.pow(2,state.todayTasksCompleted||0);
     const xpEarned=state.habits.filter(h=>state.today[h.id]).reduce((s,h)=>s+h.xp*mult,0);
     const penaltyLost=state.penalties.filter(p=>state.today[p.id]).reduce((s,p)=>s+p.xp,0);
@@ -735,10 +1003,21 @@ function switchTab(name,btn){
 function showVerseSplash(){
   if(state.verseSeenDate===todayStr()) return;
   const rank=getCurrentRank(state.totalXP);
+  const cov=RACE_COVENANTS[rank.raceIndex];
   document.getElementById('verseRace').textContent=`Race ${rank.raceNum} — ${rank.raceName}`;
-  document.getElementById('verseRank').textContent=rank.rankName;
-  document.getElementById('verseText').textContent=`"${rank.verse}"`;
-  document.getElementById('verseRef').textContent=rank.ref;
+  document.getElementById('verseRank').textContent='Race Covenant';
+  document.getElementById('verseText').textContent=`"${cov.verse}"`;
+  document.getElementById('verseRef').textContent=cov.ref;
+  document.getElementById('verseSplash').classList.add('open');
+}
+
+function showCovenantSplash(){
+  const rank=getCurrentRank(state.totalXP);
+  const cov=RACE_COVENANTS[rank.raceIndex];
+  document.getElementById('verseRace').textContent=`Race ${rank.raceNum} — ${rank.raceName}`;
+  document.getElementById('verseRank').textContent='Race Covenant';
+  document.getElementById('verseText').textContent=`"${cov.verse}"`;
+  document.getElementById('verseRef').textContent=cov.ref;
   document.getElementById('verseSplash').classList.add('open');
 }
 function dismissVerse(){
@@ -790,8 +1069,9 @@ function render(){
   const next=getNextRank(state.totalXP);
 
   // Inline verse
-  document.getElementById('ivVerse').textContent=`"${rank.verse}"`;
-  document.getElementById('ivRef').textContent=rank.ref;
+  const cov=RACE_COVENANTS[rank.raceIndex];
+  document.getElementById('ivVerse').textContent=`"${cov.verse}"`;
+  document.getElementById('ivRef').textContent=cov.ref;
 
   // Rank card
   document.getElementById('raceEyebrow').textContent=`Race ${rank.raceNum} — ${rank.raceName}`;
@@ -802,7 +1082,6 @@ function render(){
   const s1=Math.round(4+glowP*20),s2=Math.round(8+glowP*32),s3=Math.round(12+glowP*48);
   document.getElementById('raceEyebrow').style.textShadow=`0 0 ${s1}px rgba(201,168,76,${a1}),0 0 ${s2}px rgba(201,168,76,${a2}),0 0 ${s3}px rgba(201,168,76,${a3})`;
   document.getElementById('rankName').textContent=rank.rankName;
-  document.getElementById('rankLevel').textContent=`Level ${rank.globalLevel} of 61`;
   document.getElementById('rankBadge').textContent=rank.raceEmoji;
 
   const xpIntoRank=state.totalXP-rank.xpRequired;
@@ -839,16 +1118,19 @@ function render(){
   renderHistory();
   renderRewards();
   renderRewardLog();
+  renderTitleArea();
+  renderRiteBanner();
+  renderRitesList();
 }
 
 function renderHabits(){
   const list=document.getElementById('habitsList');
-  if(!state.habits||state.habits.length===0){ list.innerHTML=`<div class="empty-state"><strong>No Habits</strong>Tap "+ Add" above.</div>`; return; }
-  const mult=Math.pow(2,state.todayTasksCompleted||0);
   list.innerHTML='';
+  if(!state.habits||state.habits.length===0){ list.innerHTML=`<div class="empty-state"><strong>No Habits</strong></div>`; return; }
+  const mult=Math.pow(2,state.todayTasksCompleted||0);
   for(const h of state.habits){
     const done=!!state.today[h.id];
-    const effectiveXP=h.xp*mult;
+    const effectiveXP=calcTitleBonus(h, h.xp*mult)+getRiteBonus(h.category);
     const div=document.createElement('div');
     div.className='habit-item'+(done?' done':'');
     div.innerHTML=`
@@ -887,14 +1169,14 @@ function renderTasks(){
   const today=todayStr();
 
   const otList=document.getElementById('onetimeTaskList');
-  if(onetime.length===0){ otList.innerHTML=`<div class="empty-state"><strong>No One-time Tasks</strong>Tap "+ Add" above.</div>`; }
+  if(onetime.length===0){ otList.innerHTML=`<div class="empty-state"><strong>No One-time Tasks</strong></div>`; }
   else {
     otList.innerHTML='';
     for(const t of onetime){ otList.appendChild(buildTaskEl(t,today)); }
   }
 
   const tmList=document.getElementById('timedTaskList');
-  if(timed.length===0){ tmList.innerHTML=`<div class="empty-state"><strong>No Timed Tasks</strong>Tap "+ Add" above.</div>`; }
+  if(timed.length===0){ tmList.innerHTML=`<div class="empty-state"><strong>No Timed Tasks</strong></div>`; }
   else {
     tmList.innerHTML='';
     for(const t of timed){ tmList.appendChild(buildTaskEl(t,today)); }
@@ -950,7 +1232,7 @@ function renderLadder(){
     const isCur=r.globalLevel===cur.globalLevel;
     const d=document.createElement('div');
     d.className='rank-ladder-item';
-    d.innerHTML=`<div class="rli-dot ${isCur?'current':isDone?'done':'future'}"></div><div class="rli-rank-name ${isCur?'current':isDone?'done':'future'}">${r.rankName}</div>${isDone?'<span class="rli-check">✓</span>':''}`;
+    d.innerHTML=`<div class="rli-dot ${isCur?'current':isDone?'done':'future'}"></div><div class="rli-rank-name ${isCur?'current':isDone?'done':'future'}">${r.rankName}</div>`;
     ladder.appendChild(d);
   }
 }
@@ -1027,7 +1309,12 @@ function toggleHabit(id){
       const isRaceChange=rankAfter.raceIndex!==rankBefore.raceIndex;
       if(isRaceChange) bonusPts+=RACE_BONUSES[rankAfter.raceIndex]||0;
       state.points+=bonusPts;
-      showRankUp(rankAfter,bonusPts,isRaceChange);
+      // Check if this is rank 10 of current race — show covenant instead of rank up
+      const triggered=checkCovenantTrigger(rankBefore, rankAfter);
+      if(!triggered){
+        showRankUp(rankAfter,bonusPts,isRaceChange);
+        if(!isRaceChange) addInscriptionTask(rankBefore);
+      }
     }
   }
   save(); render();
@@ -1036,8 +1323,9 @@ function toggleHabit(id){
 function togglePenalty(id){
   const h=state.penalties.find(p=>p.id===id);
   if(!h) return;
-  if(state.today[id]){ state.today[id]=false; state.totalXP+=h.xp; }
-  else { state.today[id]=true; state.totalXP=Math.max(0,state.totalXP-h.xp); if(h.resetStreak) state.streak=0; }
+  const pxp=calcPenaltyXPFinal(h);
+  if(state.today[id]){ state.today[id]=false; state.totalXP+=pxp; }
+  else { state.today[id]=true; state.totalXP=Math.max(0,state.totalXP-pxp); if(h.resetStreak) state.streak=0; }
   save(); render();
 }
 
@@ -1128,6 +1416,16 @@ function dismissRankUp(){
   const screen=document.getElementById('rankupScreen');
   screen.style.transition='opacity 0.4s ease'; screen.style.opacity='0';
   setTimeout(()=>{ screen.classList.remove('show'); screen.style.opacity=''; screen.style.transition=''; },420);
+}
+
+function addInscriptionTask(rank){
+  const deadline=new Date();
+  deadline.setDate(deadline.getDate()+30);
+  const deadlineStr=deadline.toLocaleDateString('en-CA');
+  const taskName='Use "'+rank.ref+'" in conversation naturally';
+  if(state.tasks.some(t=>t.name===taskName)) return;
+  state.tasks.push({id:uid(),name:taskName,category:'Social',xp:60,type:'timed',deadline:deadlineStr,inscription:true});
+  save();
 }
 
 // ══════════════════════════════════════════
@@ -1235,14 +1533,373 @@ function redeemReward(id){
 document.getElementById('confirmModal').addEventListener('click',e=>{if(e.target===e.currentTarget)closeModal('confirmModal');});
 
 // ══════════════════════════════════════════
+// TITLE SYSTEM
+// ══════════════════════════════════════════
+function getEquippedTitle(){
+  if(state.equippedTitle===null||state.equippedTitle===undefined) return null;
+  return RACE_TITLES[state.equippedTitle]||null;
+}
+
+
+function toggleTitleDropdown(){
+  document.getElementById('titleDropdown').classList.toggle('open');
+}
+
+function renderTitleArea(){
+  const badge=document.getElementById('activeTitleBadge');
+  const dropdown=document.getElementById('titleDropdown');
+  if(!state.earnedTitles||state.earnedTitles.length===0){badge.style.display='none';return;}
+  badge.style.display='inline-block';
+  const equipped=getEquippedTitle();
+  badge.textContent=equipped?equipped.name:'— No Title Equipped —';
+  dropdown.innerHTML='';
+  for(const ri of state.earnedTitles){
+    const t=RACE_TITLES[ri];
+    const div=document.createElement('div');
+    div.className='title-option'+(state.equippedTitle===ri?' equipped':'');
+    div.innerHTML=`<span>${t.name}</span><span class="title-option-bonus">${t.bonus}</span>`;
+    div.addEventListener('click',()=>{
+      state.equippedTitle=(state.equippedTitle===ri?null:ri);
+      save();render();
+      document.getElementById('titleDropdown').classList.remove('open');
+    });
+    dropdown.appendChild(div);
+  }
+}
+
+function calcTitleBonus(habit, baseXP){
+  const title=getEquippedTitle();
+  if(!title) return baseXP;
+  const e=title.effect;
+  if(e.type==='kadosh'){
+    let bonus=0;
+    for(const ri of state.earnedTitles){
+      if(ri===6) continue;
+      const t=RACE_TITLES[ri];
+      bonus+=applyEffect(t.effect,habit,baseXP)-baseXP;
+    }
+    return (baseXP+bonus)*2;
+  }
+  return applyEffect(e,habit,baseXP);
+}
+
+function applyEffect(e,habit,xp){
+  if(e.type==='flat'&&habit.category===e.category) return xp+e.xp;
+  if(e.type==='flat_multi'&&e.categories&&e.categories.includes(habit.category)) return xp+e.xp;
+  if(e.type==='double_cat'&&e.categories&&e.categories.includes(habit.category)) return xp*2;
+  if(e.type==='fullday_double'){
+    const done=state.habits.filter(h=>state.today[h.id]).length;
+    if(done===state.habits.length&&state.habits.length>0) return xp*2;
+  }
+  if(e.type==='momentum'&&state.yesterdayFullCompletion) return xp+5;
+  if(e.type==='watchman'){
+    let out=xp;
+    if(habit.category==='Spiritual') out+=15;
+    if(habit.category==='Spiritual'||habit.category==='Emotional') out*=2;
+    return out;
+  }
+  return xp;
+}
+
+function calcPenaltyXPFinal(penalty){
+  const title=getEquippedTitle();
+  if(title&&title.effect.type==='penalty_reduction') return Math.round(penalty.xp*(1-title.effect.pct));
+  return penalty.xp;
+}
+
+function getRiteBonus(category){
+  const rank=getCurrentRank(state.totalXP);
+  const rite=getActiveRite(rank.raceIndex);
+  if(!rite||state.completedRites[rite.id]) return 0;
+  const e=rite.bonusEffect;
+  if(!e) return 0;
+  if(e.type==='flat'&&category===e.category) return e.xp;
+  if(e.type==='flat_multi'&&e.categories&&e.categories.includes(category)) return e.xp;
+  return 0;
+}
+
+// ══════════════════════════════════════════
+// RITES
+// ══════════════════════════════════════════
+function getActiveRite(raceIndex){
+  const today=todayStr();
+  const year=new Date().getFullYear();
+  for(const r of RITE_DATA){
+    if(state.completedRites&&state.completedRites[r.id]) continue;
+    const start=new Date(year+'-'+r.start+'T00:00:00');
+    const end=new Date(year+'-'+r.end+'T00:00:00');
+    const t=new Date(today+'T00:00:00');
+    if(t>=start&&t<=end) return r;
+  }
+  return null;
+}
+
+function getRiteStatus(r){
+  const today=new Date(todayStr()+'T00:00:00');
+  const year=today.getFullYear();
+  const start=new Date(year+'-'+r.start+'T00:00:00');
+  const end=new Date(year+'-'+r.end+'T00:00:00');
+  if(state.completedRites&&state.completedRites[r.id]) return 'done';
+  if(today<start) return 'upcoming';
+  if(today>end) return 'upcoming';
+  return 'running';
+}
+
+function completeRite(riteId){
+  const rite=RITE_DATA.find(r=>r.id===riteId);
+  if(!rite) return;
+  if(!state.completedRites) state.completedRites={};
+  if(!state.riteTaskCounts) state.riteTaskCounts={};
+  state.completedRites[riteId]=true;
+  state.points+=rite.pointReward;
+  save(); render();
+  document.getElementById('rcTitle').textContent=rite.name;
+  document.getElementById('rcDiscipline').textContent=rite.discipline;
+  document.getElementById('rcPts').textContent='+'+rite.pointReward+' points awarded';
+  document.getElementById('riteCompleteScreen').classList.add('open');
+}
+function dismissRiteComplete(){document.getElementById('riteCompleteScreen').classList.remove('open');}
+
+function toggleRiteChallenge(btn){
+  const ch=btn.nextElementSibling;
+  ch.classList.toggle('open');
+  btn.textContent=ch.classList.contains('open')?'Hide Challenge':'Show Challenge';
+}
+
+function getNextUpcomingRite(){
+  const today=new Date(todayStr()+'T00:00:00');
+  const year=today.getFullYear();
+  let soonest=null, soonestDays=Infinity;
+  for(const r of RITE_DATA){
+    if(state.completedRites&&state.completedRites[r.id]) continue;
+    let start=new Date(year+'-'+r.start+'T00:00:00');
+    if(start<=today) start=new Date((year+1)+'-'+r.start+'T00:00:00');
+    const days=Math.round((start-today)/(1000*60*60*24));
+    if(days>0&&days<soonestDays){soonestDays=days;soonest={rite:r,daysUntil:days};}
+  }
+  return soonest;
+}
+
+function renderRiteBanner(raceIndex){
+  const banner=document.getElementById('riteActiveBanner');
+  if(!banner) return;
+  const rite=getActiveRite(raceIndex);
+  const rank=getCurrentRank(state.totalXP);
+
+  if(rite){
+    banner.style.display='';
+    const year=new Date().getFullYear();
+    const end=new Date(year+'-'+rite.end+'T00:00:00');
+    const today=new Date(todayStr()+'T00:00:00');
+    const daysLeft=Math.round((end-today)/(1000*60*60*24));
+    const challenge=rite.challenges[Math.min(rank.raceIndex,rite.challenges.length-1)];
+    banner.className='rite-active-banner active';
+    banner.innerHTML=`
+      <div class="rab-eyebrow">${rite.discipline}</div>
+      <div class="rab-name">${rite.name}</div>
+      <div class="rab-verse">"${rite.verse}"</div>
+    `;
+    return;
+  }
+
+  // No active rite — hide banner entirely
+  banner.style.display='none';
+}
+
+function renderRitesList(){
+  const list=document.getElementById('ritesList');
+  if(!list) return;
+  list.innerHTML='';
+  const rank=getCurrentRank(state.totalXP);
+  const year=new Date().getFullYear();
+  const today=new Date(todayStr()+'T00:00:00');
+
+  // Find active rite first
+  const active=getActiveRite(rank.raceIndex);
+  if(active){
+    const end=new Date(year+'-'+active.end+'T00:00:00');
+    const daysLeft=Math.round((end-today)/(1000*60*60*24));
+    const startFmt=new Date(year+'-'+active.start+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'});
+    const endFmt=new Date(year+'-'+active.end+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'});
+    const challenge=active.challenges[Math.min(rank.raceIndex,active.challenges.length-1)];
+    const div=document.createElement('div');
+    div.className='rite-item running';
+    div.innerHTML=`
+      <div class="rite-header">
+        <div><div class="rite-name">${active.name}</div><div class="rite-discipline">${active.discipline}</div></div>
+        <span class="rite-status running">Running</span>
+      </div>
+      <div class="rite-verse">"${active.verse}"</div>
+      <div class="rite-meta">${active.ref} · ${startFmt} – ${endFmt} · ${daysLeft} day${daysLeft===1?'':'s'} left</div>
+      <div class="rite-bonus">${active.bonus} · +${active.pointReward} pts on completion</div>
+      <div class="rite-challenge-label">Your Challenge</div>
+      <div class="rite-challenge-text">${challenge}</div>
+      <button class="rite-complete-btn" onclick="completeRite('${active.id}')">Mark Rite Complete</button>
+    `;
+    list.appendChild(div);
+    return;
+  }
+
+  // No active rite — show only next upcoming, grayed out
+  const next=getNextUpcomingRite();
+  if(!next){
+    list.innerHTML='<div class="empty-state"><strong>All Rites Complete</strong></div>';
+    return;
+  }
+  const {rite:upcoming, daysUntil}=next;
+  const startFmt=new Date(year+'-'+upcoming.start+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'});
+  const endFmt=new Date(year+'-'+upcoming.end+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'});
+  const challenge=upcoming.challenges[Math.min(rank.raceIndex,upcoming.challenges.length-1)];
+  const div=document.createElement('div');
+  div.className='rite-item';
+  div.style.opacity='0.38';
+  div.innerHTML=`
+    <div class="rite-header">
+      <div><div class="rite-name">${upcoming.name}</div><div class="rite-discipline">${upcoming.discipline}</div></div>
+      <span class="rite-status upcoming">Upcoming</span>
+    </div>
+    <div class="rite-meta" style="margin-top:4px;">${startFmt} – ${endFmt} · ${daysUntil} day${daysUntil===1?'':'s'} away</div>
+  `;
+  list.appendChild(div);
+}
+
+function getRiteTaskCount(riteId){
+  if(!state.riteTaskCounts) state.riteTaskCounts={};
+  return state.riteTaskCounts[riteId]||0;
+}
+
+function getRiteGate(rite, raceIndex){
+  if(!rite.completionGates) return 99;
+  return rite.completionGates[Math.min(raceIndex, rite.completionGates.length-1)];
+}
+
+function renderRiteDisciplines(){
+  const rank=getCurrentRank(state.totalXP);
+  const rite=getActiveRite(rank.raceIndex);
+  const section=document.getElementById('riteDisciplinesSection');
+  const list=document.getElementById('riteDisciplinesList');
+  const header=document.getElementById('riteDisciplinesHeader');
+  if(!section||!list||!header) return;
+
+  if(!rite||!rite.riteTasks||(state.completedRites&&state.completedRites[rite.id])){
+    section.style.display='none';
+    return;
+  }
+
+  section.style.display='block';
+  const gate=getRiteGate(rite, rank.raceIndex);
+  const count=getRiteTaskCount(rite.id);
+  const canComplete=count>=gate;
+  header.innerHTML=`
+    <div class="section-title" style="color:#4a7aaa;">${rite.name}</div>
+    <div style="font-family:'Oswald',sans-serif;font-size:10px;letter-spacing:0.08em;color:${canComplete?'var(--copper)':'#3a5060'};text-transform:uppercase;">${count}/${gate}</div>
+  `;
+
+  list.innerHTML='';
+  for(const rt of rite.riteTasks){
+    const rtId='rite_'+rite.id+'_'+rt.name.replace(/\s/g,'_');
+    const done=!!state.today[rtId];
+    const div=document.createElement('div');
+    div.className='habit-item rite-task'+(done?' done':'');
+    div.innerHTML=`
+      <div class="habit-check">${done?'✓':''}</div>
+      <div class="habit-info">
+        <div class="habit-name">${rt.name}</div>
+        <div class="habit-meta">${rite.discipline}</div>
+      </div>
+      <div class="habit-xp">+${rt.xp} XP</div>`;
+    if(!done){
+      div.addEventListener('click',()=>{
+        state.today[rtId]=true;
+        state.totalXP+=rt.xp;
+        if(!state.riteTaskCounts) state.riteTaskCounts={};
+        state.riteTaskCounts[rite.id]=(state.riteTaskCounts[rite.id]||0)+1;
+        triggerXPPulse();
+        save(); render();
+      });
+    }
+    list.appendChild(div);
+  }
+
+  // Complete button — only shown when gate met
+  if(canComplete){
+    const btn=document.createElement('button');
+    btn.className='rite-complete-btn';
+    btn.style.cssText='margin:10px 0 2px;width:100%;';
+    btn.textContent='Mark Rite Complete';
+    btn.addEventListener('click',()=>completeRite(rite.id));
+    list.appendChild(btn);
+  }
+}
+
+function renderRiteTasksInHabits(){ return []; }
+
+// ══════════════════════════════════════════
+// COVENANT
+// ══════════════════════════════════════════
+function checkCovenantTrigger(rankBefore,rankAfter){
+  const raceRanks=ALL_RANKS.filter(r=>r.raceIndex===rankBefore.raceIndex);
+  const lastRank=raceRanks[raceRanks.length-1];
+  if(rankAfter.globalLevel===lastRank.globalLevel&&rankBefore.globalLevel!==lastRank.globalLevel){
+    state.pendingCovenant=true; save();
+    setTimeout(()=>showCovenantScreen(rankBefore.raceIndex),500);
+    return true;
+  }
+  return false;
+}
+
+function showCovenantScreen(raceIndex){
+  const cov=RACE_COVENANTS[raceIndex];
+  const race=RACES[raceIndex];
+  document.getElementById('covRace').textContent='Race '+race.raceNum+' — '+race.name;
+  document.getElementById('covVerse').textContent='"'+cov.verse+'"';
+  document.getElementById('covRef').textContent=cov.ref;
+  document.getElementById('covenantScreen').classList.add('open');
+}
+
+function keepCovenant(){
+  document.getElementById('covenantScreen').classList.remove('open');
+  const rankBefore=getCurrentRank(state.totalXP);
+  state.pendingCovenant=false;
+  if(!state.earnedTitles.includes(rankBefore.raceIndex)){
+    state.earnedTitles.push(rankBefore.raceIndex);
+    if(state.equippedTitle===null||state.equippedTitle===undefined) state.equippedTitle=rankBefore.raceIndex;
+  }
+  const nextRaceFirstRank=ALL_RANKS.find(r=>r.raceIndex===rankBefore.raceIndex+1);
+  if(nextRaceFirstRank){
+    const bonusPts=10+(RACE_BONUSES[rankBefore.raceIndex+1]||0);
+    state.points+=bonusPts;
+    state.totalXP=nextRaceFirstRank.xpRequired;
+    save(); render();
+    setTimeout(()=>showRankUp(nextRaceFirstRank,bonusPts,true),400);
+  } else { save(); render(); }
+}
+
+function returnToAltar(){
+  document.getElementById('covenantScreen').classList.remove('open');
+  state.pendingCovenant=false;
+  const rank=getCurrentRank(state.totalXP);
+  const raceRanks=ALL_RANKS.filter(r=>r.raceIndex===rank.raceIndex);
+  const lastRank=raceRanks[raceRanks.length-1];
+  state.totalXP=lastRank.xpRequired;
+  state.today={}; state.todayTasksCompleted=0;
+  save(); render();
+}
+
+
+
+// ══════════════════════════════════════════
 // INIT
 // ══════════════════════════════════════════
 load();
 checkDayReset();
 render();
 showVerseSplash();
-// If verse already seen today, process failed tasks immediately
 if(state.verseSeenDate===todayStr()) processFailedTaskQueue();
+if(state.pendingCovenant){
+  const rank=getCurrentRank(state.totalXP);
+  setTimeout(()=>showCovenantScreen(rank.raceIndex), 800);
+}
 setInterval(()=>{checkDayReset();render();},60000);
 </script>
 </body>
