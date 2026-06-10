@@ -248,7 +248,7 @@
   .confirm-actions { display:flex; gap:10px; }
   #confirmModal { align-items:center; justify-content:center; }
 
-  /* ── RACE COVENANT SCREEN ── */
+  /* ── CLASS COVENANT SCREEN ── */
   .covenant-screen { display:none; position:fixed; inset:0; background:#080808; z-index:420; flex-direction:column; align-items:center; justify-content:center; padding:40px 32px; text-align:center; }
   .covenant-screen.open { display:flex; animation:fade-in 0.6s ease forwards; }
   .cov-eyebrow { font-family:'Oswald',sans-serif; font-size:11px; letter-spacing:0.28em; text-transform:uppercase; color:var(--gold-dim); margin-bottom:6px; animation:ru-appear 0.7s ease forwards; }
@@ -261,7 +261,7 @@
   .cov-return { background:none; border:1px solid #3a2a14; color:var(--copper); font-family:'Oswald',sans-serif; font-size:12px; letter-spacing:0.14em; text-transform:uppercase; padding:12px 24px; border-radius:6px; cursor:pointer; transition:background 0.15s; }
   .cov-return:hover { background:var(--copper-glow); }
 
-  /* ── RACE COVENANT CARD ── */
+  /* ── CLASS COVENANT CARD ── */
   .covenant-card { margin:0 20px; background:linear-gradient(135deg,#100e08,#12100a); border:1px solid var(--gold-dim); border-radius:9px; padding:13px 16px; }
   .cov-card-eyebrow { font-family:'Oswald',sans-serif; font-size:10px; letter-spacing:0.18em; text-transform:uppercase; color:var(--gold-dim); margin-bottom:4px; }
   .cov-card-text { font-size:13px; font-style:italic; color:#c0a870; line-height:1.5; margin-bottom:4px; }
@@ -291,7 +291,7 @@
   .rite-status.completed { background:#1a2a1a; color:#4a8a4a; }
   .rite-discipline { font-family:'Oswald',sans-serif; font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:#4a7aaa; margin-bottom:8px; }
   .rite-verse { font-size:13px; font-style:italic; color:#8090a0; line-height:1.6; margin-bottom:3px; }
-  .rite-meta { font-family:'Oswald',sans-serif; font-size:10px; letter-spacing:0.06em; color:#3a5060; margin-bottom:10px; text-transform:uppercase; }
+  .rite-meta { font-family:'Oswald',sans-serif; font-size:12px; letter-spacing:0.06em; color:#7a8a9a; margin-bottom:10px; text-transform:uppercase; }
   .rite-bonus { font-size:12px; color:var(--copper); margin-bottom:10px; line-height:1.5; }
   .rite-challenge-label { font-family:'Oswald',sans-serif; font-size:10px; letter-spacing:0.14em; text-transform:uppercase; color:#3a4858; margin-bottom:6px; }
   .rite-challenge-text { font-size:13px; color:#7a8890; line-height:1.65; margin-bottom:12px; }
@@ -327,6 +327,57 @@
   .habit-item.rite-task.done .habit-name { color:var(--gold); }
   .habit-item.rite-task.done .habit-xp { color:var(--gold); }
   .habit-item.rite-task.done .habit-check { background:var(--gold); border-color:var(--gold); color:#0D0D0D; }
+
+  /* ── GLOWING HEADER ── */
+  @keyframes logo-pulse {
+    0%, 100% { text-shadow: 0 0 8px rgba(201,168,76,0.25), 0 0 20px rgba(201,168,76,0.12); }
+    50% { text-shadow: 0 0 14px rgba(201,168,76,0.55), 0 0 36px rgba(201,168,76,0.28), 0 0 60px rgba(201,168,76,0.12); }
+  }
+  .logo { animation: logo-pulse 4s ease-in-out infinite; }
+
+  /* ── RACE SELECTION SCREEN ── */
+  .race-select-screen { display:none; position:fixed; inset:0; background:#080808; z-index:430; flex-direction:column; align-items:center; padding:48px 24px 40px; text-align:center; overflow-y:auto; }
+  .race-select-screen.open { display:flex; animation:fade-in 0.6s ease forwards; }
+  .rs-eyebrow { font-family:'Oswald',sans-serif; font-size:11px; letter-spacing:0.28em; text-transform:uppercase; color:var(--gold-dim); margin-bottom:6px; animation:ru-appear 0.7s ease forwards; }
+  .rs-title { font-family:'Oswald',sans-serif; font-size:26px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--gold); margin-bottom:8px; animation:ru-appear 0.7s ease 0.2s both; }
+  .rs-sub { font-size:13px; color:var(--text-dim); max-width:320px; line-height:1.6; margin-bottom:24px; animation:ru-appear 0.7s ease 0.4s both; }
+  .rs-list { display:flex; flex-direction:column; gap:10px; width:100%; max-width:400px; animation:ru-appear 0.7s ease 0.6s both; }
+  .rs-card { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:14px 16px; text-align:left; cursor:pointer; transition:border-color 0.15s, background 0.15s; }
+  .rs-card:hover { border-color:var(--gold-dim); background:linear-gradient(135deg,#141414,#1a1608); }
+  .rs-card-name { font-family:'Oswald',sans-serif; font-size:16px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--gold); margin-bottom:2px; }
+  .rs-card-disc { font-family:'Oswald',sans-serif; font-size:10px; letter-spacing:0.12em; text-transform:uppercase; color:var(--copper); margin-bottom:6px; }
+  .rs-card-desc { font-size:12px; color:var(--text-dim); line-height:1.5; margin-bottom:8px; }
+  .rs-card-habit { font-size:11px; color:#7a8a9a; line-height:1.5; border-top:1px solid var(--border); padding-top:7px; }
+  .rs-card-habit strong { font-family:'Oswald',sans-serif; font-size:9px; letter-spacing:0.1em; text-transform:uppercase; color:#4a5a6a; display:block; margin-bottom:3px; }
+
+  /* ── RACE UPGRADE SECTION (Points tab) ── */
+  .race-upgrade-card { margin:0 20px 14px; background:var(--card); border:1px solid var(--border); border-radius:10px; overflow:hidden; }
+  .race-upgrade-header { padding:14px 16px; display:flex; align-items:center; justify-content:space-between; cursor:pointer; transition:background 0.15s; }
+  .race-upgrade-header:hover { background:var(--card2); }
+  .ruc-name { font-family:'Oswald',sans-serif; font-size:15px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--gold); }
+  .ruc-disc { font-family:'Oswald',sans-serif; font-size:10px; letter-spacing:0.1em; text-transform:uppercase; color:var(--copper); margin-top:1px; }
+  .ruc-tier { font-family:'Oswald',sans-serif; font-size:11px; letter-spacing:0.08em; color:var(--text-dim); text-transform:uppercase; }
+  .race-upgrade-body { display:none; border-top:1px solid var(--border); padding:14px 16px; }
+  .race-upgrade-body.open { display:block; }
+  .ruc-boost { font-size:12px; color:var(--copper); margin-bottom:12px; }
+  .ruc-habit-row { display:flex; align-items:flex-start; gap:10px; padding:9px 0; border-bottom:1px solid #1c1c1c; }
+  .ruc-habit-row:last-of-type { border-bottom:none; }
+  .ruc-habit-status { font-family:'Oswald',sans-serif; font-size:9px; letter-spacing:0.08em; text-transform:uppercase; padding:2px 7px; border-radius:3px; flex-shrink:0; margin-top:1px; }
+  .ruc-habit-status.unlocked { background:#1a2a1a; color:#4a8a4a; }
+  .ruc-habit-status.locked { background:#222; color:#555; }
+  .ruc-habit-text { font-size:12px; color:var(--text); line-height:1.5; flex:1; }
+  .ruc-habit-text.locked { color:#555; }
+  .ruc-habit-diff { font-size:10px; color:#4a5a6a; font-family:'Oswald',sans-serif; letter-spacing:0.06em; text-transform:uppercase; }
+  .ruc-upgrade-btn { width:100%; margin-top:12px; background:none; border:1px solid #3a2a14; color:var(--copper); font-family:'Oswald',sans-serif; font-size:12px; letter-spacing:0.12em; text-transform:uppercase; padding:10px; border-radius:7px; cursor:pointer; transition:background 0.15s; }
+  .ruc-upgrade-btn:hover { background:var(--copper-glow); }
+  .ruc-upgrade-btn:disabled { opacity:0.35; cursor:not-allowed; }
+  .ruc-change-btn { width:100%; margin-top:8px; background:none; border:1px solid var(--border); color:var(--text-dim); font-family:'Oswald',sans-serif; font-size:11px; letter-spacing:0.1em; text-transform:uppercase; padding:8px; border-radius:7px; cursor:pointer; }
+  .ruc-change-btn:hover { color:var(--gold); border-color:var(--gold-dim); }
+  .ruc-inscription { margin-top:14px; padding:12px 14px; background:var(--card2); border-left:2px solid var(--gold-dim); border-radius:7px; }
+  .ruc-insc-label { font-family:'Oswald',sans-serif; font-size:9px; letter-spacing:0.16em; text-transform:uppercase; color:var(--gold-dim); margin-bottom:5px; }
+  .ruc-insc-verse { font-size:12px; font-style:italic; color:#c0a870; line-height:1.6; margin-bottom:4px; }
+  .ruc-insc-ref { font-family:'Oswald',sans-serif; font-size:10px; color:var(--gold-dim); letter-spacing:0.06em; }
+  .race-none-card { margin:0 20px 14px; background:var(--card); border:1px dashed var(--border); border-radius:10px; padding:16px; text-align:center; font-size:12px; color:var(--text-dim); font-style:italic; }
   ::-webkit-scrollbar { width:4px; }
   ::-webkit-scrollbar-track { background:transparent; }
   ::-webkit-scrollbar-thumb { background:#2a2a2a; border-radius:2px; }
@@ -348,7 +399,7 @@
 
     <!-- Inline verse -->
     <div class="inline-verse" onclick="showCovenantSplash()">
-      <div class="iv-eyebrow">Race Covenant</div>
+      <div class="iv-eyebrow">Class Covenant</div>
       <div class="iv-verse" id="ivVerse"></div>
       <div class="iv-ref" id="ivRef"></div>
     </div>
@@ -356,7 +407,7 @@
     <div class="rank-card">
       <div class="rank-row">
         <div class="rank-labels">
-          <div class="race-eyebrow" id="raceEyebrow">Race I — Apprentice</div>
+          <div class="race-eyebrow" id="raceEyebrow">Class I — Apprentice</div>
           <div class="rank-name" id="rankName">Unformed</div>
           <div id="activeTitleBadge" class="active-title-badge" onclick="toggleTitleDropdown()" style="display:none;"></div>
           <div class="title-dropdown" id="titleDropdown"></div>
@@ -369,7 +420,7 @@
       </div>
       <div class="xp-track"><div class="xp-fill" id="xpFill" style="width:0%"></div></div>
       <button class="rank-ladder-toggle" id="ladderToggle" onclick="toggleLadder()">
-        <span>Race Progress</span><span class="arrow">▼</span>
+        <span>Class Progress</span><span class="arrow">▼</span>
       </button>
       <div class="rank-ladder" id="rankLadder"></div>
     </div>
@@ -415,7 +466,6 @@
       <div class="section-title" style="color:#5a3a3a;">Penalties</div>
       <button class="add-btn" style="border-color:#3a2020;color:#a05050;" onclick="openAddPenaltyModal()">+ Add</button>
     </div>
-    <div class="accountability-note">Log honestly. No penalty for skipping — only for checking.</div>
     <div class="habits-list" id="penaltyList" style="margin-top:8px;"></div>
 
     <div class="divider"></div>
@@ -437,6 +487,12 @@
       <button class="add-btn" onclick="openAddTaskModal('timed')">+ Add</button>
     </div>
     <div class="habits-list" id="timedTaskList"></div>
+
+    <div class="divider"></div>
+    <div class="section-header">
+      <div class="section-title">Completed</div>
+    </div>
+    <div class="reward-log-list" id="taskLogList"></div>
   </div>
 
   <!-- TAB: RITES -->
@@ -455,6 +511,11 @@
       </div>
       <div class="rpb-icon">✧</div>
     </div>
+    <div class="section-header" style="padding-top:4px;">
+      <div class="section-title">Race</div>
+    </div>
+    <div id="raceUpgradeArea"></div>
+
     <div class="section-header">
       <div class="section-title">Rewards</div>
       <button class="add-btn" onclick="openRewardModal()">+ Add</button>
@@ -475,10 +536,10 @@
   <button class="tab-btn" onclick="switchTab('rewards',this)">✦</button>
 </div>
 
-<!-- RACE COVENANT SCREEN -->
+<!-- CLASS COVENANT SCREEN -->
 <div class="covenant-screen" id="covenantScreen">
   <div class="cov-eyebrow" id="covRace"></div>
-  <div class="cov-title">Race Covenant</div>
+  <div class="cov-title">Class Covenant</div>
   <div class="cov-verse" id="covVerse"></div>
   <div class="cov-ref" id="covRef"></div>
   <div class="cov-actions">
@@ -494,6 +555,14 @@
   <div class="rc-name" id="rcDiscipline"></div>
   <div class="rc-pts" id="rcPts"></div>
   <button class="fs-btn" style="animation:ru-appear 0.6s ease 0.9s both;" onclick="dismissRiteComplete()">Receive It</button>
+</div>
+
+<!-- RACE SELECTION SCREEN -->
+<div class="race-select-screen" id="raceSelectScreen">
+  <div class="rs-eyebrow">A Path Must Be Chosen</div>
+  <div class="rs-title">Choose Your Race</div>
+  <div class="rs-sub" id="rsSub">Each race walks a different discipline. Your choice grants a daily habit and shapes your formation for this class.</div>
+  <div class="rs-list" id="rsList"></div>
 </div>
 
 <!-- VERSE SPLASH -->
@@ -539,10 +608,17 @@
           <option value="Social">Social</option>
         </select>
       </div>
-      <div style="flex:0 0 95px">
-        <div class="field-label">XP Value</div>
-        <input class="field-input" id="habitXPInput" type="number" min="5" max="500" value="25">
+      <div style="flex:0 0 110px">
+        <div class="field-label">Difficulty</div>
+        <select class="field-input" id="habitDiffInput" style="appearance:none;cursor:pointer;">
+          <option value="Common">Common</option>
+          <option value="Hard">Hard</option>
+          <option value="Severe">Severe</option>
+        </select>
       </div>
+    </div>
+    <div style="font-size:11px;color:var(--text-dim);line-height:1.5;margin:-4px 0 12px;padding:8px 10px;background:var(--card);border-radius:6px;">
+      <span id="habitDiffHint">Common: 15 XP, building +5 per day in a streak (up to 50 at 7 days)</span>
     </div>
     <div class="modal-actions">
       <button class="btn-cancel" onclick="closeModal('addHabitModal')">Cancel</button>
@@ -604,10 +680,17 @@
           <option value="Social">Social</option>
         </select>
       </div>
-      <div style="flex:0 0 95px">
-        <div class="field-label">XP Value</div>
-        <input class="field-input" id="taskXPInput" type="number" min="5" max="500" value="50">
+      <div style="flex:0 0 110px">
+        <div class="field-label">Difficulty</div>
+        <select class="field-input" id="taskDiffInput" style="appearance:none;cursor:pointer;">
+          <option value="Common">Common</option>
+          <option value="Hard">Hard</option>
+          <option value="Severe">Severe</option>
+        </select>
       </div>
+    </div>
+    <div style="font-size:11px;color:var(--text-dim);line-height:1.5;margin:-4px 0 12px;padding:8px 10px;background:var(--card);border-radius:6px;">
+      <span id="taskDiffHint">Common: 30 XP · Hard: 40 XP · Severe: 50 XP — doubled on completion</span>
     </div>
     <div id="deadlineRow" style="display:none;">
       <div class="field-label">Deadline Date</div>
@@ -649,7 +732,7 @@
 
 <script>
 // ══════════════════════════════════════════
-// RACE & RANK DATA
+// CLASS & RANK DATA
 // ══════════════════════════════════════════
 const RACES = [
   { name:'Apprentice', emoji:'י', raceNum:'I', xpPerRank:825, ranks:[
@@ -730,6 +813,96 @@ const RACES = [
 ];
 
 const RACE_BONUSES = [0,50,75,100,125,150,175];
+
+// ── DIFFICULTY SYSTEM ──
+// Habits: streak-based. base + 5*streakDays (capped at 7 days). Streak resets on miss.
+// Tasks: flat XP by difficulty.
+const HABIT_DIFFICULTY = {
+  Common:    { base:15, label:'Common' },
+  Hard:      { base:25, label:'Hard' },
+  Severe:    { base:30, label:'Severe' },
+};
+// ── RACE SYSTEM ──
+const RACE_UPGRADE_COST = 500; // points per tier upgrade
+const RACE_XP_BOOST = [0, 0.05, 0.10]; // tier index 0/1/2 → boost (tier1=0%, tier2=5%, tier3=10%)
+const RACES_DATA = [
+  {
+    id:'intercessor', name:'Intercessor', discipline:'Prayer',
+    desc:'The one who stands in the gap. Intercession as a way of life.',
+    habits:[
+      {name:'Pray specifically for one named person',                                        difficulty:'Common'},
+      {name:'Pray for a people group, nation, or community beyond your immediate circle',    difficulty:'Hard'},
+      {name:'Pray with someone',                                                             difficulty:'Severe'},
+    ]
+  },
+  {
+    id:'scribe', name:'Scribe', discipline:'Bible Reading',
+    desc:'The slow work of embedding scripture until it becomes part of you.',
+    habits:[
+      {name:'Read your rank inscription verse aloud',                                        difficulty:'Common'},
+      {name:'Recite your rank inscription verse from memory',                                difficulty:'Hard'},
+      {name:'Meditate on your rank inscription verse for 10 minutes',                        difficulty:'Severe'},
+    ]
+  },
+  {
+    id:'ascetic', name:'Ascetic', discipline:'Fasting',
+    desc:'Abstinence as foundation. The discipline of the body creating capacity in the spirit.',
+    habits:[
+      {name:'Abstain intentionally from one source of pleasure',                             difficulty:'Common'},
+      {name:'Fast one meal you would normally eat',                                          difficulty:'Hard'},
+      {name:'Fast from sunup to sundown',                                                    difficulty:'Severe'},
+    ]
+  },
+  {
+    id:'almoner', name:'Almoner', discipline:'Giving',
+    desc:'Generosity from stewardship. What you hold was never yours to keep.',
+    habits:[
+      {name:'Account for your Sunday tithe — return what was never yours to keep',           difficulty:'Common'},
+      {name:'Give something away — money, time, or a possession',                            difficulty:'Hard'},
+      {name:'Give something that is hard to give',                                           difficulty:'Severe'},
+    ]
+  },
+  {
+    id:'penitent', name:'Penitent', discipline:'Repentance',
+    desc:'Honest reckoning as a daily discipline. The ongoing practice of turning.',
+    habits:[
+      {name:'Pray through your day and ask the Holy Spirit to reveal your sin patterns',     difficulty:'Common'},
+      {name:'Confess something specific to another person',                                  difficulty:'Hard'},
+      {name:'Ask someone how they are doing spiritually and create space for their confession', difficulty:'Severe'},
+    ]
+  },
+  {
+    id:'sabbatarian', name:'Sabbatarian', discipline:'Sabbath',
+    desc:'The posture that makes weekly rest possible. You are not the sustainer of your own life.',
+    habits:[
+      {name:'Name one thing beyond your capacity and explicitly give it to God',             difficulty:'Common'},
+      {name:'Identify one thing you are trying to control and pray a prayer of release',     difficulty:'Hard'},
+      {name:'Do one thing that guards your Sabbath day',                                     difficulty:'Severe'},
+    ]
+  },
+  {
+    id:'recluse', name:'Recluse', discipline:'Solitude',
+    desc:'Intentional aloneness with God. Silence as a way of hearing.',
+    habits:[
+      {name:'Spend 10 minutes in silence before God — no phone, no music, no input',         difficulty:'Common'},
+      {name:'Spend 30 minutes alone with God — silence, prayer, or scripture',               difficulty:'Hard'},
+      {name:'Spend one hour in complete solitude before God — no people, no noise',          difficulty:'Severe'},
+    ]
+  },
+];
+
+const TASK_DIFFICULTY = {
+  Common: 30,
+  Hard:   40,
+  Severe: 50,
+};
+function habitStreakXP(habit){
+  // base + 5 per consecutive day, capped at 7 days of streak
+  const diff = HABIT_DIFFICULTY[habit.difficulty] || HABIT_DIFFICULTY.Common;
+  const base = (habit.difficulty ? diff.base : (habit.xp||15));
+  const streak = Math.min(habit.streak||0, 7);
+  return base + (streak * 5);
+}
 
 const RACE_COVENANTS = [
   {verse:'Whatever your hand finds to do, do it with your might.',                        ref:'Ecclesiastes 9:10'},
@@ -896,7 +1069,8 @@ const DEFAULT_STATE = {
   today:{}, totalXP:0, points:0, streak:0,
   lastDate:null, history:[], verseSeenDate:null,
   todayTasksCompleted:0, failedTasks:[], pendingCovenant:false,
-  earnedTitles:[], equippedTitle:null, completedRites:{}, riteTaskCounts:{},
+  earnedTitles:[], equippedTitle:null, completedRites:{}, riteTaskCounts:{}, taskLog:[],
+  playerRace:null, raceTier:0, raceLockedIn:false, pendingRaceSelect:false,
   yesterdayFullCompletion:false,
 };
 let state = {...DEFAULT_STATE};
@@ -910,13 +1084,13 @@ function load(){
   if(raw){try{state={...DEFAULT_STATE,...JSON.parse(raw)};}catch(e){}}
   if(!state.habits||state.habits.length===0){
     state.habits=[
-      {id:uid(),name:'Morning workout',               category:'Physical',  xp:30},
-      {id:uid(),name:'Took pills / supplements',      category:'Physical',  xp:15},
-      {id:uid(),name:'7+ hours of sleep',             category:'Physical',  xp:20},
-      {id:uid(),name:'Prayed',                        category:'Spiritual', xp:25},
-      {id:uid(),name:'Read Bible or listened to sermon',category:'Spiritual',xp:25},
-      {id:uid(),name:'Posted social content',         category:'Business',  xp:40},
-      {id:uid(),name:'Did schoolwork',                category:'Mental',    xp:30},
+      {id:uid(),name:'Morning workout',               category:'Physical',  difficulty:'Severe', streak:0},
+      {id:uid(),name:'Took pills / supplements',      category:'Physical',  difficulty:'Common', streak:0},
+      {id:uid(),name:'7+ hours of sleep',             category:'Physical',  difficulty:'Common', streak:0},
+      {id:uid(),name:'Prayed',                        category:'Spiritual', difficulty:'Hard',   streak:0},
+      {id:uid(),name:'Read Bible or listened to sermon',category:'Spiritual',difficulty:'Hard',  streak:0},
+      {id:uid(),name:'Posted social content',         category:'Business',  difficulty:'Severe', streak:0},
+      {id:uid(),name:'Did schoolwork',                category:'Mental',    difficulty:'Hard',   streak:0},
     ];
   }
   if(!state.penalties||state.penalties.length===0){
@@ -940,6 +1114,18 @@ function load(){
   if(!state.earnedTitles) state.earnedTitles=[];
   if(!state.completedRites) state.completedRites={};
   if(!state.riteTaskCounts) state.riteTaskCounts={};
+  if(!state.taskLog) state.taskLog=[];
+  if(state.playerRace===undefined) state.playerRace=null;
+  if(state.raceTier===undefined) state.raceTier=0;
+  if(state.raceLockedIn===undefined) state.raceLockedIn=false;
+  if(state.pendingRaceSelect===undefined) state.pendingRaceSelect=false;
+  // Migrate legacy habits to difficulty system
+  state.habits.forEach(h=>{
+    if(h.streak===undefined) h.streak=0;
+    if(!h.difficulty && h.xp){
+      h.difficulty = h.xp<=15?'Common':h.xp<=25?'Hard':'Severe';
+    } else if(!h.difficulty){ h.difficulty='Common'; }
+  });
   if(state.todayTasksCompleted===undefined) state.todayTasksCompleted=0;
   if(state.pendingCovenant===undefined) state.pendingCovenant=false;
   if(state.yesterdayFullCompletion===undefined) state.yesterdayFullCompletion=false;
@@ -972,11 +1158,26 @@ function checkDayReset(){
 
     const habitsDone=state.habits.filter(h=>state.today[h.id]).length;
     state.yesterdayFullCompletion=(habitsDone===state.habits.length&&state.habits.length>0);
-    const mult=Math.pow(2,state.todayTasksCompleted||0);
-    const xpEarned=state.habits.filter(h=>state.today[h.id]).reduce((s,h)=>s+h.xp*mult,0);
+    const xpEarned=state.habits.filter(h=>state.today[h.id]).reduce((s,h)=>s+habitStreakXP(h),0);
     const penaltyLost=state.penalties.filter(p=>state.today[p.id]).reduce((s,p)=>s+p.xp,0);
     state.history.unshift({date:state.lastDate,completed:habitsDone,total:state.habits.length,xpEarned:xpEarned-penaltyLost});
     if(state.history.length>14) state.history=state.history.slice(0,14);
+    // Per-habit streak update: increment if completed yesterday, reset if missed
+    state.habits.forEach(h=>{
+      if(state.today[h.id]) h.streak=Math.min((h.streak||0)+1, 7);
+      else h.streak=0;
+    });
+    // Race habit streaks
+    const _race=getPlayerRace();
+    if(_race){
+      const _tier=state.raceTier||1;
+      for(let i=0;i<_tier;i++){
+        const rhId='race_'+_race.id+'_'+i;
+        const sKey='raceHabitStreak_'+_race.id+'_'+i;
+        if(state.today[rhId]) state[sKey]=Math.min((state[sKey]||0)+1, 7);
+        else state[sKey]=0;
+      }
+    }
     const yesterday=new Date(); yesterday.setDate(yesterday.getDate()-1);
     if(state.lastDate===yesterday.toLocaleDateString('en-CA')&&habitsDone>0) state.streak++;
     else if(state.lastDate!==yesterday.toLocaleDateString('en-CA')) state.streak=0;
@@ -1004,8 +1205,8 @@ function showVerseSplash(){
   if(state.verseSeenDate===todayStr()) return;
   const rank=getCurrentRank(state.totalXP);
   const cov=RACE_COVENANTS[rank.raceIndex];
-  document.getElementById('verseRace').textContent=`Race ${rank.raceNum} — ${rank.raceName}`;
-  document.getElementById('verseRank').textContent='Race Covenant';
+  document.getElementById('verseRace').textContent=`Class ${rank.raceNum} — ${rank.raceName}`;
+  document.getElementById('verseRank').textContent='Class Covenant';
   document.getElementById('verseText').textContent=`"${cov.verse}"`;
   document.getElementById('verseRef').textContent=cov.ref;
   document.getElementById('verseSplash').classList.add('open');
@@ -1014,8 +1215,8 @@ function showVerseSplash(){
 function showCovenantSplash(){
   const rank=getCurrentRank(state.totalXP);
   const cov=RACE_COVENANTS[rank.raceIndex];
-  document.getElementById('verseRace').textContent=`Race ${rank.raceNum} — ${rank.raceName}`;
-  document.getElementById('verseRank').textContent='Race Covenant';
+  document.getElementById('verseRace').textContent=`Class ${rank.raceNum} — ${rank.raceName}`;
+  document.getElementById('verseRank').textContent='Class Covenant';
   document.getElementById('verseText').textContent=`"${cov.verse}"`;
   document.getElementById('verseRef').textContent=cov.ref;
   document.getElementById('verseSplash').classList.add('open');
@@ -1074,7 +1275,7 @@ function render(){
   document.getElementById('ivRef').textContent=cov.ref;
 
   // Rank card
-  document.getElementById('raceEyebrow').textContent=`Race ${rank.raceNum} — ${rank.raceName}`;
+  document.getElementById('raceEyebrow').textContent=`Class ${rank.raceNum} — ${rank.raceName}`;
   const raceRanks=ALL_RANKS.filter(r=>r.raceIndex===rank.raceIndex);
   const rankPos=raceRanks.findIndex(r=>r.globalLevel===rank.globalLevel);
   const glowP=rankPos/Math.max(raceRanks.length-1,1);
@@ -1121,16 +1322,32 @@ function render(){
   renderTitleArea();
   renderRiteBanner();
   renderRitesList();
+  renderTaskLog();
+  renderRaceUpgradeArea();
 }
 
 function renderHabits(){
   const list=document.getElementById('habitsList');
   list.innerHTML='';
-  if(!state.habits||state.habits.length===0){ list.innerHTML=`<div class="empty-state"><strong>No Habits</strong></div>`; return; }
-  const mult=Math.pow(2,state.todayTasksCompleted||0);
+  const raceHabits=getRaceHabits();
+  // Race habits render first, mixed in seamlessly
+  for(const rh of raceHabits){
+    const done=!!state.today[rh.id];
+    const effectiveXP=habitEffectiveXP(rh);
+    const div=document.createElement('div');
+    div.className='habit-item'+(done?' done':'');
+    div.innerHTML=`
+      <div class="habit-check">${done?'✓':''}</div>
+      <div class="habit-info"><div class="habit-name">${rh.name}</div><div class="habit-meta">${rh.category}</div></div>
+      <div class="habit-xp">+${effectiveXP} XP</div>`;
+    div.addEventListener('click',()=>toggleRaceHabit(rh));
+    list.appendChild(div);
+  }
+  if((!state.habits||state.habits.length===0)&&raceHabits.length===0){ list.innerHTML=`<div class="empty-state"><strong>No Habits</strong></div>`; return; }
+  if(!state.habits) return;
   for(const h of state.habits){
     const done=!!state.today[h.id];
-    const effectiveXP=calcTitleBonus(h, h.xp*mult)+getRiteBonus(h.category);
+    const effectiveXP=habitEffectiveXP(h);
     const div=document.createElement('div');
     div.className='habit-item'+(done?' done':'');
     div.innerHTML=`
@@ -1210,6 +1427,7 @@ function buildTaskEl(t,today){
       ${countdownHtml}
       <span class="task-xp">+${effectiveXP} XP · 2 pts</span>
     </div>
+    ${t.inscription&&t.verse?`<div style="margin-top:8px;padding:9px 11px;background:var(--card2);border-left:2px solid var(--gold-dim);border-radius:6px;"><div style="font-size:12px;font-style:italic;color:#c0a870;line-height:1.55;margin-bottom:3px;">"${t.verse}"</div><div style="font-family:'Oswald',sans-serif;font-size:10px;color:var(--gold-dim);letter-spacing:0.06em;">${t.ref}</div></div>`:''}
     ${!done?`<div class="task-actions">
       <button class="task-complete-btn">Mark Complete</button>
       <button class="task-del-btn">×</button>
@@ -1287,18 +1505,30 @@ function renderRewardLog(){
 // ══════════════════════════════════════════
 // HABIT TOGGLE
 // ══════════════════════════════════════════
+function habitEffectiveXP(habit){
+  const mult=Math.pow(2,state.todayTasksCompleted||0);
+  const baseStreakXP=habitStreakXP(habit);
+  const raw=calcTitleBonus(habit, baseStreakXP*mult) + getRiteBonus(habit.category);
+  const boost=getRaceXPBoost();
+  return Math.round(raw*(1+boost));
+}
+
 function toggleHabit(id){
   const habit=state.habits.find(h=>h.id===id);
   if(!habit) return;
   const rankBefore=getCurrentRank(state.totalXP);
-  const mult=Math.pow(2,state.todayTasksCompleted||0);
+  const xpVal=habitEffectiveXP(habit);
 
   if(state.today[id]){
+    // Uncheck — remove XP and point
     state.today[id]=false;
-    state.totalXP=Math.max(0,state.totalXP-habit.xp*mult);
+    state.totalXP=Math.max(0,state.totalXP-xpVal);
+    state.points=Math.max(0,state.points-1);
   } else {
+    // Check — award XP and 1 point
     state.today[id]=true;
-    state.totalXP+=habit.xp*mult;
+    state.totalXP+=xpVal;
+    state.points+=1;
     triggerXPPulse();
   }
 
@@ -1309,7 +1539,7 @@ function toggleHabit(id){
       const isRaceChange=rankAfter.raceIndex!==rankBefore.raceIndex;
       if(isRaceChange) bonusPts+=RACE_BONUSES[rankAfter.raceIndex]||0;
       state.points+=bonusPts;
-      // Check if this is rank 10 of current race — show covenant instead of rank up
+      handleRaceFlagsOnRankUp(rankBefore, rankAfter, isRaceChange);
       const triggered=checkCovenantTrigger(rankBefore, rankAfter);
       if(!triggered){
         showRankUp(rankAfter,bonusPts,isRaceChange);
@@ -1349,22 +1579,40 @@ function completeTask(id){
   const rankBefore=getCurrentRank(state.totalXP);
   const mult=Math.pow(2,state.todayTasksCompleted||0);
   const xpGain=task.xp*2*mult;
-  state.today[id]=true;
   state.totalXP+=xpGain;
   state.points+=2;
   state.todayTasksCompleted=(state.todayTasksCompleted||0)+1;
-  // Remove one-time tasks after completion
-  if(task.type==='onetime'){ state.tasks=state.tasks.filter(t=>t.id!==id); }
+  // Log the completed task
+  const dateStr=new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+  state.taskLog.unshift({name:task.name,xp:xpGain,date:dateStr});
+  if(state.taskLog.length>50) state.taskLog=state.taskLog.slice(0,50);
+  // Remove the task (both one-time and timed) after completion
+  state.tasks=state.tasks.filter(t=>t.id!==id);
+  delete state.today[id];
   const rankAfter=getCurrentRank(state.totalXP);
   if(rankAfter.globalLevel!==rankBefore.globalLevel){
     let bonusPts=10;
     const isRaceChange=rankAfter.raceIndex!==rankBefore.raceIndex;
     if(isRaceChange) bonusPts+=RACE_BONUSES[rankAfter.raceIndex]||0;
     state.points+=bonusPts;
+    handleRaceFlagsOnRankUp(rankBefore, rankAfter, isRaceChange);
     showRankUp(rankAfter,bonusPts,isRaceChange);
   }
   triggerXPPulse();
   save(); render();
+}
+
+function renderTaskLog(){
+  const list=document.getElementById('taskLogList');
+  if(!list) return;
+  if(!state.taskLog||state.taskLog.length===0){ list.innerHTML=`<div class="empty-state" style="padding:16px 20px;"><strong>No Completed Tasks Yet</strong></div>`; return; }
+  list.innerHTML='';
+  for(const entry of state.taskLog.slice(0,30)){
+    const d=document.createElement('div');
+    d.className='reward-log-item';
+    d.innerHTML=`<div class="rli-name">${entry.name}</div><div class="rli-right"><div class="rli-cost" style="color:var(--gold);">+${entry.xp} XP</div><div class="rli-date">${entry.date}</div></div>`;
+    list.appendChild(d);
+  }
 }
 
 function deleteTask(id){
@@ -1392,7 +1640,7 @@ function showRankUp(rank,bonusPts,isRaceChange){
 
   if(isRaceChange){
     inner.innerHTML=`
-      <div class="ru-race-unlock ru-a0">New Race Unlocked</div>
+      <div class="ru-race-unlock ru-a0">New Class Unlocked</div>
       <div class="ru-race-big ru-a0" style="text-shadow:0 0 30px rgba(201,168,76,0.6),0 0 60px rgba(201,168,76,0.3);">${rank.raceName}</div>
       <div class="ru-divider ru-a1"></div>
       <div class="ru-eyebrow ru-a1">Race ${rank.raceNum} — Rank I</div>
@@ -1412,10 +1660,30 @@ function showRankUp(rank,bonusPts,isRaceChange){
       <button class="ru-dismiss ru-a3" onclick="dismissRankUp()">Receive It</button>`;
   }
 }
+function handleRaceFlagsOnRankUp(rankBefore, rankAfter, isClassChange){
+  // First ever rank-up — trigger race selection
+  if(state.playerRace===null||state.playerRace===undefined){
+    state.pendingRaceSelect=true;
+  } else if(isClassChange){
+    // New class — race can be re-chosen until first rank of new class completes
+    state.pendingRaceSelect=true;
+    state.raceLockedIn=false;
+  } else {
+    // Completed a rank within the class — race locks in
+    state.raceLockedIn=true;
+  }
+  save();
+}
+
 function dismissRankUp(){
   const screen=document.getElementById('rankupScreen');
   screen.style.transition='opacity 0.4s ease'; screen.style.opacity='0';
-  setTimeout(()=>{ screen.classList.remove('show'); screen.style.opacity=''; screen.style.transition=''; },420);
+  setTimeout(()=>{
+    screen.classList.remove('show'); screen.style.opacity=''; screen.style.transition='';
+    if(state.pendingRaceSelect){
+      setTimeout(()=>showRaceSelectScreen(),300);
+    }
+  },420);
 }
 
 function addInscriptionTask(rank){
@@ -1424,7 +1692,7 @@ function addInscriptionTask(rank){
   const deadlineStr=deadline.toLocaleDateString('en-CA');
   const taskName='Use "'+rank.ref+'" in conversation naturally';
   if(state.tasks.some(t=>t.name===taskName)) return;
-  state.tasks.push({id:uid(),name:taskName,category:'Social',xp:60,type:'timed',deadline:deadlineStr,inscription:true});
+  state.tasks.push({id:uid(),name:taskName,category:'Social',difficulty:'Hard',type:'timed',deadline:deadlineStr,inscription:true,verse:rank.verse,ref:rank.ref});
   save();
 }
 
@@ -1433,9 +1701,15 @@ function addInscriptionTask(rank){
 // ══════════════════════════════════════════
 function closeModal(id){ document.getElementById(id).classList.remove('open'); }
 
+const HABIT_DIFF_HINTS = {
+  Common:'Common: 15 XP base, building +5 per streak day (up to 50 at 7 days)',
+  Hard:'Hard: 25 XP base, building +5 per streak day (up to 60 at 7 days)',
+  Severe:'Severe: 30 XP base, building +5 per streak day (up to 65 at 7 days)',
+};
 function openAddHabitModal(){
   document.getElementById('habitNameInput').value='';
-  document.getElementById('habitXPInput').value='25';
+  document.getElementById('habitDiffInput').value='Common';
+  document.getElementById('habitDiffHint').textContent=HABIT_DIFF_HINTS.Common;
   document.getElementById('addHabitModal').classList.add('open');
   setTimeout(()=>document.getElementById('habitNameInput').focus(),100);
 }
@@ -1443,10 +1717,13 @@ function addHabit(){
   const name=document.getElementById('habitNameInput').value.trim();
   if(!name){document.getElementById('habitNameInput').focus();return;}
   const category=document.getElementById('habitCatInput').value;
-  const xp=Math.max(5,Math.min(500,parseInt(document.getElementById('habitXPInput').value)||25));
-  state.habits.push({id:uid(),name,category,xp});
+  const difficulty=document.getElementById('habitDiffInput').value;
+  state.habits.push({id:uid(),name,category,difficulty,streak:0});
   save(); closeModal('addHabitModal'); render();
 }
+document.getElementById('habitDiffInput').addEventListener('change',e=>{
+  document.getElementById('habitDiffHint').textContent=HABIT_DIFF_HINTS[e.target.value]||'';
+});
 document.getElementById('addHabitModal').addEventListener('click',e=>{if(e.target===e.currentTarget)closeModal('addHabitModal');});
 document.getElementById('habitNameInput').addEventListener('keydown',e=>{if(e.key==='Enter')addHabit();});
 
@@ -1475,7 +1752,7 @@ function setTaskType(type,btn){
 function openAddTaskModal(type){
   currentTaskType=type||'onetime';
   document.getElementById('taskNameInput').value='';
-  document.getElementById('taskXPInput').value='50';
+  document.getElementById('taskDiffInput').value='Common';
   document.getElementById('taskDeadlineInput').value='';
   document.getElementById('deadlineRow').style.display=currentTaskType==='timed'?'block':'none';
   document.querySelectorAll('#taskTypeSeg .seg-btn').forEach((b,i)=>b.classList.toggle('active',i===(currentTaskType==='onetime'?0:1)));
@@ -1486,10 +1763,11 @@ function addTask(){
   const name=document.getElementById('taskNameInput').value.trim();
   if(!name){document.getElementById('taskNameInput').focus();return;}
   const category=document.getElementById('taskCatInput').value;
-  const xp=Math.max(5,Math.min(500,parseInt(document.getElementById('taskXPInput').value)||50));
+  const difficulty=document.getElementById('taskDiffInput').value;
+  const xp=TASK_DIFFICULTY[difficulty]||30;
   const deadline=currentTaskType==='timed'?document.getElementById('taskDeadlineInput').value:'';
   if(currentTaskType==='timed'&&!deadline){document.getElementById('taskDeadlineInput').focus();return;}
-  state.tasks.push({id:uid(),name,category,xp,type:currentTaskType,deadline});
+  state.tasks.push({id:uid(),name,category,xp,difficulty,type:currentTaskType,deadline});
   save(); closeModal('addTaskModal'); render();
 }
 document.getElementById('addTaskModal').addEventListener('click',e=>{if(e.target===e.currentTarget)closeModal('addTaskModal');});
@@ -1650,6 +1928,18 @@ function completeRite(riteId){
   if(!rite) return;
   if(!state.completedRites) state.completedRites={};
   if(!state.riteTaskCounts) state.riteTaskCounts={};
+  if(!state.taskLog) state.taskLog=[];
+  if(state.playerRace===undefined) state.playerRace=null;
+  if(state.raceTier===undefined) state.raceTier=0;
+  if(state.raceLockedIn===undefined) state.raceLockedIn=false;
+  if(state.pendingRaceSelect===undefined) state.pendingRaceSelect=false;
+  // Migrate legacy habits to difficulty system
+  state.habits.forEach(h=>{
+    if(h.streak===undefined) h.streak=0;
+    if(!h.difficulty && h.xp){
+      h.difficulty = h.xp<=15?'Common':h.xp<=25?'Hard':'Severe';
+    } else if(!h.difficulty){ h.difficulty='Common'; }
+  });
   state.completedRites[riteId]=true;
   state.points+=rite.pointReward;
   save(); render();
@@ -1752,19 +2042,31 @@ function renderRitesList(){
   const challenge=upcoming.challenges[Math.min(rank.raceIndex,upcoming.challenges.length-1)];
   const div=document.createElement('div');
   div.className='rite-item';
-  div.style.opacity='0.38';
+  div.style.opacity='0.6';
   div.innerHTML=`
     <div class="rite-header">
       <div><div class="rite-name">${upcoming.name}</div><div class="rite-discipline">${upcoming.discipline}</div></div>
       <span class="rite-status upcoming">Upcoming</span>
     </div>
-    <div class="rite-meta" style="margin-top:4px;">${startFmt} – ${endFmt} · ${daysUntil} day${daysUntil===1?'':'s'} away</div>
+    <div class="rite-meta" style="margin-top:4px;color:#9aacbc;font-size:12px;">${startFmt} – ${endFmt} · ${daysUntil} day${daysUntil===1?'':'s'} away</div>
   `;
   list.appendChild(div);
 }
 
 function getRiteTaskCount(riteId){
   if(!state.riteTaskCounts) state.riteTaskCounts={};
+  if(!state.taskLog) state.taskLog=[];
+  if(state.playerRace===undefined) state.playerRace=null;
+  if(state.raceTier===undefined) state.raceTier=0;
+  if(state.raceLockedIn===undefined) state.raceLockedIn=false;
+  if(state.pendingRaceSelect===undefined) state.pendingRaceSelect=false;
+  // Migrate legacy habits to difficulty system
+  state.habits.forEach(h=>{
+    if(h.streak===undefined) h.streak=0;
+    if(!h.difficulty && h.xp){
+      h.difficulty = h.xp<=15?'Common':h.xp<=25?'Hard':'Severe';
+    } else if(!h.difficulty){ h.difficulty='Common'; }
+  });
   return state.riteTaskCounts[riteId]||0;
 }
 
@@ -1813,6 +2115,18 @@ function renderRiteDisciplines(){
         state.today[rtId]=true;
         state.totalXP+=rt.xp;
         if(!state.riteTaskCounts) state.riteTaskCounts={};
+  if(!state.taskLog) state.taskLog=[];
+  if(state.playerRace===undefined) state.playerRace=null;
+  if(state.raceTier===undefined) state.raceTier=0;
+  if(state.raceLockedIn===undefined) state.raceLockedIn=false;
+  if(state.pendingRaceSelect===undefined) state.pendingRaceSelect=false;
+  // Migrate legacy habits to difficulty system
+  state.habits.forEach(h=>{
+    if(h.streak===undefined) h.streak=0;
+    if(!h.difficulty && h.xp){
+      h.difficulty = h.xp<=15?'Common':h.xp<=25?'Hard':'Severe';
+    } else if(!h.difficulty){ h.difficulty='Common'; }
+  });
         state.riteTaskCounts[rite.id]=(state.riteTaskCounts[rite.id]||0)+1;
         triggerXPPulse();
         save(); render();
@@ -1851,7 +2165,7 @@ function checkCovenantTrigger(rankBefore,rankAfter){
 function showCovenantScreen(raceIndex){
   const cov=RACE_COVENANTS[raceIndex];
   const race=RACES[raceIndex];
-  document.getElementById('covRace').textContent='Race '+race.raceNum+' — '+race.name;
+  document.getElementById('covRace').textContent='Class '+race.raceNum+' — '+race.name;
   document.getElementById('covVerse').textContent='"'+cov.verse+'"';
   document.getElementById('covRef').textContent=cov.ref;
   document.getElementById('covenantScreen').classList.add('open');
@@ -1861,6 +2175,9 @@ function keepCovenant(){
   document.getElementById('covenantScreen').classList.remove('open');
   const rankBefore=getCurrentRank(state.totalXP);
   state.pendingCovenant=false;
+  // Class change — allow race re-selection
+  state.pendingRaceSelect=true;
+  state.raceLockedIn=false;
   if(!state.earnedTitles.includes(rankBefore.raceIndex)){
     state.earnedTitles.push(rankBefore.raceIndex);
     if(state.equippedTitle===null||state.equippedTitle===undefined) state.equippedTitle=rankBefore.raceIndex;
@@ -1888,6 +2205,172 @@ function returnToAltar(){
 
 
 
+
+// ══════════════════════════════════════════
+// RACE SYSTEM
+// ══════════════════════════════════════════
+function getPlayerRace(){
+  if(state.playerRace===null||state.playerRace===undefined) return null;
+  return RACES_DATA.find(r=>r.id===state.playerRace)||null;
+}
+
+function getRaceXPBoost(){
+  if(!getPlayerRace()) return 0;
+  return RACE_XP_BOOST[Math.max(0,(state.raceTier||1)-1)]||0;
+}
+
+function getRaceHabits(){
+  const race=getPlayerRace();
+  if(!race) return [];
+  const tier=state.raceTier||1;
+  return race.habits.slice(0,tier).map((h,i)=>({
+    id:'race_'+race.id+'_'+i,
+    name:h.name,
+    category:'Spiritual',
+    difficulty:h.difficulty,
+    streak:state['raceHabitStreak_'+race.id+'_'+i]||0,
+    isRaceHabit:true,
+    raceHabitIndex:i,
+  }));
+}
+
+function showRaceSelectScreen(){
+  const list=document.getElementById('rsList');
+  list.innerHTML='';
+  for(const race of RACES_DATA){
+    const card=document.createElement('div');
+    card.className='rs-card';
+    card.innerHTML=`
+      <div class="rs-card-name">${race.name}</div>
+      <div class="rs-card-disc">${race.discipline}</div>
+      <div class="rs-card-desc">${race.desc}</div>
+      <div class="rs-card-habit"><strong>Daily Habit</strong>${race.habits[0].name}</div>
+    `;
+    card.addEventListener('click',()=>selectRace(race.id));
+    list.appendChild(card);
+  }
+  document.getElementById('raceSelectScreen').classList.add('open');
+}
+
+function selectRace(raceId){
+  const prevRace=state.playerRace;
+  state.playerRace=raceId;
+  if(prevRace!==raceId){
+    state.raceTier=1; // reset tier on race change
+  }
+  if(!state.raceTier||state.raceTier<1) state.raceTier=1;
+  state.pendingRaceSelect=false;
+  save();
+  document.getElementById('raceSelectScreen').classList.remove('open');
+  render();
+}
+
+function upgradeRace(){
+  const race=getPlayerRace();
+  if(!race) return;
+  if((state.raceTier||1)>=3) return;
+  if(state.points<RACE_UPGRADE_COST) return;
+  state.points-=RACE_UPGRADE_COST;
+  state.raceTier=(state.raceTier||1)+1;
+  save(); render();
+}
+
+function changeRaceFromPoints(){
+  // Only allowed before first rank of current class is completed
+  if(state.raceLockedIn) return;
+  showRaceSelectScreen();
+}
+
+function renderRaceUpgradeArea(){
+  const area=document.getElementById('raceUpgradeArea');
+  if(!area) return;
+  const race=getPlayerRace();
+  const rank=getCurrentRank(state.totalXP);
+
+  if(!race){
+    area.innerHTML='<div class="race-none-card">No race chosen yet. Your race will be chosen at your first rank.</div>';
+    return;
+  }
+
+  const tier=state.raceTier||1;
+  const boost=getRaceXPBoost();
+  const canUpgrade=tier<3&&state.points>=RACE_UPGRADE_COST;
+  const nextBoost=tier<3?RACE_XP_BOOST[tier]:null;
+
+  let habitsHtml='';
+  race.habits.forEach((h,i)=>{
+    const unlocked=i<tier;
+    habitsHtml+=`
+      <div class="ruc-habit-row">
+        <span class="ruc-habit-status ${unlocked?'unlocked':'locked'}">${unlocked?'Active':'Tier '+(i+1)}</span>
+        <div style="flex:1;">
+          <div class="ruc-habit-text ${unlocked?'':'locked'}">${h.name}</div>
+          <div class="ruc-habit-diff">${h.difficulty}</div>
+        </div>
+      </div>`;
+  });
+
+  const cov=RACE_COVENANTS[rank.raceIndex];
+
+  area.innerHTML=`
+    <div class="race-upgrade-card">
+      <div class="race-upgrade-header" onclick="toggleRaceUpgradeBody()">
+        <div>
+          <div class="ruc-name">${race.name}</div>
+          <div class="ruc-disc">${race.discipline}</div>
+        </div>
+        <div class="ruc-tier">Tier ${tier} / 3 ▾</div>
+      </div>
+      <div class="race-upgrade-body" id="raceUpgradeBody">
+        ${boost>0?`<div class="ruc-boost">Active boost: +${Math.round(boost*100)}% XP on all habits</div>`:''}
+        ${habitsHtml}
+        ${tier<3?`<button class="ruc-upgrade-btn" ${canUpgrade?'':'disabled'} onclick="upgradeRace()">Upgrade to Tier ${tier+1} — ${RACE_UPGRADE_COST} points${nextBoost?` · +${Math.round(nextBoost*100)}% XP`:''}</button>`:''}
+        ${!state.raceLockedIn?`<button class="ruc-change-btn" onclick="changeRaceFromPoints()">Change Race</button>`:''}
+        <div class="ruc-inscription">
+          <div class="ruc-insc-label">Rank Inscription — ${rank.rankName}</div>
+          <div class="ruc-insc-verse">"${rank.verse}"</div>
+          <div class="ruc-insc-ref">${rank.ref}</div>
+        </div>
+      </div>
+    </div>`;
+}
+
+function toggleRaceUpgradeBody(){
+  document.getElementById('raceUpgradeBody').classList.toggle('open');
+}
+
+function toggleRaceHabit(rh){
+  const rankBefore=getCurrentRank(state.totalXP);
+  const streakKey='raceHabitStreak_'+getPlayerRace().id+'_'+rh.raceHabitIndex;
+  const xpVal=habitEffectiveXP(rh);
+  if(state.today[rh.id]){
+    state.today[rh.id]=false;
+    state.totalXP=Math.max(0,state.totalXP-xpVal);
+    state.points=Math.max(0,state.points-1);
+  } else {
+    state.today[rh.id]=true;
+    state.totalXP+=xpVal;
+    state.points+=1;
+    triggerXPPulse();
+  }
+  if(state.today[rh.id]){
+    const rankAfter=getCurrentRank(state.totalXP);
+    if(rankAfter.globalLevel!==rankBefore.globalLevel){
+      let bonusPts=10;
+      const isRaceChange=rankAfter.raceIndex!==rankBefore.raceIndex;
+      if(isRaceChange) bonusPts+=RACE_BONUSES[rankAfter.raceIndex]||0;
+      state.points+=bonusPts;
+      handleRaceFlagsOnRankUp(rankBefore, rankAfter, isRaceChange);
+      const triggered=checkCovenantTrigger(rankBefore, rankAfter);
+      if(!triggered){
+        showRankUp(rankAfter,bonusPts,isRaceChange);
+        if(!isRaceChange) addInscriptionTask(rankBefore);
+      }
+    }
+  }
+  save(); render();
+}
+
 // ══════════════════════════════════════════
 // INIT
 // ══════════════════════════════════════════
@@ -1899,6 +2382,8 @@ if(state.verseSeenDate===todayStr()) processFailedTaskQueue();
 if(state.pendingCovenant){
   const rank=getCurrentRank(state.totalXP);
   setTimeout(()=>showCovenantScreen(rank.raceIndex), 800);
+} else if(state.pendingRaceSelect){
+  setTimeout(()=>showRaceSelectScreen(), 800);
 }
 setInterval(()=>{checkDayReset();render();},60000);
 </script>
