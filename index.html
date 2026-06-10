@@ -84,8 +84,12 @@
   .rank-card { margin:14px 20px; background:var(--card); border:1px solid var(--border); border-radius:10px; padding:16px 18px 14px; }
   .rank-row { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:10px; gap:10px; }
   .rank-labels { flex:1; }
-  .race-eyebrow { font-size:13px; color:var(--gold); text-transform:uppercase; letter-spacing:0.18em; margin-bottom:4px; font-family:'Oswald',sans-serif; font-weight:600; transition:text-shadow 0.6s ease; }
-  .rank-name { font-family:'Oswald',sans-serif; font-size:24px; font-weight:700; color:var(--gold); letter-spacing:0.06em; text-transform:uppercase; line-height:1; margin-bottom:3px; }
+  .race-eyebrow { font-size:13px; color:var(--gold-dim); text-transform:uppercase; letter-spacing:0.18em; margin-bottom:4px; font-family:'Oswald',sans-serif; font-weight:600; }
+  .rank-name { font-family:'Oswald',sans-serif; font-size:24px; font-weight:700; color:var(--gold); letter-spacing:0.06em; text-transform:uppercase; line-height:1; margin-bottom:3px; cursor:pointer; animation:rank-glow-pulse 4s ease-in-out infinite; }
+  @keyframes rank-glow-pulse {
+    0%, 100% { text-shadow: 0 0 var(--g1s,6px) rgba(201,168,76,var(--g1a,0.15)), 0 0 var(--g2s,14px) rgba(201,168,76,var(--g2a,0.07)); }
+    50% { text-shadow: 0 0 var(--g1sh,10px) rgba(201,168,76,var(--g1ah,0.3)), 0 0 var(--g2sh,24px) rgba(201,168,76,var(--g2ah,0.15)), 0 0 var(--g3sh,40px) rgba(201,168,76,var(--g3ah,0.06)); }
+  }
   .rank-badge { width:44px; height:44px; border-radius:50%; border:2px solid var(--gold-dim); display:flex; align-items:center; justify-content:center; font-size:26px; background:var(--card2); flex-shrink:0; font-family:'Times New Roman',serif; color:var(--gold); line-height:1; align-self:flex-start; margin-top:1px; }
   .xp-row { display:flex; justify-content:space-between; align-items:center; margin-bottom:5px; }
   .xp-label { font-size:11px; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.08em; }
@@ -111,6 +115,9 @@
   .rli-rank-name.done { color:var(--gold-dim); }
   .rli-rank-name.current { color:var(--gold); font-weight:600; }
   .rli-rank-name.future { color:#444; }
+  .rli-inscription { margin:2px 0 6px 17px; padding:8px 12px; background:var(--card2); border-left:2px solid var(--gold-dim); border-radius:6px; }
+  .rli-insc-verse { font-size:11px; font-style:italic; color:#c0a870; line-height:1.55; margin-bottom:3px; }
+  .rli-insc-ref { font-family:'Oswald',sans-serif; font-size:9px; color:var(--gold-dim); letter-spacing:0.06em; }
 
   /* ── STATS ── */
   .stats-row { display:flex; gap:8px; margin:10px 20px 0; }
@@ -373,10 +380,6 @@
   .ruc-upgrade-btn:disabled { opacity:0.35; cursor:not-allowed; }
   .ruc-change-btn { width:100%; margin-top:8px; background:none; border:1px solid var(--border); color:var(--text-dim); font-family:'Oswald',sans-serif; font-size:11px; letter-spacing:0.1em; text-transform:uppercase; padding:8px; border-radius:7px; cursor:pointer; }
   .ruc-change-btn:hover { color:var(--gold); border-color:var(--gold-dim); }
-  .ruc-inscription { margin-top:14px; padding:12px 14px; background:var(--card2); border-left:2px solid var(--gold-dim); border-radius:7px; }
-  .ruc-insc-label { font-family:'Oswald',sans-serif; font-size:9px; letter-spacing:0.16em; text-transform:uppercase; color:var(--gold-dim); margin-bottom:5px; }
-  .ruc-insc-verse { font-size:12px; font-style:italic; color:#c0a870; line-height:1.6; margin-bottom:4px; }
-  .ruc-insc-ref { font-family:'Oswald',sans-serif; font-size:10px; color:var(--gold-dim); letter-spacing:0.06em; }
   .race-none-card { margin:0 20px 14px; background:var(--card); border:1px dashed var(--border); border-radius:10px; padding:16px; text-align:center; font-size:12px; color:var(--text-dim); font-style:italic; }
   ::-webkit-scrollbar { width:4px; }
   ::-webkit-scrollbar-track { background:transparent; }
@@ -408,7 +411,7 @@
       <div class="rank-row">
         <div class="rank-labels">
           <div class="race-eyebrow" id="raceEyebrow">Class I — Apprentice</div>
-          <div class="rank-name" id="rankName">Unformed</div>
+          <div class="rank-name" id="rankName" onclick="showInscriptionSplash()">Unformed</div>
           <div id="activeTitleBadge" class="active-title-badge" onclick="toggleTitleDropdown()" style="display:none;"></div>
           <div class="title-dropdown" id="titleDropdown"></div>
         </div>
@@ -1089,7 +1092,6 @@ function load(){
       {id:uid(),name:'7+ hours of sleep',             category:'Physical',  difficulty:'Common', streak:0},
       {id:uid(),name:'Prayed',                        category:'Spiritual', difficulty:'Hard',   streak:0},
       {id:uid(),name:'Read Bible or listened to sermon',category:'Spiritual',difficulty:'Hard',  streak:0},
-      {id:uid(),name:'Posted social content',         category:'Business',  difficulty:'Severe', streak:0},
       {id:uid(),name:'Did schoolwork',                category:'Mental',    difficulty:'Hard',   streak:0},
     ];
   }
@@ -1212,7 +1214,19 @@ function showVerseSplash(){
   document.getElementById('verseSplash').classList.add('open');
 }
 
+
+function showInscriptionSplash(){
+  _splashIsDaily=false;
+  const rank=getCurrentRank(state.totalXP);
+  document.getElementById('verseRace').textContent=`Class ${rank.raceNum} — ${rank.raceName}`;
+  document.getElementById('verseRank').textContent=rank.rankName;
+  document.getElementById('verseText').textContent=`"${rank.verse}"`;
+  document.getElementById('verseRef').textContent=rank.ref;
+  document.getElementById('verseSplash').classList.add('open');
+}
+
 function showCovenantSplash(){
+  _splashIsDaily=false;
   const rank=getCurrentRank(state.totalXP);
   const cov=RACE_COVENANTS[rank.raceIndex];
   document.getElementById('verseRace').textContent=`Class ${rank.raceNum} — ${rank.raceName}`;
@@ -1221,10 +1235,12 @@ function showCovenantSplash(){
   document.getElementById('verseRef').textContent=cov.ref;
   document.getElementById('verseSplash').classList.add('open');
 }
+let _splashIsDaily=true;
 function dismissVerse(){
-  state.verseSeenDate=todayStr(); save();
+  if(_splashIsDaily){ state.verseSeenDate=todayStr(); save(); }
   document.getElementById('verseSplash').classList.remove('open');
-  processFailedTaskQueue();
+  if(_splashIsDaily) processFailedTaskQueue();
+  _splashIsDaily=true;
 }
 
 // ══════════════════════════════════════════
@@ -1279,9 +1295,20 @@ function render(){
   const raceRanks=ALL_RANKS.filter(r=>r.raceIndex===rank.raceIndex);
   const rankPos=raceRanks.findIndex(r=>r.globalLevel===rank.globalLevel);
   const glowP=rankPos/Math.max(raceRanks.length-1,1);
-  const a1=(0.08+glowP*0.62).toFixed(2),a2=(0.04+glowP*0.36).toFixed(2),a3=(0+glowP*0.18).toFixed(2);
-  const s1=Math.round(4+glowP*20),s2=Math.round(8+glowP*32),s3=Math.round(12+glowP*48);
-  document.getElementById('raceEyebrow').style.textShadow=`0 0 ${s1}px rgba(201,168,76,${a1}),0 0 ${s2}px rgba(201,168,76,${a2}),0 0 ${s3}px rgba(201,168,76,${a3})`;
+  // Pulsing glow on rank name — scales with rank position (rank 1 lightly visible → rank 10 blazing)
+  const rn=document.getElementById('rankName');
+  // Low phase (resting glow)
+  rn.style.setProperty('--g1s', Math.round(5+glowP*10)+'px');
+  rn.style.setProperty('--g1a', (0.12+glowP*0.35).toFixed(2));
+  rn.style.setProperty('--g2s', Math.round(12+glowP*20)+'px');
+  rn.style.setProperty('--g2a', (0.05+glowP*0.20).toFixed(2));
+  // High phase (peak of pulse)
+  rn.style.setProperty('--g1sh', Math.round(8+glowP*16)+'px');
+  rn.style.setProperty('--g1ah', (0.25+glowP*0.50).toFixed(2));
+  rn.style.setProperty('--g2sh', Math.round(20+glowP*32)+'px');
+  rn.style.setProperty('--g2ah', (0.10+glowP*0.32).toFixed(2));
+  rn.style.setProperty('--g3sh', Math.round(32+glowP*48)+'px');
+  rn.style.setProperty('--g3ah', (0.04+glowP*0.18).toFixed(2));
   document.getElementById('rankName').textContent=rank.rankName;
   document.getElementById('rankBadge').textContent=rank.raceEmoji;
 
@@ -1452,6 +1479,12 @@ function renderLadder(){
     d.className='rank-ladder-item';
     d.innerHTML=`<div class="rli-dot ${isCur?'current':isDone?'done':'future'}"></div><div class="rli-rank-name ${isCur?'current':isDone?'done':'future'}">${r.rankName}</div>`;
     ladder.appendChild(d);
+    if(isCur){
+      const v=document.createElement('div');
+      v.className='rli-inscription';
+      v.innerHTML=`<div class="rli-insc-verse">"${r.verse}"</div><div class="rli-insc-ref">${r.ref}</div>`;
+      ladder.appendChild(v);
+    }
   }
 }
 
@@ -2326,11 +2359,7 @@ function renderRaceUpgradeArea(){
         ${habitsHtml}
         ${tier<3?`<button class="ruc-upgrade-btn" ${canUpgrade?'':'disabled'} onclick="upgradeRace()">Upgrade to Tier ${tier+1} — ${RACE_UPGRADE_COST} points${nextBoost?` · +${Math.round(nextBoost*100)}% XP`:''}</button>`:''}
         ${!state.raceLockedIn?`<button class="ruc-change-btn" onclick="changeRaceFromPoints()">Change Race</button>`:''}
-        <div class="ruc-inscription">
-          <div class="ruc-insc-label">Rank Inscription — ${rank.rankName}</div>
-          <div class="ruc-insc-verse">"${rank.verse}"</div>
-          <div class="ruc-insc-ref">${rank.ref}</div>
-        </div>
+
       </div>
     </div>`;
 }
