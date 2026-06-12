@@ -467,7 +467,12 @@
     <div class="divider"></div>
     <div class="section-header">
       <div class="section-title" style="color:#5a3a3a;">Penalties</div>
-      <button class="add-btn" style="border-color:#3a2020;color:#a05050;" onclick="openAddPenaltyModal()">+ Add</button>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <div id="penResetBtn" style="display:none;">
+          <button onclick="resetPenaltiesToDefaults()" style="background:none;border:1px solid #3a2020;color:#7a4040;font-family:'Oswald',sans-serif;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;padding:5px 10px;border-radius:5px;cursor:pointer;">Reset to Defaults</button>
+        </div>
+        <button class="add-btn" style="border-color:#3a2020;color:#a05050;" onclick="openAddPenaltyModal()">+ Add</button>
+      </div>
     </div>
     <div class="habits-list" id="penaltyList" style="margin-top:8px;"></div>
 
@@ -1124,17 +1129,11 @@ function load(){
   if(state.raceTier===undefined) state.raceTier=0;
   if(state.raceLockedIn===undefined) state.raceLockedIn=false;
   if(state.pendingRaceSelect===undefined) state.pendingRaceSelect=false;
-  // Auto-migrate old penalty seeds to seven deadly sins
-  const OLD_PENALTY_NAMES = ['Scrolled 30+ minutes','Wasted money','Viewed pornography'];
-  const hasOldPenalties = state.penalties.some(p=>OLD_PENALTY_NAMES.includes(p.name));
-  if(hasOldPenalties){
-    state.penalties = state.penalties.filter(p=>!OLD_PENALTY_NAMES.includes(p.name));
-    const _sins = [
-      {name:'Acted from pride'}, {name:'Acted in greed'}, {name:'Gave in to lust'},
-      {name:'Indulged in envy'}, {name:'Indulged gluttony'}, {name:'Acted in wrath'},
-      {name:'Indulged in sloth'}
-    ];
-    _sins.forEach(s=>{ if(!state.penalties.some(p=>p.name===s.name)) state.penalties.push({id:uid(),name:s.name,category:'Spiritual',xp:50,pStreak:0}); });
+  // Auto-migrate: add any missing deadly sins without removing custom penalties
+  const DEADLY_SINS = ['Acted from pride','Acted in greed','Gave in to lust','Indulged in envy','Indulged gluttony','Acted in wrath','Indulged in sloth'];
+  const missingSins = DEADLY_SINS.filter(name=>!state.penalties.some(p=>p.name===name));
+  if(missingSins.length>0){
+    missingSins.forEach(name=>state.penalties.push({id:uid(),name,category:'Spiritual',xp:50,pStreak:0}));
     save();
   }
   // Init penalty streaks
@@ -1409,6 +1408,11 @@ function renderHabits(){
 }
 
 function renderPenalties(){
+  // Show reset button if ANY deadly sin is missing from current list
+  const DEADLY_SINS=['Acted from pride','Acted in greed','Gave in to lust','Indulged in envy','Indulged gluttony','Acted in wrath','Indulged in sloth'];
+  const missingSome=DEADLY_SINS.some(name=>!state.penalties.some(p=>p.name===name));
+  const resetBtn=document.getElementById('penResetBtn');
+  if(resetBtn) resetBtn.style.display=missingSome?'block':'none';
   const list=document.getElementById('penaltyList');
   if(!state.penalties||state.penalties.length===0){ list.innerHTML=`<div class="empty-state"><strong>None Added</strong></div>`; return; }
   list.innerHTML='';
@@ -1598,6 +1602,15 @@ function toggleHabit(id){
       }
     }
   }
+  save(); render();
+}
+
+function resetPenaltiesToDefaults(){
+  if(!confirm('Replace all current penalties with the seven deadly sins? Custom penalties will be removed.')) return;
+  const DEADLY_SINS=['Acted from pride','Acted in greed','Gave in to lust','Indulged in envy','Indulged gluttony','Acted in wrath','Indulged in sloth'];
+  state.penalties=DEADLY_SINS.map(name=>({id:uid(),name,category:'Spiritual',xp:50,pStreak:0}));
+  // Clear any checked penalties for today
+  state.penalties.forEach(p=>{ delete state.today[p.id]; });
   save(); render();
 }
 
@@ -2000,17 +2013,11 @@ function completeRite(riteId){
   if(state.raceTier===undefined) state.raceTier=0;
   if(state.raceLockedIn===undefined) state.raceLockedIn=false;
   if(state.pendingRaceSelect===undefined) state.pendingRaceSelect=false;
-  // Auto-migrate old penalty seeds to seven deadly sins
-  const OLD_PENALTY_NAMES = ['Scrolled 30+ minutes','Wasted money','Viewed pornography'];
-  const hasOldPenalties = state.penalties.some(p=>OLD_PENALTY_NAMES.includes(p.name));
-  if(hasOldPenalties){
-    state.penalties = state.penalties.filter(p=>!OLD_PENALTY_NAMES.includes(p.name));
-    const _sins = [
-      {name:'Acted from pride'}, {name:'Acted in greed'}, {name:'Gave in to lust'},
-      {name:'Indulged in envy'}, {name:'Indulged gluttony'}, {name:'Acted in wrath'},
-      {name:'Indulged in sloth'}
-    ];
-    _sins.forEach(s=>{ if(!state.penalties.some(p=>p.name===s.name)) state.penalties.push({id:uid(),name:s.name,category:'Spiritual',xp:50,pStreak:0}); });
+  // Auto-migrate: add any missing deadly sins without removing custom penalties
+  const DEADLY_SINS = ['Acted from pride','Acted in greed','Gave in to lust','Indulged in envy','Indulged gluttony','Acted in wrath','Indulged in sloth'];
+  const missingSins = DEADLY_SINS.filter(name=>!state.penalties.some(p=>p.name===name));
+  if(missingSins.length>0){
+    missingSins.forEach(name=>state.penalties.push({id:uid(),name,category:'Spiritual',xp:50,pStreak:0}));
     save();
   }
   // Init penalty streaks
@@ -2142,17 +2149,11 @@ function getRiteTaskCount(riteId){
   if(state.raceTier===undefined) state.raceTier=0;
   if(state.raceLockedIn===undefined) state.raceLockedIn=false;
   if(state.pendingRaceSelect===undefined) state.pendingRaceSelect=false;
-  // Auto-migrate old penalty seeds to seven deadly sins
-  const OLD_PENALTY_NAMES = ['Scrolled 30+ minutes','Wasted money','Viewed pornography'];
-  const hasOldPenalties = state.penalties.some(p=>OLD_PENALTY_NAMES.includes(p.name));
-  if(hasOldPenalties){
-    state.penalties = state.penalties.filter(p=>!OLD_PENALTY_NAMES.includes(p.name));
-    const _sins = [
-      {name:'Acted from pride'}, {name:'Acted in greed'}, {name:'Gave in to lust'},
-      {name:'Indulged in envy'}, {name:'Indulged gluttony'}, {name:'Acted in wrath'},
-      {name:'Indulged in sloth'}
-    ];
-    _sins.forEach(s=>{ if(!state.penalties.some(p=>p.name===s.name)) state.penalties.push({id:uid(),name:s.name,category:'Spiritual',xp:50,pStreak:0}); });
+  // Auto-migrate: add any missing deadly sins without removing custom penalties
+  const DEADLY_SINS = ['Acted from pride','Acted in greed','Gave in to lust','Indulged in envy','Indulged gluttony','Acted in wrath','Indulged in sloth'];
+  const missingSins = DEADLY_SINS.filter(name=>!state.penalties.some(p=>p.name===name));
+  if(missingSins.length>0){
+    missingSins.forEach(name=>state.penalties.push({id:uid(),name,category:'Spiritual',xp:50,pStreak:0}));
     save();
   }
   // Init penalty streaks
@@ -2217,17 +2218,11 @@ function renderRiteDisciplines(){
   if(state.raceTier===undefined) state.raceTier=0;
   if(state.raceLockedIn===undefined) state.raceLockedIn=false;
   if(state.pendingRaceSelect===undefined) state.pendingRaceSelect=false;
-  // Auto-migrate old penalty seeds to seven deadly sins
-  const OLD_PENALTY_NAMES = ['Scrolled 30+ minutes','Wasted money','Viewed pornography'];
-  const hasOldPenalties = state.penalties.some(p=>OLD_PENALTY_NAMES.includes(p.name));
-  if(hasOldPenalties){
-    state.penalties = state.penalties.filter(p=>!OLD_PENALTY_NAMES.includes(p.name));
-    const _sins = [
-      {name:'Acted from pride'}, {name:'Acted in greed'}, {name:'Gave in to lust'},
-      {name:'Indulged in envy'}, {name:'Indulged gluttony'}, {name:'Acted in wrath'},
-      {name:'Indulged in sloth'}
-    ];
-    _sins.forEach(s=>{ if(!state.penalties.some(p=>p.name===s.name)) state.penalties.push({id:uid(),name:s.name,category:'Spiritual',xp:50,pStreak:0}); });
+  // Auto-migrate: add any missing deadly sins without removing custom penalties
+  const DEADLY_SINS = ['Acted from pride','Acted in greed','Gave in to lust','Indulged in envy','Indulged gluttony','Acted in wrath','Indulged in sloth'];
+  const missingSins = DEADLY_SINS.filter(name=>!state.penalties.some(p=>p.name===name));
+  if(missingSins.length>0){
+    missingSins.forEach(name=>state.penalties.push({id:uid(),name,category:'Spiritual',xp:50,pStreak:0}));
     save();
   }
   // Init penalty streaks
