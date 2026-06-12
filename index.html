@@ -621,7 +621,7 @@
       </div>
     </div>
     <div style="font-size:11px;color:var(--text-dim);line-height:1.5;margin:-4px 0 12px;padding:8px 10px;background:var(--card);border-radius:6px;">
-      <span id="habitDiffHint">Common: 15 XP, building +5 per day in a streak (up to 50 at 7 days)</span>
+      <span id="habitDiffHint">Common: 10 XP, building +3 per day in a streak (up to 19 at 3 days)</span>
     </div>
     <div class="modal-actions">
       <button class="btn-cancel" onclick="closeModal('addHabitModal')">Cancel</button>
@@ -693,7 +693,7 @@
       </div>
     </div>
     <div style="font-size:11px;color:var(--text-dim);line-height:1.5;margin:-4px 0 12px;padding:8px 10px;background:var(--card);border-radius:6px;">
-      <span id="taskDiffHint">Common: 30 XP · Hard: 40 XP · Severe: 50 XP — doubled on completion</span>
+      <span id="taskDiffHint">Common: 20 XP · Hard: 30 XP · Severe: 40 XP</span>
     </div>
     <div id="deadlineRow" style="display:none;">
       <div class="field-label">Deadline Date</div>
@@ -821,8 +821,8 @@ const RACE_BONUSES = [0,50,75,100,125,150,175];
 // Habits: streak-based. base + 5*streakDays (capped at 7 days). Streak resets on miss.
 // Tasks: flat XP by difficulty.
 const HABIT_DIFFICULTY = {
-  Common:    { base:15, label:'Common' },
-  Hard:      { base:25, label:'Hard' },
+  Common:    { base:10, label:'Common' },
+  Hard:      { base:20, label:'Hard' },
   Severe:    { base:30, label:'Severe' },
 };
 // ── RACE SYSTEM ──
@@ -830,7 +830,7 @@ const RACE_UPGRADE_COST = 500; // points per tier upgrade
 const RACE_XP_BOOST = [0, 0.05, 0.10]; // tier index 0/1/2 → boost (tier1=0%, tier2=5%, tier3=10%)
 const RACES_DATA = [
   {
-    id:'intercessor', name:'Intercessor', discipline:'Prayer',
+    id:'intercessor', name:'Intercessor', discipline:'Prayer', category:'Spiritual',
     desc:'The one who stands in the gap. Intercession as a way of life.',
     habits:[
       {name:'Pray specifically for one named person',                                        difficulty:'Common'},
@@ -839,7 +839,7 @@ const RACES_DATA = [
     ]
   },
   {
-    id:'scribe', name:'Scribe', discipline:'Bible Reading',
+    id:'scribe', name:'Scribe', discipline:'Bible Reading', category:'Spiritual',
     desc:'The slow work of embedding scripture until it becomes part of you.',
     habits:[
       {name:'Read your rank inscription verse aloud',                                        difficulty:'Common'},
@@ -848,7 +848,7 @@ const RACES_DATA = [
     ]
   },
   {
-    id:'ascetic', name:'Ascetic', discipline:'Fasting',
+    id:'ascetic', name:'Ascetic', discipline:'Fasting', category:'Physical',
     desc:'Abstinence as foundation. The discipline of the body creating capacity in the spirit.',
     habits:[
       {name:'Abstain intentionally from one source of pleasure',                             difficulty:'Common'},
@@ -857,7 +857,7 @@ const RACES_DATA = [
     ]
   },
   {
-    id:'almoner', name:'Almoner', discipline:'Giving',
+    id:'almoner', name:'Almoner', discipline:'Giving', category:'Social',
     desc:'Generosity from stewardship. What you hold was never yours to keep.',
     habits:[
       {name:'Account for your Sunday tithe — return what was never yours to keep',           difficulty:'Common'},
@@ -866,7 +866,7 @@ const RACES_DATA = [
     ]
   },
   {
-    id:'penitent', name:'Penitent', discipline:'Repentance',
+    id:'penitent', name:'Penitent', discipline:'Repentance', category:'Emotional',
     desc:'Honest reckoning as a daily discipline. The ongoing practice of turning.',
     habits:[
       {name:'Pray through your day and ask the Holy Spirit to reveal your sin patterns',     difficulty:'Common'},
@@ -875,7 +875,7 @@ const RACES_DATA = [
     ]
   },
   {
-    id:'sabbatarian', name:'Sabbatarian', discipline:'Sabbath',
+    id:'sabbatarian', name:'Sabbatarian', discipline:'Sabbath', category:'Emotional',
     desc:'The posture that makes weekly rest possible. You are not the sustainer of your own life.',
     habits:[
       {name:'Name one thing beyond your capacity and explicitly give it to God',             difficulty:'Common'},
@@ -884,7 +884,7 @@ const RACES_DATA = [
     ]
   },
   {
-    id:'recluse', name:'Recluse', discipline:'Solitude',
+    id:'recluse', name:'Monk', discipline:'Solitude', category:'Spiritual',
     desc:'Intentional aloneness with God. Silence as a way of hearing.',
     habits:[
       {name:'Spend 10 minutes in silence before God — no phone, no music, no input',         difficulty:'Common'},
@@ -895,16 +895,16 @@ const RACES_DATA = [
 ];
 
 const TASK_DIFFICULTY = {
-  Common: 30,
-  Hard:   40,
-  Severe: 50,
+  Common: 20,
+  Hard:   30,
+  Severe: 40,
 };
 function habitStreakXP(habit){
-  // base + 5 per consecutive day, capped at 7 days of streak
+  // base + 3 per consecutive day, capped at 3 days of streak
   const diff = HABIT_DIFFICULTY[habit.difficulty] || HABIT_DIFFICULTY.Common;
-  const base = (habit.difficulty ? diff.base : (habit.xp||15));
-  const streak = Math.min(habit.streak||0, 7);
-  return base + (streak * 5);
+  const base = (habit.difficulty ? diff.base : (habit.xp||10));
+  const streak = Math.min(habit.streak||0, 3);
+  return base + (streak * 3);
 }
 
 const RACE_COVENANTS = [
@@ -1166,7 +1166,7 @@ function checkDayReset(){
     if(state.history.length>14) state.history=state.history.slice(0,14);
     // Per-habit streak update: increment if completed yesterday, reset if missed
     state.habits.forEach(h=>{
-      if(state.today[h.id]) h.streak=Math.min((h.streak||0)+1, 7);
+      if(state.today[h.id]) h.streak=Math.min((h.streak||0)+1, 3);
       else h.streak=0;
     });
     // Race habit streaks
@@ -1176,7 +1176,7 @@ function checkDayReset(){
       for(let i=0;i<_tier;i++){
         const rhId='race_'+_race.id+'_'+i;
         const sKey='raceHabitStreak_'+_race.id+'_'+i;
-        if(state.today[rhId]) state[sKey]=Math.min((state[sKey]||0)+1, 7);
+        if(state.today[rhId]) state[sKey]=Math.min((state[sKey]||0)+1, 3);
         else state[sKey]=0;
       }
     }
@@ -1327,11 +1327,8 @@ function render(){
   streakEl.className='stat-val'+(state.streak===0?' streak-danger':'');
   document.getElementById('streakLbl').textContent=state.streak>10?'🔥 Streak':'Streak';
 
-  // XP multiplier banner
-  const mult=Math.pow(2,state.todayTasksCompleted||0);
   const banner=document.getElementById('xpMultBanner');
-  if(mult>1){ banner.style.display='flex'; document.getElementById('xpMultVal').textContent=mult+'×'; }
-  else { banner.style.display='none'; }
+  if(banner) banner.style.display='none';
 
   const doneCount=state.habits.filter(h=>state.today[h.id]).length;
   const pct=state.habits.length===0?0:Math.round((doneCount/state.habits.length)*100);
@@ -1429,8 +1426,7 @@ function renderTasks(){
 
 function buildTaskEl(t,today){
   const done=!!state.today[t.id];
-  const mult=Math.pow(2,state.todayTasksCompleted||0);
-  const effectiveXP=t.xp*(done?1:mult)*2;
+  const effectiveXP=t.xp;
   const div=document.createElement('div');
   div.className='task-item'+(t.type==='timed'?' timed':'')+(done?' done':'');
 
@@ -1539,9 +1535,8 @@ function renderRewardLog(){
 // HABIT TOGGLE
 // ══════════════════════════════════════════
 function habitEffectiveXP(habit){
-  const mult=Math.pow(2,state.todayTasksCompleted||0);
   const baseStreakXP=habitStreakXP(habit);
-  const raw=calcTitleBonus(habit, baseStreakXP*mult) + getRiteBonus(habit.category);
+  const raw=calcTitleBonus(habit, baseStreakXP) + getRiteBonus(habit.category);
   const boost=getRaceXPBoost();
   return Math.round(raw*(1+boost));
 }
@@ -1594,7 +1589,7 @@ function togglePenalty(id){
 
 function deleteHabit(id){
   const h=state.habits.find(x=>x.id===id);
-  if(state.today[id]&&h){ const mult=Math.pow(2,state.todayTasksCompleted||0); state.totalXP=Math.max(0,state.totalXP-h.xp*mult); }
+  if(state.today[id]&&h){ state.totalXP=Math.max(0,state.totalXP-habitEffectiveXP(h)); }
   state.habits=state.habits.filter(x=>x.id!==id); delete state.today[id]; save(); render();
 }
 function deletePenalty(id){
@@ -1610,11 +1605,9 @@ function completeTask(id){
   const task=state.tasks.find(t=>t.id===id);
   if(!task||state.today[id]) return;
   const rankBefore=getCurrentRank(state.totalXP);
-  const mult=Math.pow(2,state.todayTasksCompleted||0);
-  const xpGain=task.xp*2*mult;
+  const xpGain=task.xp;
   state.totalXP+=xpGain;
   state.points+=2;
-  state.todayTasksCompleted=(state.todayTasksCompleted||0)+1;
   // Log the completed task
   const dateStr=new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
   state.taskLog.unshift({name:task.name,xp:xpGain,date:dateStr});
@@ -1735,9 +1728,9 @@ function addInscriptionTask(rank){
 function closeModal(id){ document.getElementById(id).classList.remove('open'); }
 
 const HABIT_DIFF_HINTS = {
-  Common:'Common: 15 XP base, building +5 per streak day (up to 50 at 7 days)',
-  Hard:'Hard: 25 XP base, building +5 per streak day (up to 60 at 7 days)',
-  Severe:'Severe: 30 XP base, building +5 per streak day (up to 65 at 7 days)',
+  Common:'Common: 10 XP base, building +3 per streak day (up to 19 at 3 days)',
+  Hard:'Hard: 20 XP base, building +3 per streak day (up to 29 at 3 days)',
+  Severe:'Severe: 30 XP base, building +3 per streak day (up to 39 at 3 days)',
 };
 function openAddHabitModal(){
   document.getElementById('habitNameInput').value='';
@@ -1746,7 +1739,10 @@ function openAddHabitModal(){
   document.getElementById('addHabitModal').classList.add('open');
   setTimeout(()=>document.getElementById('habitNameInput').focus(),100);
 }
+const MAX_HABITS = 15;
+const MAX_TASKS = 10;
 function addHabit(){
+  if(state.habits.length>=MAX_HABITS){ alert('Habit limit reached (15). Remove a habit to add a new one.'); return; }
   const name=document.getElementById('habitNameInput').value.trim();
   if(!name){document.getElementById('habitNameInput').focus();return;}
   const category=document.getElementById('habitCatInput').value;
@@ -1793,6 +1789,7 @@ function openAddTaskModal(type){
   setTimeout(()=>document.getElementById('taskNameInput').focus(),100);
 }
 function addTask(){
+  if(state.tasks.length>=MAX_TASKS){ alert('Task limit reached (10). Complete or remove a task to add a new one.'); return; }
   const name=document.getElementById('taskNameInput').value.trim();
   if(!name){document.getElementById('taskNameInput').focus();return;}
   const category=document.getElementById('taskCatInput').value;
@@ -2259,7 +2256,7 @@ function getRaceHabits(){
   return race.habits.slice(0,tier).map((h,i)=>({
     id:'race_'+race.id+'_'+i,
     name:h.name,
-    category:'Spiritual',
+    category:race.category||'Spiritual',
     difficulty:h.difficulty,
     streak:state['raceHabitStreak_'+race.id+'_'+i]||0,
     isRaceHabit:true,
