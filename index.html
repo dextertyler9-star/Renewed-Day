@@ -53,7 +53,7 @@
   .ru-divider { width:48px; height:1px; background:var(--gold-dim); margin:0 auto 28px; }
   .ru-eyebrow { font-family:'Oswald',sans-serif; font-size:13px; letter-spacing:0.22em; text-transform:uppercase; color:var(--gold-dim); margin-bottom:4px; }
   .ru-rank { font-family:'Oswald',sans-serif; font-size:28px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--gold); line-height:1; margin-bottom:32px; }
-  .ru-verse { font-size:16px; font-weight:300; color:var(--text); line-height:1.75; max-width:340px; font-style:italic; margin-bottom:14px; }
+  .ru-verse { font-size:16px; font-weight:300; color:var(--text); line-height:1.75; font-style:italic; margin-bottom:14px; padding:0 24px; text-align:center; word-break:normal; overflow-wrap:break-word; }
   .ru-ref { font-family:'Oswald',sans-serif; font-size:14px; letter-spacing:0.1em; color:var(--gold-dim); margin-bottom:28px; }
   .ru-pts { font-size:13px; color:var(--copper); letter-spacing:0.08em; margin-bottom:28px; font-family:'Oswald',sans-serif; }
   .ru-dismiss { background:none; border:1px solid var(--gold-dim); color:var(--gold); font-family:'Oswald',sans-serif; font-size:13px; letter-spacing:0.14em; text-transform:uppercase; padding:10px 28px; border-radius:6px; cursor:pointer; }
@@ -148,7 +148,7 @@
 
   /* ── HABIT ITEMS ── */
   .habits-list { padding:0 20px; display:flex; flex-direction:column; gap:8px; }
-  .habit-item { background:var(--card); border:1px solid var(--border); border-radius:9px; display:flex; align-items:center; padding:12px 13px; gap:12px; cursor:pointer; transition:border-color 0.15s,background 0.15s; user-select:none; position:relative; overflow:hidden; }
+  .habit-item { background:var(--card); border:1px solid var(--border); border-radius:9px; display:flex; align-items:flex-start; padding:12px 13px; gap:12px; cursor:pointer; transition:border-color 0.15s,background 0.15s; user-select:none; position:relative; overflow:hidden; }
   .habit-item:hover { border-color:#333; }
   .habit-item.done { border-color:var(--gold-dim); background:linear-gradient(135deg,#141414,#1a1608); }
   .habit-item.done::before { content:''; position:absolute; inset:0; background:linear-gradient(90deg,transparent,rgba(201,168,76,0.04)); pointer-events:none; }
@@ -164,7 +164,7 @@
   .habit-check { width:24px; height:24px; border-radius:6px; border:2px solid var(--border); display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:all 0.18s; font-size:14px; }
   .habit-item.done .habit-check { background:var(--gold); border-color:var(--gold); color:#0D0D0D; }
   .habit-info { flex:1; min-width:0; }
-  .habit-name { font-size:16px; font-weight:500; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .habit-name { font-size:16px; font-weight:500; color:var(--text); line-height:1.35; word-break:break-word; }
   .habit-item.done .habit-name { color:var(--gold); }
   .habit-meta { font-size:13px; color:var(--text-dim); margin-top:1px; }
   .habit-xp { font-family:'Oswald',sans-serif; font-size:14px; font-weight:600; color:var(--gold-dim); letter-spacing:0.04em; flex-shrink:0; transition:color 0.18s; }
@@ -180,7 +180,7 @@
   .task-type-badge { font-family:'Oswald',sans-serif; font-size:11px; letter-spacing:0.1em; text-transform:uppercase; padding:2px 7px; border-radius:3px; flex-shrink:0; }
   .task-type-badge.onetime { background:#1a2a3a; color:var(--blue-bright); }
   .task-type-badge.timed { background:#1a2820; color:#4abf7a; }
-  .task-name { font-size:16px; font-weight:500; color:var(--text); flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .task-name { font-size:16px; font-weight:500; color:var(--text); flex:1; min-width:0; line-height:1.35; word-break:break-word; }
   .task-item.done .task-name { color:var(--gold-dim); }
   .task-meta { font-size:13px; color:var(--text-dim); display:flex; align-items:center; justify-content:space-between; }
   .task-countdown { font-family:'Oswald',sans-serif; font-size:13px; letter-spacing:0.06em; }
@@ -312,10 +312,11 @@
   .active-title-badge { font-family:'Oswald',sans-serif; font-size:13px; color:var(--copper); letter-spacing:0.08em; text-transform:uppercase; cursor:pointer; border-bottom:1px dotted var(--copper); display:inline-block; margin-bottom:3px; }
   .title-dropdown { display:none; background:var(--card2); border:1px solid var(--border); border-radius:8px; padding:8px; margin-top:6px; flex-direction:column; gap:4px; }
   .title-dropdown.open { display:flex; }
-  .title-option { font-family:'Oswald',sans-serif; font-size:13px; letter-spacing:0.06em; text-transform:uppercase; padding:7px 10px; border-radius:5px; cursor:pointer; color:var(--text-dim); display:flex; align-items:center; justify-content:space-between; gap:8px; }
+    .title-option { font-family:'Oswald',sans-serif; font-size:13px; letter-spacing:0.06em; text-transform:uppercase; padding:10px 12px; border-radius:7px; cursor:pointer; display:flex; flex-direction:column; gap:4px; transition:background 0.12s; }
   .title-option:hover { background:var(--card); color:var(--gold); }
   .title-option.equipped { color:var(--copper); }
-  .title-option-bonus { font-size:11px; color:#555; text-transform:none; font-family:'Inter',sans-serif; flex-shrink:0; }
+    .title-option-name { color:var(--text); font-family:'Oswald',sans-serif; font-size:13px; letter-spacing:0.06em; text-transform:uppercase; }
+  .title-option-bonus { font-size:12px; color:#6a7a8a; text-transform:none; font-family:'Inter',sans-serif; line-height:1.45; }
 
 
 
@@ -337,8 +338,8 @@
 
   /* ── GLOWING HEADER ── */
   @keyframes logo-pulse {
-    0%, 100% { text-shadow: 0 0 8px rgba(201,168,76,0.25), 0 0 20px rgba(201,168,76,0.12); }
-    50% { text-shadow: 0 0 14px rgba(201,168,76,0.55), 0 0 36px rgba(201,168,76,0.28), 0 0 60px rgba(201,168,76,0.12); }
+    0%, 100% { text-shadow: 0 0 var(--lg1s,8px) rgba(201,168,76,var(--lg1a,0.25)), 0 0 var(--lg2s,20px) rgba(201,168,76,var(--lg2a,0.12)); }
+    50% { text-shadow: 0 0 var(--lg1sh,14px) rgba(201,168,76,var(--lg1ah,0.55)), 0 0 var(--lg2sh,36px) rgba(201,168,76,var(--lg2ah,0.28)), 0 0 var(--lg3sh,60px) rgba(201,168,76,var(--lg3ah,0.12)); }
   }
   .logo { animation: logo-pulse 4s ease-in-out infinite; }
 
@@ -378,8 +379,6 @@
   .ruc-upgrade-btn { width:100%; margin-top:12px; background:none; border:1px solid #3a2a14; color:var(--copper); font-family:'Oswald',sans-serif; font-size:13px; letter-spacing:0.12em; text-transform:uppercase; padding:10px; border-radius:7px; cursor:pointer; transition:background 0.15s; }
   .ruc-upgrade-btn:hover { background:var(--copper-glow); }
   .ruc-upgrade-btn:disabled { opacity:0.35; cursor:not-allowed; }
-  .ruc-change-btn { width:100%; margin-top:8px; background:none; border:1px solid var(--border); color:var(--text-dim); font-family:'Oswald',sans-serif; font-size:13px; letter-spacing:0.1em; text-transform:uppercase; padding:8px; border-radius:7px; cursor:pointer; }
-  .ruc-change-btn:hover { color:var(--gold); border-color:var(--gold-dim); }
   .race-none-card { margin:0 20px 14px; background:var(--card); border:1px dashed var(--border); border-radius:10px; padding:16px; text-align:center; font-size:13px; color:var(--text-dim); font-style:italic; }
   ::-webkit-scrollbar { width:4px; }
   ::-webkit-scrollbar-track { background:transparent; }
@@ -465,6 +464,14 @@
     <div class="habits-list" id="habitsList"></div>
 
     <div class="divider"></div>
+    <!-- RACE HABITS SECTION -->
+    <div id="raceHabitsSection" style="display:none;">
+      <div class="section-header">
+        <div class="section-title" id="raceHabitsTitle" style="color:var(--copper);">Race</div>
+      </div>
+      <div class="habits-list" id="raceHabitsList"></div>
+      <div class="divider"></div>
+    </div>
     <div class="section-header">
       <div class="section-title" style="color:#5a3a3a;">Penalties</div>
       <div style="display:flex;gap:8px;align-items:center;">
@@ -515,7 +522,6 @@
       <div>
         <div class="rpb-label">Available Points</div>
         <div class="rpb-val" id="rewardPointsVal">0</div>
-        <div class="rpb-sub">Earned through discipline</div>
       </div>
       <div class="rpb-icon">✧</div>
     </div>
@@ -563,6 +569,17 @@
   <div class="rc-name" id="rcDiscipline"></div>
   <div class="rc-pts" id="rcPts"></div>
   <button class="fs-btn" style="animation:ru-appear 0.6s ease 0.9s both;" onclick="dismissRiteComplete()">Receive It</button>
+</div>
+
+<!-- RACE CHANGE PROMPT -->
+<div class="race-select-screen" id="raceChangePrompt" style="justify-content:center;">
+  <div class="rs-eyebrow">A New Class Begins</div>
+  <div class="rs-title" style="font-size:22px;">Choose a New Race?</div>
+  <div class="rs-sub" id="raceChangeSubtext"></div>
+  <div style="display:flex;flex-direction:column;gap:10px;width:100%;max-width:320px;margin-top:8px;">
+    <button class="fs-btn" style="width:100%;" onclick="raceChangeChooseNew()">Choose New Race</button>
+    <button class="fs-btn" style="width:100%;background:none;border-color:var(--border);color:var(--text-dim);" onclick="raceChangeKeep()" id="raceKeepBtn">Continue as Intercessor</button>
+  </div>
 </div>
 
 <!-- RACE SELECTION SCREEN -->
@@ -816,7 +833,7 @@ const RACES = [
     {name:'Sent',                              verse:'As the Father has sent me, even so I am sending you.',                                               ref:'John 20:21'},
   ]},
   { name:'Consecrated', emoji:'ק', raceNum:'VII', xpPerRank:99999, ranks:[
-    {name:'Kadosh', verse:'You shall be holy, for I the Lord your God am holy.', ref:'Leviticus 19:2'},
+    {name:'Set Apart', verse:'But you are a chosen race, a royal priesthood, a holy nation, a people for his own possession, that you may proclaim the excellencies of him who called you out of darkness into his marvelous light.', ref:'1 Peter 2:9'},
   ]},
 ];
 
@@ -914,7 +931,7 @@ function habitStreakXP(habit){
 
 const RACE_COVENANTS = [
   {verse:'Whatever your hand finds to do, do it with your might.',                        ref:'Ecclesiastes 9:10'},
-  {verse:'No one who puts his hand to the plow and looks back is fit for the kingdom of God.', ref:'Luke 9:62'},
+  {verse:'And a highway will be there; it will be called the Way of Holiness; it will be for those who walk on that Way. The unclean will not journey on it; wicked fools will not go about on it.', ref:'Isaiah 35:8'},
   {verse:'Whatever you do, work heartily, as for the Lord and not for men.',              ref:'Colossians 3:23'},
   {verse:'Unless the Lord builds the house, those who build it labor in vain.',           ref:'Psalm 127:1'},
   {verse:'Write the vision; make it plain on tablets, so he may run who reads it.',       ref:'Habakkuk 2:2'},
@@ -1077,7 +1094,7 @@ const DEFAULT_STATE = {
   today:{}, totalXP:0, points:0, streak:0,
   lastDate:null, history:[], verseSeenDate:null,
   todayTasksCompleted:0, failedTasks:[], pendingCovenant:false,
-  earnedTitles:[], equippedTitle:null, completedRites:{}, riteTaskCounts:{}, taskLog:[],
+  earnedTitles:[], equippedTitle:null, completedRites:{}, riteTaskCounts:{}, taskLog:[], highestRankXP:0,
   playerRace:null, raceTier:0, raceLockedIn:false, pendingRaceSelect:false,
   yesterdayFullCompletion:false,
 };
@@ -1125,6 +1142,9 @@ function load(){
   if(!state.completedRites) state.completedRites={};
   if(!state.riteTaskCounts) state.riteTaskCounts={};
   if(!state.taskLog) state.taskLog=[];
+  if(state.highestRankXP===undefined) state.highestRankXP=0;
+  // Backfill floor for existing users
+  setTimeout(()=>{ try{ updateXPFloor(); save(); }catch(e){} }, 100);
   if(state.playerRace===undefined) state.playerRace=null;
   if(state.raceTier===undefined) state.raceTier=0;
   if(state.raceLockedIn===undefined) state.raceLockedIn=false;
@@ -1227,6 +1247,8 @@ function switchTab(name,btn){
 // ══════════════════════════════════════════
 function showVerseSplash(){
   if(state.verseSeenDate===todayStr()) return;
+  _splashContext='daily';
+  setSplashButton();
   const rank=getCurrentRank(state.totalXP);
   const cov=RACE_COVENANTS[rank.raceIndex];
   document.getElementById('verseRace').textContent=`Class ${rank.raceNum} — ${rank.raceName}`;
@@ -1238,7 +1260,8 @@ function showVerseSplash(){
 
 
 function showInscriptionSplash(){
-  _splashIsDaily=false;
+  _splashContext='inscription';
+  setSplashButton();
   const rank=getCurrentRank(state.totalXP);
   document.getElementById('verseRace').textContent=`Class ${rank.raceNum} — ${rank.raceName}`;
   document.getElementById('verseRank').textContent=rank.rankName;
@@ -1248,7 +1271,8 @@ function showInscriptionSplash(){
 }
 
 function showCovenantSplash(){
-  _splashIsDaily=false;
+  _splashContext='covenant';
+  setSplashButton();
   const rank=getCurrentRank(state.totalXP);
   const cov=RACE_COVENANTS[rank.raceIndex];
   document.getElementById('verseRace').textContent=`Class ${rank.raceNum} — ${rank.raceName}`;
@@ -1257,12 +1281,21 @@ function showCovenantSplash(){
   document.getElementById('verseRef').textContent=cov.ref;
   document.getElementById('verseSplash').classList.add('open');
 }
-let _splashIsDaily=true;
+let _splashContext='daily'; // 'daily' | 'inscription' | 'covenant'
 function dismissVerse(){
-  if(_splashIsDaily){ state.verseSeenDate=todayStr(); save(); }
+  if(_splashContext==='daily'){ state.verseSeenDate=todayStr(); save(); }
+  else if(_splashContext==='inscription'){ SFX.inscriptionSeal(); }
+  else if(_splashContext==='covenant'){ SFX.covenantSeal(); }
   document.getElementById('verseSplash').classList.remove('open');
-  if(_splashIsDaily) processFailedTaskQueue();
-  _splashIsDaily=true;
+  if(_splashContext==='daily') processFailedTaskQueue();
+  _splashContext='daily';
+}
+function setSplashButton(){
+  const btn=document.querySelector('#verseSplash .fs-btn');
+  if(!btn) return;
+  if(_splashContext==='inscription') btn.textContent='I Will Remember';
+  else if(_splashContext==='covenant') btn.textContent='I Will Honor This Covenant';
+  else btn.textContent='Enter the Day';
 }
 
 // ══════════════════════════════════════════
@@ -1331,6 +1364,21 @@ function render(){
   rn.style.setProperty('--g2ah', (0.10+glowP*0.32).toFixed(2));
   rn.style.setProperty('--g3sh', Math.round(32+glowP*48)+'px');
   rn.style.setProperty('--g3ah', (0.04+glowP*0.18).toFixed(2));
+  // Logo glow scales by class (0=Apprentice subtle → 6=Consecrated blazing)
+  const classP=rank.raceIndex/6;
+  const lg=document.querySelector('.logo');
+  if(lg){
+    lg.style.setProperty('--lg1s', Math.round(8+classP*10)+'px');
+    lg.style.setProperty('--lg1a', (0.25+classP*0.35).toFixed(2));
+    lg.style.setProperty('--lg2s', Math.round(20+classP*20)+'px');
+    lg.style.setProperty('--lg2a', (0.12+classP*0.22).toFixed(2));
+    lg.style.setProperty('--lg1sh', Math.round(14+classP*16)+'px');
+    lg.style.setProperty('--lg1ah', (0.55+classP*0.35).toFixed(2));
+    lg.style.setProperty('--lg2sh', Math.round(36+classP*30)+'px');
+    lg.style.setProperty('--lg2ah', (0.28+classP*0.30).toFixed(2));
+    lg.style.setProperty('--lg3sh', Math.round(60+classP*50)+'px');
+    lg.style.setProperty('--lg3ah', (0.12+classP*0.25).toFixed(2));
+  }
   document.getElementById('rankName').textContent=rank.rankName;
   document.getElementById('rankBadge').textContent=rank.raceEmoji;
 
@@ -1352,9 +1400,12 @@ function render(){
   const banner=document.getElementById('xpMultBanner');
   if(banner) banner.style.display='none';
 
-  const doneCount=state.habits.filter(h=>state.today[h.id]).length;
-  const pct=state.habits.length===0?0:Math.round((doneCount/state.habits.length)*100);
-  document.getElementById('dpLabel').textContent=`${doneCount} of ${state.habits.length} completed`;
+  const _raceH=getRaceHabits();
+  const raceHDone=_raceH.filter(rh=>state.today[rh.id]).length;
+  const doneCount=state.habits.filter(h=>state.today[h.id]).length + raceHDone;
+  const totalCount=state.habits.length + _raceH.length;
+  const pct=totalCount===0?0:Math.round((doneCount/totalCount)*100);
+  document.getElementById('dpLabel').textContent=`${doneCount} of ${totalCount} completed`;
   document.getElementById('dpPct').textContent=pct+'%';
   document.getElementById('dpFill').style.width=pct+'%';
 
@@ -1372,11 +1423,17 @@ function render(){
   renderRaceUpgradeArea();
 }
 
-function renderHabits(){
-  const list=document.getElementById('habitsList');
-  list.innerHTML='';
+function renderRaceHabitsSection(){
+  const section=document.getElementById('raceHabitsSection');
+  const list=document.getElementById('raceHabitsList');
+  const title=document.getElementById('raceHabitsTitle');
+  if(!section||!list) return;
   const raceHabits=getRaceHabits();
-  // Race habits render first, mixed in seamlessly
+  const race=getPlayerRace();
+  if(raceHabits.length===0||!race){ section.style.display='none'; return; }
+  section.style.display='block';
+  title.textContent=race.name;
+  list.innerHTML='';
   for(const rh of raceHabits){
     const done=!!state.today[rh.id];
     const effectiveXP=habitEffectiveXP(rh);
@@ -1389,8 +1446,13 @@ function renderHabits(){
     div.addEventListener('click',()=>toggleRaceHabit(rh));
     list.appendChild(div);
   }
-  if((!state.habits||state.habits.length===0)&&raceHabits.length===0){ list.innerHTML=`<div class="empty-state"><strong>No Habits</strong></div>`; return; }
-  if(!state.habits) return;
+}
+
+function renderHabits(){
+  const list=document.getElementById('habitsList');
+  list.innerHTML='';
+  renderRaceHabitsSection();
+  if(!state.habits||state.habits.length===0){ list.innerHTML=`<div class="empty-state"><strong>No Habits</strong></div>`; return; }
   for(const h of state.habits){
     const done=!!state.today[h.id];
     const effectiveXP=habitEffectiveXP(h);
@@ -1507,13 +1569,30 @@ function renderLadder(){
       v.className='rli-inscription';
       v.innerHTML=`<div class="rli-insc-verse">"${r.verse}"</div><div class="rli-insc-ref">${r.ref}</div>`;
       ladder.appendChild(v);
+    } else if(isDone){
+      d.style.cursor='pointer';
+      const v=document.createElement('div');
+      v.className='rli-inscription rli-unfurl';
+      v.style.display='none';
+      v.innerHTML=`<div class="rli-insc-verse">"${r.verse}"</div><div class="rli-insc-ref">${r.ref}</div>`;
+      ladder.appendChild(v);
+      d.addEventListener('click',(e)=>{
+        e.stopPropagation();
+        const isOpen=v.style.display!=='none';
+        ladder.querySelectorAll('.rli-unfurl').forEach(el=>el.style.display='none');
+        v.style.display=isOpen?'none':'block';
+      });
     }
   }
 }
 
 function toggleLadder(){
-  document.getElementById('rankLadder').classList.toggle('open');
+  const ladder=document.getElementById('rankLadder');
+  ladder.classList.toggle('open');
   document.getElementById('ladderToggle').classList.toggle('open');
+  if(!ladder.classList.contains('open')){
+    ladder.querySelectorAll('.rli-unfurl').forEach(el=>el.style.display='none');
+  }
 }
 
 function renderHistory(){
@@ -1575,16 +1654,16 @@ function toggleHabit(id){
   const xpVal=habitEffectiveXP(habit);
 
   if(state.today[id]){
-    // Uncheck — remove XP and point
     state.today[id]=false;
-    state.totalXP=Math.max(0,state.totalXP-xpVal);
+    state.totalXP=Math.max(getXPFloor(),state.totalXP-xpVal);
     state.points=Math.max(0,state.points-1);
+    SFX.habitUncheck();
   } else {
-    // Check — award XP and 1 point
     state.today[id]=true;
     state.totalXP+=xpVal;
     state.points+=1;
     triggerXPPulse();
+    SFX.habitCheck();
   }
 
   if(state.today[id]){
@@ -1598,7 +1677,7 @@ function toggleHabit(id){
       const triggered=checkCovenantTrigger(rankBefore, rankAfter);
       if(!triggered){
         showRankUp(rankAfter,bonusPts,isRaceChange);
-        if(!isRaceChange) addInscriptionTask(rankBefore);
+        if(!isRaceChange) addInscriptionTask(rankAfter);
       }
     }
   }
@@ -1618,14 +1697,14 @@ function togglePenalty(id){
   const h=state.penalties.find(p=>p.id===id);
   if(!h) return;
   const pxp=calcPenaltyXPFinal(h);
-  if(state.today[id]){ state.today[id]=false; state.totalXP+=pxp; }
-  else { state.today[id]=true; state.totalXP=Math.max(0,state.totalXP-pxp); }
+  if(state.today[id]){ state.today[id]=false; state.totalXP+=pxp; SFX.penaltyUncheck(); }
+  else { state.today[id]=true; state.totalXP=Math.max(getXPFloor(),state.totalXP-pxp); SFX.penaltyCheck(); }
   save(); render();
 }
 
 function deleteHabit(id){
   const h=state.habits.find(x=>x.id===id);
-  if(state.today[id]&&h){ state.totalXP=Math.max(0,state.totalXP-habitEffectiveXP(h)); }
+  if(state.today[id]&&h){ state.totalXP=Math.max(getXPFloor(),state.totalXP-habitEffectiveXP(h)); }
   state.habits=state.habits.filter(x=>x.id!==id); delete state.today[id]; save(); render();
 }
 function deletePenalty(id){
@@ -1661,6 +1740,7 @@ function completeTask(id){
     showRankUp(rankAfter,bonusPts,isRaceChange);
   }
   triggerXPPulse();
+  SFX.taskComplete();
   save(); render();
 }
 
@@ -1695,6 +1775,7 @@ function triggerXPPulse(){
 // RANK UP SCREEN
 // ══════════════════════════════════════════
 function showRankUp(rank,bonusPts,isRaceChange){
+  if(isRaceChange) SFX.classUp(); else SFX.rankUp();
   const screen=document.getElementById('rankupScreen');
   const inner=document.getElementById('rankupInner');
   screen.style.opacity='0'; screen.classList.add('show');
@@ -1723,6 +1804,7 @@ function showRankUp(rank,bonusPts,isRaceChange){
   }
 }
 function handleRaceFlagsOnRankUp(rankBefore, rankAfter, isClassChange){
+  updateXPFloor();
   // First ever rank-up — trigger race selection
   if(state.playerRace===null||state.playerRace===undefined){
     state.pendingRaceSelect=true;
@@ -1743,7 +1825,11 @@ function dismissRankUp(){
   setTimeout(()=>{
     screen.classList.remove('show'); screen.style.opacity=''; screen.style.transition='';
     if(state.pendingRaceSelect){
-      setTimeout(()=>showRaceSelectScreen(),300);
+      if(state.playerRace===null||state.playerRace===undefined){
+        setTimeout(()=>showRaceSelectScreen(false),300);
+      } else {
+        setTimeout(()=>showRaceChangePrompt(),300);
+      }
     }
   },420);
 }
@@ -1752,9 +1838,9 @@ function addInscriptionTask(rank){
   const deadline=new Date();
   deadline.setDate(deadline.getDate()+30);
   const deadlineStr=deadline.toLocaleDateString('en-CA');
-  const taskName='Use "'+rank.ref+'" in conversation naturally';
+  const taskName='Rank Inscription — '+rank.rankName;
   if(state.tasks.some(t=>t.name===taskName)) return;
-  state.tasks.push({id:uid(),name:taskName,category:'Social',difficulty:'Hard',type:'timed',deadline:deadlineStr,inscription:true,verse:rank.verse,ref:rank.ref});
+  state.tasks.push({id:uid(),name:taskName,category:'Social',xp:100,difficulty:'Hard',type:'timed',deadline:deadlineStr,inscription:true,verse:rank.verse,ref:rank.ref});
   save();
 }
 
@@ -1868,6 +1954,7 @@ function openConfirm(rewardId){
 function redeemReward(id){
   const reward=state.rewards.find(r=>r.id===id);
   if(!reward||state.points<reward.cost) return;
+  SFX.redeem();
   state.points-=reward.cost;
   const dateStr=new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
   state.rewardLog.unshift({name:reward.name,cost:reward.cost,date:dateStr});
@@ -1901,7 +1988,7 @@ function renderTitleArea(){
     const t=RACE_TITLES[ri];
     const div=document.createElement('div');
     div.className='title-option'+(state.equippedTitle===ri?' equipped':'');
-    div.innerHTML=`<span>${t.name}</span><span class="title-option-bonus">${t.bonus}</span>`;
+    div.innerHTML=`<div class="title-option-name">${t.name}${state.equippedTitle===ri?' ✓':''}</div><div class="title-option-bonus">${t.bonus}</div>`;
     div.addEventListener('click',()=>{
       state.equippedTitle=(state.equippedTitle===ri?null:ri);
       save();render();
@@ -2004,11 +2091,15 @@ function getRiteStatus(r){
 }
 
 function completeRite(riteId){
+  SFX.riteComplete();
   const rite=RITE_DATA.find(r=>r.id===riteId);
   if(!rite) return;
   if(!state.completedRites) state.completedRites={};
   if(!state.riteTaskCounts) state.riteTaskCounts={};
   if(!state.taskLog) state.taskLog=[];
+  if(state.highestRankXP===undefined) state.highestRankXP=0;
+  // Backfill floor for existing users
+  setTimeout(()=>{ try{ updateXPFloor(); save(); }catch(e){} }, 100);
   if(state.playerRace===undefined) state.playerRace=null;
   if(state.raceTier===undefined) state.raceTier=0;
   if(state.raceLockedIn===undefined) state.raceLockedIn=false;
@@ -2145,6 +2236,9 @@ function renderRitesList(){
 function getRiteTaskCount(riteId){
   if(!state.riteTaskCounts) state.riteTaskCounts={};
   if(!state.taskLog) state.taskLog=[];
+  if(state.highestRankXP===undefined) state.highestRankXP=0;
+  // Backfill floor for existing users
+  setTimeout(()=>{ try{ updateXPFloor(); save(); }catch(e){} }, 100);
   if(state.playerRace===undefined) state.playerRace=null;
   if(state.raceTier===undefined) state.raceTier=0;
   if(state.raceLockedIn===undefined) state.raceLockedIn=false;
@@ -2214,6 +2308,9 @@ function renderRiteDisciplines(){
         state.totalXP+=rt.xp;
         if(!state.riteTaskCounts) state.riteTaskCounts={};
   if(!state.taskLog) state.taskLog=[];
+  if(state.highestRankXP===undefined) state.highestRankXP=0;
+  // Backfill floor for existing users
+  setTimeout(()=>{ try{ updateXPFloor(); save(); }catch(e){} }, 100);
   if(state.playerRace===undefined) state.playerRace=null;
   if(state.raceTier===undefined) state.raceTier=0;
   if(state.raceLockedIn===undefined) state.raceLockedIn=false;
@@ -2236,6 +2333,7 @@ function renderRiteDisciplines(){
   });
         state.riteTaskCounts[rite.id]=(state.riteTaskCounts[rite.id]||0)+1;
         triggerXPPulse();
+        SFX.riteTask();
         save(); render();
       });
     }
@@ -2270,6 +2368,7 @@ function checkCovenantTrigger(rankBefore,rankAfter){
 }
 
 function showCovenantScreen(raceIndex){
+  SFX.covenant();
   const cov=RACE_COVENANTS[raceIndex];
   const race=RACES[raceIndex];
   document.getElementById('covRace').textContent='Class '+race.raceNum+' — '+race.name;
@@ -2341,7 +2440,27 @@ function getRaceHabits(){
   }));
 }
 
-function showRaceSelectScreen(){
+
+function showRaceChangePrompt(){
+  const race=getPlayerRace();
+  const keepBtn=document.getElementById('raceKeepBtn');
+  if(keepBtn&&race) keepBtn.textContent='Continue as '+race.name;
+  document.getElementById('raceChangePrompt').classList.add('open');
+}
+function raceChangeChooseNew(){
+  document.getElementById('raceChangePrompt').classList.remove('open');
+  showRaceSelectScreen(true); // true = abbreviated (no intro subtitle)
+}
+function raceChangeKeep(){
+  document.getElementById('raceChangePrompt').classList.remove('open');
+  state.pendingRaceSelect=false;
+  state.raceLockedIn=false; // lock happens on first rank completion as before
+  save(); render();
+}
+
+function showRaceSelectScreen(abbreviated){
+  const sub=document.getElementById('rsSub');
+  if(sub) sub.style.display=abbreviated?'none':'block';
   const list=document.getElementById('rsList');
   list.innerHTML='';
   for(const race of RACES_DATA){
@@ -2377,15 +2496,10 @@ function upgradeRace(){
   if(!race) return;
   if((state.raceTier||1)>=3) return;
   if(state.points<RACE_UPGRADE_COST) return;
+  SFX.raceUpgrade();
   state.points-=RACE_UPGRADE_COST;
   state.raceTier=(state.raceTier||1)+1;
   save(); render();
-}
-
-function changeRaceFromPoints(){
-  // Only allowed before first rank of current class is completed
-  if(state.raceLockedIn) return;
-  showRaceSelectScreen();
 }
 
 function renderRaceUpgradeArea(){
@@ -2432,7 +2546,6 @@ function renderRaceUpgradeArea(){
         ${boost>0?`<div class="ruc-boost">Active boost: +${Math.round(boost*100)}% XP on all habits</div>`:''}
         ${habitsHtml}
         ${tier<3?`<button class="ruc-upgrade-btn" ${canUpgrade?'':'disabled'} onclick="upgradeRace()">Upgrade to Tier ${tier+1} — ${RACE_UPGRADE_COST} points${nextBoost?` · +${Math.round(nextBoost*100)}% XP`:''}</button>`:''}
-        ${!state.raceLockedIn?`<button class="ruc-change-btn" onclick="changeRaceFromPoints()">Change Race</button>`:''}
 
       </div>
     </div>`;
@@ -2448,13 +2561,15 @@ function toggleRaceHabit(rh){
   const xpVal=habitEffectiveXP(rh);
   if(state.today[rh.id]){
     state.today[rh.id]=false;
-    state.totalXP=Math.max(0,state.totalXP-xpVal);
+    state.totalXP=Math.max(getXPFloor(),state.totalXP-xpVal);
     state.points=Math.max(0,state.points-1);
+    SFX.habitUncheck();
   } else {
     state.today[rh.id]=true;
     state.totalXP+=xpVal;
     state.points+=1;
     triggerXPPulse();
+    SFX.habitCheck();
   }
   if(state.today[rh.id]){
     const rankAfter=getCurrentRank(state.totalXP);
@@ -2467,12 +2582,153 @@ function toggleRaceHabit(rh){
       const triggered=checkCovenantTrigger(rankBefore, rankAfter);
       if(!triggered){
         showRankUp(rankAfter,bonusPts,isRaceChange);
-        if(!isRaceChange) addInscriptionTask(rankBefore);
+        if(!isRaceChange) addInscriptionTask(rankAfter);
       }
     }
   }
   save(); render();
 }
+
+
+
+function getRankEntryXP(globalLevel){
+  // Returns the cumulative XP needed to enter the given global level
+  let xp=0, lvl=1;
+  for(const race of RACES){
+    for(let r=0;r<race.ranks.length;r++){
+      if(lvl===globalLevel) return xp;
+      xp+=race.xpPerRank; lvl++;
+    }
+  }
+  return xp;
+}
+
+function getXPFloor(){
+  // The user can never drop below the entry XP of the highest rank achieved
+  return state.highestRankXP||0;
+}
+
+function updateXPFloor(){
+  const rank=getCurrentRank(state.totalXP);
+  const entry=getRankEntryXP(rank.globalLevel);
+  if(entry>(state.highestRankXP||0)) state.highestRankXP=entry;
+}
+
+// ══════════════════════════════════════════
+// AUDIO ENGINE
+// ══════════════════════════════════════════
+let _audioCtx = null;
+function getAudioCtx(){
+  if(!_audioCtx) _audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+  if(_audioCtx.state==='suspended') _audioCtx.resume();
+  return _audioCtx;
+}
+// Pre-warm audio on first touch to eliminate latency
+let _audioWarmed=false;
+function warmAudio(){
+  if(_audioWarmed) return;
+  _audioWarmed=true;
+  try{ const ctx=getAudioCtx(); const o=ctx.createOscillator(); const g=ctx.createGain(); g.gain.value=0; o.connect(g); g.connect(ctx.destination); o.start(); o.stop(ctx.currentTime+0.01); }catch(e){}
+}
+document.addEventListener('touchstart', warmAudio, {once:false, passive:true});
+document.addEventListener('mousedown', warmAudio, {once:false, passive:true});
+
+function soundOn(){ return state.soundEnabled!==false; }
+
+function playTone(opts){
+  if(!soundOn()) return;
+  try {
+    const ctx = getAudioCtx();
+    const t = ctx.currentTime + (opts.delay||0);
+    const osc = ctx.createOscillator();
+    const env = ctx.createGain();
+    osc.connect(env); env.connect(ctx.destination);
+    osc.type = opts.type||'sine';
+    osc.frequency.setValueAtTime(opts.freq||440, t);
+    if(opts.freq2) osc.frequency.exponentialRampToValueAtTime(opts.freq2, t+(opts.sustain||0.15));
+    const g = opts.gain||0.18;
+    env.gain.setValueAtTime(0, t);
+    env.gain.linearRampToValueAtTime(g, t+(opts.attack||0.01));
+    env.gain.setValueAtTime(g, t+(opts.attack||0.01)+(opts.sustain||0.15));
+    env.gain.exponentialRampToValueAtTime(0.001, t+(opts.attack||0.01)+(opts.sustain||0.15)+(opts.release||0.3));
+    osc.start(t);
+    osc.stop(t+(opts.attack||0.01)+(opts.sustain||0.15)+(opts.release||0.3)+0.05);
+  } catch(e){}
+}
+
+const SFX = {
+  habitCheck: ()=>{
+    // Lower-pitched warm chime
+    playTone({freq:330, freq2:392, type:'sine', attack:0.01, sustain:0.1, release:0.3, gain:0.15});
+  },
+  habitUncheck: ()=>{
+    playTone({freq:330, freq2:262, type:'sine', attack:0.01, sustain:0.07, release:0.22, gain:0.10});
+  },
+  penaltyCheck: ()=>{
+    playTone({freq:220, freq2:207, type:'sine', attack:0.02, sustain:0.12, release:0.35, gain:0.13});
+    playTone({freq:277, type:'sine', attack:0.02, sustain:0.08, release:0.25, gain:0.06, delay:0.05});
+  },
+  penaltyUncheck: ()=>{
+    playTone({freq:233, type:'sine', attack:0.01, sustain:0.06, release:0.2, gain:0.09});
+  },
+  taskComplete: ()=>{
+    // Unique: three quick rising notes, crisp
+    playTone({freq:440, type:'triangle', attack:0.005, sustain:0.06, release:0.18, gain:0.13});
+    playTone({freq:554, type:'triangle', attack:0.005, sustain:0.06, release:0.18, gain:0.13, delay:0.09});
+    playTone({freq:659, type:'triangle', attack:0.005, sustain:0.1, release:0.3, gain:0.14, delay:0.18});
+  },
+  riteTask: ()=>{
+    playTone({freq:494, freq2:587, type:'sine', attack:0.01, sustain:0.1, release:0.28, gain:0.13});
+  },
+  redeem: ()=>{
+    // The old bright habit chime — now for reward redemption
+    playTone({freq:523, freq2:659, type:'sine', attack:0.01, sustain:0.08, release:0.25, gain:0.14});
+    playTone({freq:784, type:'sine', attack:0.01, sustain:0.1, release:0.3, gain:0.10, delay:0.1});
+  },
+  raceUpgrade: ()=>{
+    // Unique: deep-to-bright sweep, weighty
+    playTone({freq:262, freq2:523, type:'sine', attack:0.03, sustain:0.25, release:0.6, gain:0.16});
+    playTone({freq:392, type:'sine', attack:0.05, sustain:0.3, release:0.7, gain:0.10, delay:0.15});
+    playTone({freq:659, type:'sine', attack:0.04, sustain:0.25, release:0.8, gain:0.11, delay:0.3});
+  },
+  inscriptionSeal: ()=>{
+    // "I Will Remember" — quiet resolute two-note settle
+    playTone({freq:392, type:'sine', attack:0.02, sustain:0.15, release:0.5, gain:0.14});
+    playTone({freq:330, type:'sine', attack:0.02, sustain:0.2, release:0.7, gain:0.13, delay:0.2});
+  },
+  covenantSeal: ()=>{
+    // "I Will Honor This Covenant" — deeper, weightier settle
+    playTone({freq:294, type:'sine', attack:0.02, sustain:0.2, release:0.8, gain:0.16});
+    playTone({freq:196, type:'sine', attack:0.03, sustain:0.3, release:1.2, gain:0.15, delay:0.25});
+  },
+  rankUp: ()=>{
+    playTone({freq:523, type:'sine', attack:0.02, sustain:0.18, release:0.5, gain:0.16});
+    playTone({freq:659, type:'sine', attack:0.02, sustain:0.2, release:0.55, gain:0.15, delay:0.2});
+    playTone({freq:784, type:'sine', attack:0.02, sustain:0.3, release:0.8, gain:0.17, delay:0.4});
+    playTone({freq:1046, type:'sine', attack:0.05, sustain:0.25, release:0.7, gain:0.07, delay:0.4});
+  },
+  classUp: ()=>{
+    playTone({freq:392, type:'sine', attack:0.03, sustain:0.4, release:1.2, gain:0.15});
+    playTone({freq:523, type:'sine', attack:0.03, sustain:0.4, release:1.2, gain:0.14, delay:0.05});
+    playTone({freq:659, type:'sine', attack:0.03, sustain:0.45, release:1.3, gain:0.13, delay:0.1});
+    playTone({freq:784, type:'sine', attack:0.05, sustain:0.5, release:1.5, gain:0.12, delay:0.18});
+    playTone({freq:523, type:'sine', attack:0.02, sustain:0.35, release:1.0, gain:0.10, delay:0.6});
+    playTone({freq:659, type:'sine', attack:0.02, sustain:0.4, release:1.1, gain:0.09, delay:0.7});
+    playTone({freq:1046,type:'sine', attack:0.03, sustain:0.5, release:1.5, gain:0.08, delay:0.65});
+  },
+  covenant: ()=>{
+    playTone({freq:196, type:'sine', attack:0.01, sustain:0.5, release:2.5, gain:0.20});
+    playTone({freq:293, type:'sine', attack:0.01, sustain:0.4, release:2.0, gain:0.12, delay:0.03});
+    playTone({freq:392, type:'sine', attack:0.02, sustain:0.3, release:1.8, gain:0.09, delay:0.06});
+  },
+  riteComplete: ()=>{
+    playTone({freq:440, type:'sine', attack:0.02, sustain:0.2, release:0.6, gain:0.14});
+    playTone({freq:554, type:'sine', attack:0.02, sustain:0.22, release:0.65, gain:0.13, delay:0.18});
+    playTone({freq:659, type:'sine', attack:0.02, sustain:0.3, release:0.9, gain:0.15, delay:0.36});
+    playTone({freq:880, type:'sine', attack:0.03, sustain:0.4, release:1.2, gain:0.12, delay:0.54});
+  },
+};
+
 
 // ══════════════════════════════════════════
 // INIT
@@ -2486,7 +2742,11 @@ if(state.pendingCovenant){
   const rank=getCurrentRank(state.totalXP);
   setTimeout(()=>showCovenantScreen(rank.raceIndex), 800);
 } else if(state.pendingRaceSelect){
-  setTimeout(()=>showRaceSelectScreen(), 800);
+  if(state.playerRace===null||state.playerRace===undefined){
+    setTimeout(()=>showRaceSelectScreen(false), 800);
+  } else {
+    setTimeout(()=>showRaceChangePrompt(), 800);
+  }
 }
 setInterval(()=>{checkDayReset();render();},60000);
 </script>
