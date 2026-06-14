@@ -72,6 +72,8 @@
   .logo { font-family:'Oswald',sans-serif; font-size:20px; font-weight:700; letter-spacing:0.16em; color:var(--gold); text-transform:uppercase; }
   .logo-sub { font-size:13px; color:#a08060; letter-spacing:0.14em; font-style:italic; margin-top:2px; font-family:'Oswald',sans-serif; font-weight:400; }
   .date-label { font-size:13px; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.08em; text-align:right; }
+  .header-date-col { display:flex; flex-direction:column; align-items:flex-end; }
+  .build-version { font-family:'Oswald',sans-serif; font-size:10px; color:#3a4452; letter-spacing:0.1em; text-align:right; margin-top:3px; }
 
   /* ── INLINE VERSE ── */
   .inline-verse { margin:14px 20px 0; background:var(--card); border:1px solid var(--gold-dim); border-left:3px solid var(--gold); border-radius:8px; padding:14px 16px; cursor:pointer; transition:background 0.15s; }
@@ -389,7 +391,7 @@
   .record-cycle-day { font-family:'Oswald',sans-serif; font-size:11px; letter-spacing:0.2em; text-transform:uppercase; color:var(--gold-dim); }
   .record-card { background:var(--card); border:1px solid var(--border); border-radius:10px; margin:0 20px 16px; padding:16px 16px; }
   .record-card-title { font-family:'Oswald',sans-serif; font-size:13px; letter-spacing:0.14em; text-transform:uppercase; color:var(--gold-dim); margin-bottom:4px; }
-  .record-card-sub { font-size:12px; color:#5a6a7a; line-height:1.5; margin-bottom:12px; }
+  .record-card-sub { font-size:13px; color:#9aacbc; line-height:1.55; margin-bottom:12px; }
   .record-dots { display:flex; gap:6px; margin-bottom:12px; }
   .record-dot { width:24px; height:24px; border-radius:50%; border:1px solid var(--border); display:flex; align-items:center; justify-content:center; font-family:'Oswald',sans-serif; font-size:10px; color:#3a4a5a; }
   .record-dot.held { background:var(--gold-dim); border-color:var(--gold); color:#000; }
@@ -425,7 +427,7 @@
   .record-consec-bar-track { width:100%; height:8px; background:#1a1a1a; border-radius:4px; overflow:hidden; margin:8px 0 6px; }
   .record-consec-bar-fill { height:100%; border-radius:4px; transition:width 0.5s ease; }
   .record-consec-pct { font-family:'Oswald',sans-serif; font-size:12px; color:var(--text-dim); }
-  .record-consec-word { font-size:13px; color:#8090a0; margin-bottom:2px; }
+  .record-consec-word { font-size:13px; color:#9aacbc; margin-bottom:2px; }
   .record-vigil-day { font-family:'Oswald',sans-serif; font-size:16px; font-weight:600; letter-spacing:0.14em; text-transform:uppercase; color:var(--gold); }
   .record-vigil-name { font-family:'Oswald',sans-serif; font-size:11px; letter-spacing:0.18em; text-transform:uppercase; color:var(--gold-dim); margin-top:4px; }
   .record-join-prompt { text-align:center; padding:20px 16px; }
@@ -471,7 +473,10 @@
   <div class="header">
     <div class="header-top">
       <div><div class="logo">Renewed Day</div><div class="logo-sub">The Imago Protocol</div></div>
-      <div class="date-label" id="dateLabel"></div>
+      <div class="header-date-col">
+        <div class="date-label" id="dateLabel"></div>
+        <div class="build-version">v0.4.0</div>
+      </div>
     </div>
   </div>
 
@@ -628,7 +633,7 @@
     <div class="ts-eyebrow">An Optional Vigil</div>
     <div class="ts-name" style="font-size:24px;">We Who Wrestle<br>With God</div>
     <div class="ts-why" style="margin-top:18px;">What is God asking of you?</div>
-    <textarea class="record-input" id="wrestleQuestInput" placeholder="Name it..." style="max-width:330px;margin-bottom:24px;"></textarea>
+    <textarea class="record-input" id="wrestleQuestInput" placeholder="Name it..." autocomplete="off" autocorrect="off" autocapitalize="sentences" spellcheck="false" data-1p-ignore data-lpignore="true" data-form-type="other" style="max-width:330px;margin-bottom:24px;"></textarea>
     <button class="ts-btn" onclick="acceptWrestle()">Begin</button>
     <button class="ts-btn" style="border:none;color:var(--text-dim);margin-top:8px;" onclick="closeWrestleAccept()">Not Now</button>
   </div>
@@ -745,7 +750,7 @@
   <div class="modal">
     <div class="modal-title">New Habit</div>
     <div class="field-label">Name</div>
-    <input class="field-input" id="habitNameInput" type="text" placeholder="e.g. Morning workout" maxlength="48">
+    <input class="field-input" id="habitNameInput" type="text" autocomplete="off" autocorrect="off" autocapitalize="sentences" spellcheck="false" data-1p-ignore data-lpignore="true" data-form-type="other" placeholder="e.g. Morning workout" maxlength="48">
     <div class="field-row">
       <div style="flex:1">
         <div class="field-label">Category</div>
@@ -782,7 +787,7 @@
   <div class="modal">
     <div class="modal-title">New Accountability Item</div>
     <div class="field-label">Name</div>
-    <input class="field-input" id="penaltyNameInput" type="text" placeholder="e.g. Scrolled too long" maxlength="48">
+    <input class="field-input" id="penaltyNameInput" type="text" autocomplete="off" autocorrect="off" autocapitalize="sentences" spellcheck="false" data-1p-ignore data-lpignore="true" data-form-type="other" placeholder="e.g. Scrolled too long" maxlength="48">
     <div class="field-row">
       <div style="flex:1">
         <div class="field-label">Category</div>
@@ -797,7 +802,7 @@
       </div>
       <div style="flex:0 0 95px">
         <div class="field-label">XP Penalty</div>
-        <input class="field-input" id="penaltyXPInput" type="number" min="5" max="500" value="25">
+        <input class="field-input" id="penaltyXPInput" type="number" autocomplete="off" data-1p-ignore data-lpignore="true" data-form-type="other" min="5" max="500" value="25">
       </div>
     </div>
     <div class="modal-actions">
@@ -817,7 +822,7 @@
       <button class="seg-btn" onclick="setTaskType('timed',this)">Timed</button>
     </div>
     <div class="field-label">Name</div>
-    <input class="field-input" id="taskNameInput" type="text" placeholder="e.g. Build product page" maxlength="48">
+    <input class="field-input" id="taskNameInput" type="text" autocomplete="off" autocorrect="off" autocapitalize="sentences" spellcheck="false" data-1p-ignore data-lpignore="true" data-form-type="other" placeholder="e.g. Build product page" maxlength="48">
     <div class="field-row">
       <div style="flex:1">
         <div class="field-label">Category</div>
@@ -858,9 +863,9 @@
   <div class="modal">
     <div class="modal-title">New Reward</div>
     <div class="field-label">Reward Name</div>
-    <input class="field-input" id="rewardNameInput" type="text" placeholder="e.g. New chisel" maxlength="48">
+    <input class="field-input" id="rewardNameInput" type="text" autocomplete="off" autocorrect="off" autocapitalize="sentences" spellcheck="false" data-1p-ignore data-lpignore="true" data-form-type="other" placeholder="e.g. New chisel" maxlength="48">
     <div class="field-label">Point Cost</div>
-    <input class="field-input" id="rewardCostInput" type="number" min="1" max="9999" value="20">
+    <input class="field-input" id="rewardCostInput" type="number" autocomplete="off" data-1p-ignore data-lpignore="true" data-form-type="other" min="1" max="9999" value="20">
     <div class="modal-actions">
       <button class="btn-cancel" onclick="closeModal('rewardModal')">Cancel</button>
       <button class="btn-primary" onclick="addReward()">Add Reward</button>
@@ -3520,7 +3525,7 @@ function renderRecordPanel(){
         <div class="record-stage-label">${stageLabels[stage]} \u2014 Day ${day}</div>
         <div class="record-prompt">${abidePrompt(fruit.name, stage)}</div>`;
         if(stage==='harvest'){
-          html+=`<textarea class="record-input" id="harvestInput" placeholder="What grew this week?" onblur="saveHarvestText(this.value)">${rec.abide.harvestText}</textarea>`;
+          html+=`<textarea class="record-input" id="harvestInput" placeholder="What grew this week?" autocomplete="off" autocorrect="off" autocapitalize="sentences" spellcheck="false" data-1p-ignore data-lpignore="true" data-form-type="other" onblur="saveHarvestText(this.value)">${rec.abide.harvestText}</textarea>`;
         }
         html+=`<div class="record-dots">`;
         for(let i=0;i<7;i++){
