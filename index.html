@@ -90,7 +90,7 @@
     0%, 100% { text-shadow: 0 0 var(--g1s,6px) rgba(201,168,76,var(--g1a,0.15)), 0 0 var(--g2s,14px) rgba(201,168,76,var(--g2a,0.07)); }
     50% { text-shadow: 0 0 var(--g1sh,10px) rgba(201,168,76,var(--g1ah,0.3)), 0 0 var(--g2sh,24px) rgba(201,168,76,var(--g2ah,0.15)), 0 0 var(--g3sh,40px) rgba(201,168,76,var(--g3ah,0.06)); }
   }
-  .rank-badge { width:44px; height:44px; border-radius:50%; border:2px solid var(--gold-dim); display:flex; align-items:center; justify-content:center; font-size:26px; background:var(--card2); flex-shrink:0; font-family:'Times New Roman',serif; color:var(--gold); line-height:1; align-self:flex-start; margin-top:1px; }
+  .rank-badge { width:44px; height:44px; border-radius:50%; border:2px solid var(--gold-dim); display:flex; align-items:center; justify-content:center; font-size:21px; background:var(--card2); flex-shrink:0; color:var(--gold); line-height:1; align-self:flex-start; margin-top:0; }
   .xp-row { display:flex; justify-content:space-between; align-items:center; margin-bottom:5px; }
   .xp-label { font-size:13px; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.08em; }
   .xp-nums { font-family:'Oswald',sans-serif; font-size:14px; color:var(--gold); }
@@ -112,6 +112,8 @@
   .rli-dot.current { background:var(--gold); box-shadow:0 0 6px 2px var(--gold-glow); }
   .rli-dot.future { background:#333; }
   .rli-rank-name { font-family:'Oswald',sans-serif; font-size:13px; letter-spacing:0.06em; text-transform:uppercase; }
+  .rli-arrow { margin-left:auto; color:var(--gold-dim); font-size:11px; transition:transform 0.2s; }
+  .rank-ladder-item.unfurled .rli-arrow { transform:rotate(180deg); }
   .rli-rank-name.done { color:var(--gold-dim); }
   .rli-rank-name.current { color:var(--gold); font-weight:600; }
   .rli-rank-name.future { color:#444; }
@@ -380,6 +382,83 @@
   .ruc-upgrade-btn:hover { background:var(--copper-glow); }
   .ruc-upgrade-btn:disabled { opacity:0.35; cursor:not-allowed; }
   .race-none-card { margin:0 20px 14px; background:var(--card); border:1px dashed var(--border); border-radius:10px; padding:16px; text-align:center; font-size:13px; color:var(--text-dim); font-style:italic; }
+
+  /* ── THE RECORD ── */
+  .record-panel { padding:16px 0 40px; }
+  .record-cycle-header { padding:8px 20px 16px; text-align:center; }
+  .record-cycle-day { font-family:'Oswald',sans-serif; font-size:11px; letter-spacing:0.2em; text-transform:uppercase; color:var(--gold-dim); }
+  .record-card { background:var(--card); border:1px solid var(--border); border-radius:10px; margin:0 20px 16px; padding:16px 16px; }
+  .record-card-title { font-family:'Oswald',sans-serif; font-size:13px; letter-spacing:0.14em; text-transform:uppercase; color:var(--gold-dim); margin-bottom:4px; }
+  .record-card-sub { font-size:12px; color:#5a6a7a; line-height:1.5; margin-bottom:12px; }
+  .record-dots { display:flex; gap:6px; margin-bottom:12px; }
+  .record-dot { width:24px; height:24px; border-radius:50%; border:1px solid var(--border); display:flex; align-items:center; justify-content:center; font-family:'Oswald',sans-serif; font-size:10px; color:#3a4a5a; }
+  .record-dot.held { background:var(--gold-dim); border-color:var(--gold); color:#000; }
+  .record-dot.today { border-color:var(--gold); color:var(--gold); }
+  .record-input { width:100%; background:#0c0c0e; border:1px solid var(--border); border-radius:7px; padding:10px 12px; color:var(--text); font-size:13px; font-family:'Inter',sans-serif; margin-bottom:10px; resize:vertical; min-height:60px; }
+  .record-input:focus { outline:none; border-color:var(--gold-dim); }
+  .record-btn { font-family:'Oswald',sans-serif; font-size:12px; letter-spacing:0.12em; text-transform:uppercase; color:var(--gold); border:1px solid var(--gold-dim); background:none; padding:10px 18px; border-radius:7px; cursor:pointer; width:100%; }
+  .record-btn:hover { background:rgba(201,168,76,0.08); }
+  .record-btn:disabled { opacity:0.35; cursor:default; }
+  .record-btn.done { border-color:var(--green,#4a8a5a); color:#7abf8a; }
+  .record-verse { font-size:13px; font-style:italic; color:#c0a870; line-height:1.6; margin-bottom:4px; }
+  .record-ref { font-family:'Oswald',sans-serif; font-size:10px; color:var(--gold-dim); letter-spacing:0.08em; margin-bottom:12px; }
+  .record-fruit-grid { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:12px; }
+  .record-fruit-pill { font-family:'Oswald',sans-serif; font-size:11px; letter-spacing:0.08em; text-transform:uppercase; color:var(--text-dim); border:1px solid var(--border); border-radius:20px; padding:7px 14px; cursor:pointer; }
+  .record-fruit-pill.selected { color:var(--gold); border-color:var(--gold-dim); background:rgba(201,168,76,0.08); }
+  .record-stage-label { font-family:'Oswald',sans-serif; font-size:10px; letter-spacing:0.16em; text-transform:uppercase; color:#4a5a6a; margin-bottom:6px; }
+  .record-prompt { font-size:13px; color:var(--text); line-height:1.65; margin-bottom:12px; font-style:italic; border-left:2px solid var(--gold-dim); padding-left:12px; }
+  .record-heartbeat { display:flex; align-items:center; justify-content:space-between; }
+  .record-heartbeat-pct { font-family:'Oswald',sans-serif; font-size:28px; color:var(--gold); }
+  .record-heartbeat-verdict { font-family:'Oswald',sans-serif; font-size:11px; letter-spacing:0.1em; text-transform:uppercase; }
+  .record-heartbeat-verdict.pass { color:#7abf8a; }
+  .record-heartbeat-verdict.fail { color:#bf6a6a; }
+  .record-titles { display:flex; flex-direction:column; gap:6px; }
+  .record-title-chip { font-family:'Oswald',sans-serif; font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:var(--gold); background:rgba(201,168,76,0.06); border:1px solid var(--gold-dim); border-radius:6px; padding:7px 10px; display:flex; justify-content:space-between; }
+  .record-archive-item { padding:10px 0; border-bottom:1px solid var(--border); }
+  .record-archive-item:last-child { border-bottom:none; }
+  .record-archive-week { font-family:'Oswald',sans-serif; font-size:12px; letter-spacing:0.1em; color:var(--gold-dim); text-transform:uppercase; margin-bottom:5px; }
+  .record-archive-line { font-size:13px; color:#9aacbc; line-height:1.65; }
+  .record-test-controls { margin:0 20px 20px; padding:12px; border:1px dashed #4a3a2a; border-radius:8px; }
+  .record-test-controls-label { font-family:'Oswald',sans-serif; font-size:10px; letter-spacing:0.14em; text-transform:uppercase; color:#8a6a3a; margin-bottom:8px; }
+  .record-test-btn { font-family:'Oswald',sans-serif; font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:#c0a060; border:1px solid #4a3a2a; background:none; padding:8px 12px; border-radius:6px; cursor:pointer; margin:0 6px 6px 0; }
+
+  .record-consec-bar-track { width:100%; height:8px; background:#1a1a1a; border-radius:4px; overflow:hidden; margin:8px 0 6px; }
+  .record-consec-bar-fill { height:100%; border-radius:4px; transition:width 0.5s ease; }
+  .record-consec-pct { font-family:'Oswald',sans-serif; font-size:12px; color:var(--text-dim); }
+  .record-consec-word { font-size:13px; color:#8090a0; margin-bottom:2px; }
+  .record-vigil-day { font-family:'Oswald',sans-serif; font-size:16px; font-weight:600; letter-spacing:0.14em; text-transform:uppercase; color:var(--gold); }
+  .record-vigil-name { font-family:'Oswald',sans-serif; font-size:11px; letter-spacing:0.18em; text-transform:uppercase; color:var(--gold-dim); margin-top:4px; }
+  .record-join-prompt { text-align:center; padding:20px 16px; }
+  .record-join-text { font-size:14px; color:var(--text); margin-bottom:16px; line-height:1.5; }
+  .record-join-btns { display:flex; gap:10px; }
+  .record-join-btns .record-btn { flex:1; }
+
+  .vigil-join-prompt { margin:14px 20px 0; padding:16px; background:var(--card); border:1px solid var(--gold-dim); border-radius:10px; text-align:center; }
+  .vjp-q { font-size:14px; color:var(--text); margin-bottom:4px; }
+  .vjp-event { font-family:'Oswald',sans-serif; font-size:12px; letter-spacing:0.12em; text-transform:uppercase; color:var(--gold-dim); margin-bottom:14px; }
+  .vjp-btns { display:flex; gap:10px; }
+  .vjp-btns button { flex:1; font-family:'Oswald',sans-serif; font-size:12px; letter-spacing:0.1em; text-transform:uppercase; padding:10px; border-radius:7px; cursor:pointer; }
+  .vjp-join { background:none; border:1px solid var(--gold-dim); color:var(--gold); }
+  .vjp-skip { background:none; border:1px solid var(--border); color:var(--text-dim); }
+
+  .title-screen { display:none; position:fixed; inset:0; background:#070709; z-index:460; flex-direction:column; align-items:center; justify-content:center; padding:48px 32px; text-align:center; }
+  .title-screen.open { display:flex; animation:fade-in 0.5s ease forwards; }
+  .ts-icon { font-size:64px; color:var(--gold); margin-bottom:20px; animation:logo-pulse 3s ease-in-out infinite; }
+  .ts-eyebrow { font-family:'Oswald',sans-serif; font-size:11px; letter-spacing:0.28em; text-transform:uppercase; color:var(--gold-dim); margin-bottom:10px; }
+  .ts-name { font-family:'Oswald',sans-serif; font-size:30px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; color:var(--gold); margin-bottom:6px; }
+  .ts-source { font-family:'Oswald',sans-serif; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:var(--gold-dim); margin-bottom:18px; }
+  .ts-bonus { font-family:'Oswald',sans-serif; font-size:15px; color:var(--text); margin-bottom:24px; }
+  .ts-why { font-size:14px; color:#9aacbc; line-height:1.7; max-width:330px; margin-bottom:36px; }
+  .ts-btn { font-family:'Oswald',sans-serif; font-size:13px; letter-spacing:0.16em; text-transform:uppercase; color:var(--gold); border:1px solid var(--gold-dim); background:none; padding:14px 32px; border-radius:8px; cursor:pointer; }
+  .ts-btn:hover { background:rgba(201,168,76,0.08); }
+
+  .today-title-box { margin:14px 20px 0; padding:14px 16px; background:var(--card); border:1px solid var(--gold-dim); border-radius:10px; }
+  .ttb-title { font-family:'Oswald',sans-serif; font-size:12px; letter-spacing:0.14em; text-transform:uppercase; color:var(--gold-dim); margin-bottom:10px; }
+  .ttb-list { display:flex; flex-direction:column; gap:7px; }
+  .ttb-chip { display:flex; align-items:center; gap:10px; padding:8px 10px; background:rgba(201,168,76,0.05); border:1px solid var(--gold-dim); border-radius:7px; cursor:pointer; }
+  .ttb-chip-icon { font-size:18px; color:var(--gold); }
+  .ttb-chip-name { font-family:'Oswald',sans-serif; font-size:13px; letter-spacing:0.06em; text-transform:uppercase; color:var(--gold); flex:1; }
+  .ttb-chip-bonus { font-family:'Oswald',sans-serif; font-size:12px; color:var(--text-dim); }
   ::-webkit-scrollbar { width:4px; }
   ::-webkit-scrollbar-track { background:transparent; }
   ::-webkit-scrollbar-thumb { background:#2a2a2a; border-radius:2px; }
@@ -414,7 +493,7 @@
           <div id="activeTitleBadge" class="active-title-badge" onclick="toggleTitleDropdown()" style="display:none;"></div>
           <div class="title-dropdown" id="titleDropdown"></div>
         </div>
-        <div class="rank-badge" id="rankBadge">🌾</div>
+        <div class="rank-badge" id="rankBadge"></div>
       </div>
       <div class="xp-row">
         <div class="xp-label">XP Progress</div>
@@ -426,6 +505,9 @@
       </button>
       <div class="rank-ladder" id="rankLadder"></div>
     </div>
+
+    <!-- Vigil Join Prompt (Today page) -->
+    <div id="vigilJoinPrompt" class="vigil-join-prompt" style="display:none;"></div>
 
     <!-- Active Seasonal Rite Banner -->
     <div class="rite-active-banner inactive" id="riteActiveBanner">
@@ -470,6 +552,14 @@
         <div class="section-title" id="raceHabitsTitle" style="color:var(--copper);">Race</div>
       </div>
       <div class="habits-list" id="raceHabitsList"></div>
+      <div class="divider"></div>
+    </div>
+    <!-- VIGIL TASK SECTION -->
+    <div id="vigilTaskSection" style="display:none;">
+      <div class="section-header">
+        <div class="section-title" id="vigilTaskTitle" style="color:var(--gold-dim);">Vigil</div>
+      </div>
+      <div class="habits-list" id="vigilTaskList"></div>
       <div class="divider"></div>
     </div>
     <div class="section-header">
@@ -517,6 +607,40 @@
   </div>
 
   <!-- TAB: REWARDS -->
+  <!-- ACTIVE LIMITED TITLE OVERLAY -->
+  <div class="title-screen" id="titleScreen">
+    <div class="ts-icon" id="tsIcon">❖</div>
+    <div class="ts-eyebrow">Limited Title</div>
+    <div class="ts-name" id="tsName">Attentive</div>
+    <div class="ts-source" id="tsSource">We Who Remember</div>
+    <div class="ts-bonus" id="tsBonus">+10% XP</div>
+    <div class="ts-why" id="tsWhy"></div>
+    <button class="ts-btn" onclick="closeTitleScreen()">Accept</button>
+  </div>
+
+  <!-- THE RECORD -->
+  <div class="tab-panel" id="tab-record">
+    <div class="record-panel" id="recordPanel"></div>
+  </div>
+
+  <!-- WRESTLE ACCEPT SCREEN -->
+  <div class="title-screen" id="wrestleAcceptScreen">
+    <div class="ts-eyebrow">An Optional Vigil</div>
+    <div class="ts-name" style="font-size:24px;">We Who Wrestle<br>With God</div>
+    <div class="ts-why" style="margin-top:18px;">What is God asking of you?</div>
+    <textarea class="record-input" id="wrestleQuestInput" placeholder="Name it..." style="max-width:330px;margin-bottom:24px;"></textarea>
+    <button class="ts-btn" onclick="acceptWrestle()">Begin</button>
+    <button class="ts-btn" style="border:none;color:var(--text-dim);margin-top:8px;" onclick="closeWrestleAccept()">Not Now</button>
+  </div>
+
+  <!-- WRESTLE CLOSE SCREEN -->
+  <div class="title-screen" id="wrestleCloseScreen">
+    <div class="ts-eyebrow">We Who Wrestle With God</div>
+    <div class="ts-name" id="wrestleCloseDays" style="font-size:30px;">0 days</div>
+    <div class="ts-why" style="margin-top:18px;">"For a day in thy courts is better than a thousand. I had rather be a doorkeeper in the house of my God, than to dwell in the tents of wickedness." — Psalm 84:10</div>
+    <button class="ts-btn" onclick="closeWrestleClose()">Accept</button>
+  </div>
+
   <div class="tab-panel" id="tab-rewards">
     <div class="rewards-points-banner">
       <div>
@@ -548,6 +672,7 @@
   <button class="tab-btn" onclick="switchTab('tasks',this)">◎</button>
   <button class="tab-btn" onclick="switchTab('rites',this)">☽</button>
   <button class="tab-btn" onclick="switchTab('rewards',this)">✦</button>
+  <button class="tab-btn" onclick="switchTab('record',this)">☼</button>
 </div>
 
 <!-- CLASS COVENANT SCREEN -->
@@ -760,7 +885,7 @@
 // CLASS & RANK DATA
 // ══════════════════════════════════════════
 const RACES = [
-  { name:'Apprentice', emoji:'י', raceNum:'I', xpPerRank:825, ranks:[
+  { name:'Apprentice', raceNum:'I', xpPerRank:825, ranks:[
     {name:'Unformed',             verse:'The earth was without form and void, and darkness was over the face of the deep.',                                 ref:'Genesis 1:2'},
     {name:'Called by Name',       verse:'Before I formed you in the womb I knew you, and before you were born I consecrated you.',                         ref:'Jeremiah 1:5'},
     {name:'Watching the Master',  verse:'The Son can do nothing of his own accord, but only what he sees the Father doing.',                               ref:'John 5:19'},
@@ -772,7 +897,7 @@ const RACES = [
     {name:'Tried and Not Broken', verse:'For you, O God, have tested us; you have tried us as silver is tried.',                                           ref:'Psalm 66:10'},
     {name:'Released',             verse:'Go, and the Lord be with you.',                                                                                   ref:'1 Samuel 17:37'},
   ]},
-  { name:'Journeyman', emoji:'ו', raceNum:'II', xpPerRank:1750, ranks:[
+  { name:'Journeyman', raceNum:'II', xpPerRank:1750, ranks:[
     {name:'On the Road',               verse:'A man was going down from Jerusalem to Jericho, and he fell among robbers.',                                 ref:'Luke 10:30'},
     {name:'No Bag for the Journey',    verse:'Take nothing for your journey, no staff, nor bag, nor bread, nor money.',                                    ref:'Luke 9:3'},
     {name:'Tested in the Wilderness',  verse:'Jesus was led up by the Spirit into the wilderness to be tempted by the devil.',                             ref:'Matthew 4:1'},
@@ -784,7 +909,7 @@ const RACES = [
     {name:'The Road Made Me',          verse:'We also glory in our sufferings, because we know that suffering produces perseverance.',                      ref:'Romans 5:3'},
     {name:'Forged',                    verse:'But he knows the way that I take; when he has tried me, I shall come out as gold.',                          ref:'Job 23:10'},
   ]},
-  { name:'Craftsman', emoji:'ד', raceNum:'III', xpPerRank:3000, ranks:[
+  { name:'Craftsman', raceNum:'III', xpPerRank:3000, ranks:[
     {name:'Uncut',                     verse:'If you make me an altar of stone, you shall not build it of hewn stones.',                                   ref:'Exodus 20:25'},
     {name:'First Blood of the Blade',  verse:'For the word of God is living and active, sharper than any two-edged sword.',                                ref:'Hebrews 4:12'},
     {name:'Hands That Remember',       verse:'With upright heart he shepherded them and guided them with his skillful hand.',                               ref:'Psalm 78:72'},
@@ -796,7 +921,7 @@ const RACES = [
     {name:'They Know the Work',        verse:'You will recognize them by their fruits.',                                                                   ref:'Matthew 7:16'},
     {name:'One Thing, Completely',     verse:'But one thing I do: forgetting what lies behind and straining forward to what lies ahead.',                  ref:'Philippians 3:13'},
   ]},
-  { name:'Builder', emoji:'ח', raceNum:'IV', xpPerRank:4750, ranks:[
+  { name:'Builder', raceNum:'IV', xpPerRank:4750, ranks:[
     {name:'Ground Broken by Blood',           verse:'For no one can lay a foundation other than that which is laid, which is Jesus Christ.',               ref:'1 Corinthians 3:11'},
     {name:'Stone Upon Stone',                 verse:'You yourselves like living stones are being built up as a spiritual house.',                           ref:'1 Peter 2:5'},
     {name:'What Will Not Move',               verse:'For the righteous will never be moved; he will be remembered forever.',                               ref:'Psalm 112:6'},
@@ -808,7 +933,7 @@ const RACES = [
     {name:'Still Standing',                   verse:'And when you have done everything, stand firm.',                                                      ref:'Ephesians 6:13'},
     {name:'Nothing Left to Prove',            verse:'It is finished.',                                                                                    ref:'John 19:30'},
   ]},
-  { name:'Architect', emoji:'ע', raceNum:'V', xpPerRank:7000, ranks:[
+  { name:'Architect', raceNum:'V', xpPerRank:7000, ranks:[
     {name:'The First Line',            verse:'In the beginning was the Word, and the Word was with God, and the Word was God.',                            ref:'John 1:1'},
     {name:'What No One Else Saw',      verse:'Now faith is the assurance of things hoped for, the conviction of things not seen.',                         ref:'Hebrews 11:1'},
     {name:'Given the Commission',      verse:'Go therefore and make disciples of all nations.',                                                            ref:'Matthew 28:19'},
@@ -820,7 +945,7 @@ const RACES = [
     {name:'Signed in Full',            verse:'In him you also, when you heard the word of truth, were sealed with the promised Holy Spirit.',              ref:'Ephesians 1:13'},
     {name:'It Was Already Written',    verse:'He chose us in him before the foundation of the world.',                                                    ref:'Ephesians 1:4'},
   ]},
-  { name:'Watchman', emoji:'צ', raceNum:'VI', xpPerRank:13250, ranks:[
+  { name:'Watchman', raceNum:'VI', xpPerRank:13250, ranks:[
     {name:'Posted at the Edge',                verse:'Son of man, I have made you a watchman for the house of Israel.',                                    ref:'Ezekiel 33:7'},
     {name:'Eyes That Do Not Close',            verse:'He who keeps you will not slumber.',                                                                 ref:'Psalm 121:3'},
     {name:'I Heard It Before the Others',      verse:'Speak, Lord, for your servant hears.',                                                               ref:'1 Samuel 3:10'},
@@ -832,7 +957,7 @@ const RACES = [
     {name:'Known by Name in High Places',      verse:'Fear not, for I have redeemed you; I have called you by name, you are mine.',                        ref:'Isaiah 43:1'},
     {name:'Sent',                              verse:'As the Father has sent me, even so I am sending you.',                                               ref:'John 20:21'},
   ]},
-  { name:'Consecrated', emoji:'ק', raceNum:'VII', xpPerRank:99999, ranks:[
+  { name:'Consecrated', raceNum:'VII', xpPerRank:99999, ranks:[
     {name:'Set Apart', verse:'But you are a chosen race, a royal priesthood, a holy nation, a people for his own possession, that you may proclaim the excellencies of him who called you out of darkness into his marvelous light.', ref:'1 Peter 2:9'},
   ]},
 ];
@@ -1078,7 +1203,7 @@ let _lvl=1, _xp=0;
 for (let ri=0;ri<RACES.length;ri++) {
   const race=RACES[ri];
   for (let rk=0;rk<race.ranks.length;rk++) {
-    ALL_RANKS.push({ globalLevel:_lvl, raceIndex:ri, raceName:race.name, raceNum:race.raceNum, raceEmoji:race.emoji, rankName:race.ranks[rk].name, verse:race.ranks[rk].verse, ref:race.ranks[rk].ref, xpRequired:_xp, xpToNext:race.xpPerRank });
+    ALL_RANKS.push({ globalLevel:_lvl, raceIndex:ri, raceName:race.name, raceNum:race.raceNum, rankName:race.ranks[rk].name, verse:race.ranks[rk].verse, ref:race.ranks[rk].ref, xpRequired:_xp, xpToNext:race.xpPerRank });
     _xp+=race.xpPerRank; _lvl++;
   }
 }
@@ -1380,7 +1505,18 @@ function render(){
     lg.style.setProperty('--lg3ah', (0.12+classP*0.25).toFixed(2));
   }
   document.getElementById('rankName').textContent=rank.rankName;
-  document.getElementById('rankBadge').textContent=rank.raceEmoji;
+  const _ltIcon=getActiveLimitedTitleIcon();
+  const _badge=document.getElementById('rankBadge');
+  if(_ltIcon){
+    _badge.textContent=_ltIcon;
+    _badge.style.display='flex';
+    _badge.style.cursor='pointer';
+    _badge.onclick=showActiveTitleScreen;
+  } else {
+    _badge.textContent='';
+    _badge.style.display='none';
+    _badge.onclick=null;
+  }
 
   const xpIntoRank=state.totalXP-rank.xpRequired;
   const xpPct=Math.min(100,(xpIntoRank/rank.xpToNext)*100);
@@ -1421,6 +1557,10 @@ function render(){
   renderRitesList();
   renderTaskLog();
   renderRaceUpgradeArea();
+  renderRecordPanel();
+  renderVigilJoinPrompt();
+  renderVigilTaskSection();
+  renderWrestleHabit();
 }
 
 function renderRaceHabitsSection(){
@@ -1562,7 +1702,7 @@ function renderLadder(){
     const isCur=r.globalLevel===cur.globalLevel;
     const d=document.createElement('div');
     d.className='rank-ladder-item';
-    d.innerHTML=`<div class="rli-dot ${isCur?'current':isDone?'done':'future'}"></div><div class="rli-rank-name ${isCur?'current':isDone?'done':'future'}">${r.rankName}</div>`;
+    d.innerHTML=`<div class="rli-dot ${isCur?'current':isDone?'done':'future'}"></div><div class="rli-rank-name ${isCur?'current':isDone?'done':'future'}">${r.rankName}</div>${isDone?'<span class="rli-arrow">▾</span>':''}`;
     ladder.appendChild(d);
     if(isCur){
       const v=document.createElement('div');
@@ -1580,7 +1720,9 @@ function renderLadder(){
         e.stopPropagation();
         const isOpen=v.style.display!=='none';
         ladder.querySelectorAll('.rli-unfurl').forEach(el=>el.style.display='none');
+        ladder.querySelectorAll('.rank-ladder-item').forEach(el=>el.classList.remove('unfurled'));
         v.style.display=isOpen?'none':'block';
+        if(!isOpen) d.classList.add('unfurled');
       });
     }
   }
@@ -1619,7 +1761,7 @@ function renderRewards(){
     const div=document.createElement('div');
     div.className='reward-item';
     div.innerHTML=`<div class="reward-info"><div class="reward-name">${r.name}</div><div class="reward-cost">✧ ${r.cost} points</div></div><button class="reward-redeem"${canAfford?'':' disabled'}>Redeem</button><button class="reward-del">×</button>`;
-    div.querySelector('.reward-redeem').addEventListener('click',()=>{if(canAfford)openConfirm(r.id);});
+    div.querySelector('.reward-redeem').addEventListener('click',()=>{if(canAfford)redeemReward(r.id);});
     div.querySelector('.reward-del').addEventListener('click',()=>deleteReward(r.id));
     list.appendChild(div);
   }
@@ -1643,7 +1785,7 @@ function renderRewardLog(){
 function habitEffectiveXP(habit){
   const baseStreakXP=habitStreakXP(habit);
   const raw=calcTitleBonus(habit, baseStreakXP) + getRiteBonus(habit.category);
-  const boost=getRaceXPBoost();
+  const boost=getRaceXPBoost() + getRecordBonus();
   return Math.round(raw*(1+boost));
 }
 
@@ -1943,14 +2085,6 @@ document.getElementById('rewardNameInput').addEventListener('keydown',e=>{if(e.k
 
 function deleteReward(id){ state.rewards=state.rewards.filter(r=>r.id!==id); save(); render(); }
 
-function openConfirm(rewardId){
-  const reward=state.rewards.find(r=>r.id===rewardId);
-  if(!reward) return;
-  document.getElementById('confirmTitle').textContent='Redeem Reward?';
-  document.getElementById('confirmBody').textContent=`Spend ${reward.cost} points on "${reward.name}"? You have ${state.points} points.`;
-  document.getElementById('confirmOkBtn').onclick=()=>redeemReward(rewardId);
-  document.getElementById('confirmModal').classList.add('open');
-}
 function redeemReward(id){
   const reward=state.rewards.find(r=>r.id===id);
   if(!reward||state.points<reward.cost) return;
@@ -1959,7 +2093,7 @@ function redeemReward(id){
   const dateStr=new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
   state.rewardLog.unshift({name:reward.name,cost:reward.cost,date:dateStr});
   if(state.rewardLog.length>50) state.rewardLog=state.rewardLog.slice(0,50);
-  save(); closeModal('confirmModal'); render();
+  save(); render();
 }
 document.getElementById('confirmModal').addEventListener('click',e=>{if(e.target===e.currentTarget)closeModal('confirmModal');});
 
@@ -2097,9 +2231,6 @@ function completeRite(riteId){
   if(!state.completedRites) state.completedRites={};
   if(!state.riteTaskCounts) state.riteTaskCounts={};
   if(!state.taskLog) state.taskLog=[];
-  if(state.highestRankXP===undefined) state.highestRankXP=0;
-  // Backfill floor for existing users
-  setTimeout(()=>{ try{ updateXPFloor(); save(); }catch(e){} }, 100);
   if(state.playerRace===undefined) state.playerRace=null;
   if(state.raceTier===undefined) state.raceTier=0;
   if(state.raceLockedIn===undefined) state.raceLockedIn=false;
@@ -2236,9 +2367,6 @@ function renderRitesList(){
 function getRiteTaskCount(riteId){
   if(!state.riteTaskCounts) state.riteTaskCounts={};
   if(!state.taskLog) state.taskLog=[];
-  if(state.highestRankXP===undefined) state.highestRankXP=0;
-  // Backfill floor for existing users
-  setTimeout(()=>{ try{ updateXPFloor(); save(); }catch(e){} }, 100);
   if(state.playerRace===undefined) state.playerRace=null;
   if(state.raceTier===undefined) state.raceTier=0;
   if(state.raceLockedIn===undefined) state.raceLockedIn=false;
@@ -2308,9 +2436,6 @@ function renderRiteDisciplines(){
         state.totalXP+=rt.xp;
         if(!state.riteTaskCounts) state.riteTaskCounts={};
   if(!state.taskLog) state.taskLog=[];
-  if(state.highestRankXP===undefined) state.highestRankXP=0;
-  // Backfill floor for existing users
-  setTimeout(()=>{ try{ updateXPFloor(); save(); }catch(e){} }, 100);
   if(state.playerRace===undefined) state.playerRace=null;
   if(state.raceTier===undefined) state.raceTier=0;
   if(state.raceLockedIn===undefined) state.raceLockedIn=false;
@@ -2728,6 +2853,732 @@ const SFX = {
     playTone({freq:880, type:'sine', attack:0.03, sustain:0.4, release:1.2, gain:0.12, delay:0.54});
   },
 };
+
+
+
+// ══════════════════════════════════════════
+// THE RECORD — data constants
+// ══════════════════════════════════════════
+const FRUITS = [
+  { id:'love', name:'Love',
+    notice:'Where today did you receive love you did not earn?',
+    practice:'Do one concrete act of love today for someone who cannot repay it.',
+    test:'Who in your life is hardest to love right now \u2014 and what would loving them look like today?',
+    harvest:'What did love cost you this week, and what did it produce?' },
+  { id:'joy', name:'Joy',
+    notice:'Where did joy show up today in something ordinary?',
+    practice:'Name one thing today and give thanks for it out loud.',
+    test:'What circumstance is currently working against your joy \u2014 and can joy coexist with it?',
+    harvest:'What did you learn about the difference between joy and happiness this week?' },
+  { id:'peace', name:'Peace',
+    notice:'Where in your body or mind is there a lack of peace right now?',
+    practice:'Take one concrete step today to make peace with someone or something.',
+    test:'What is the actual source of the anxiety you are carrying \u2014 and have you brought it to God?',
+    harvest:'What peace, if any, did you find this week that you did not have before?' },
+  { id:'patience', name:'Patience',
+    notice:'What are you currently waiting for, and how are you waiting?',
+    practice:'Today, when you feel rushed, choose to slow down deliberately at least once.',
+    test:'What is currently testing your patience the most \u2014 and how did you respond?',
+    harvest:'What did the waiting produce in you this week?' },
+  { id:'kindness', name:'Kindness',
+    notice:'Who did you overlook today who needed to be seen?',
+    practice:'Do one small kindness today for someone who is not expecting it.',
+    test:'Who has been unkind to you recently \u2014 and what would kindness toward them look like?',
+    harvest:'What act of kindness this week mattered most, given or received?' },
+  { id:'goodness', name:'Goodness',
+    notice:'Where did you choose the harder right thing today instead of the easier wrong thing?',
+    practice:'Do one good thing today that no one will ever know about.',
+    test:'What temptation toward a shortcut did you face \u2014 and what did you choose?',
+    harvest:'What does goodness look like in your life right now that it did not a year ago?' },
+  { id:'faithfulness', name:'Faithfulness',
+    notice:'What small commitment did you keep today that no one was watching?',
+    practice:'Follow through today on something you said you would do.',
+    test:'What long obligation are you tempted to abandon \u2014 and why are you still here?',
+    harvest:'What has your faithfulness this week been evidence of?' },
+  { id:'gentleness', name:'Gentleness',
+    notice:'Where did you respond with more force than the moment required?',
+    practice:'Choose a gentle response today in a moment that would normally provoke you.',
+    test:'Who in your life needs your strength held gently rather than asserted?',
+    harvest:'What did gentleness cost you this week \u2014 and what did it protect?' },
+  { id:'selfcontrol', name:'Self-Control',
+    notice:'What appetite or impulse asked for more than it needed today?',
+    practice:'Say no today to one thing your appetite wants but your formation does not need.',
+    test:'What is the hardest "no" you are currently living inside of?',
+    harvest:'What did restraint this week reveal about what you actually want?' },
+];
+
+function abidePrompt(fruitName, stage){
+  const f = FRUITS.find(x=>x.name===fruitName);
+  if(!f) return '';
+  return f[stage]||'';
+}
+function abideStageForDay(day){
+  if(day<=2) return 'notice';
+  if(day<=4) return 'practice';
+  if(day<=6) return 'test';
+  return 'harvest';
+}
+
+// Title tiers by completion percentage
+function recordTier(pct){
+  // Title earned only on a perfect 7/7; flat 5% bonus; carries into the next vigil
+  if(pct>=100) return {tier:'full', bonus:0.05};
+  return {tier:'none', bonus:0};
+}
+
+// Build the pool of 61 rank inscriptions + 7 class covenants = 68 items
+function buildRememberPool(){
+  const pool=[];
+  RACES.forEach((race)=>{
+    race.ranks.forEach((r)=>{
+      pool.push({verse:r.verse, ref:r.ref, source:r.name});
+    });
+  });
+  RACE_COVENANTS.forEach((cov,ci)=>{
+    pool.push({verse:cov.verse, ref:cov.ref, source:RACES[ci].name+' Covenant'});
+  });
+  return pool;
+}
+
+// Pick 7 random distinct items from the pool for this week
+function pickWeekVerses(){
+  const pool=buildRememberPool();
+  const picked=[];
+  const used=new Set();
+  while(picked.length<7 && used.size<pool.length){
+    const i=Math.floor(Math.random()*pool.length);
+    if(used.has(i)) continue;
+    used.add(i);
+    picked.push(pool[i]);
+  }
+  return picked;
+}
+
+
+
+
+// ══════════════════════════════════════════
+// WE WHO WRESTLE WITH GOD — perpetual opt-in
+// ══════════════════════════════════════════
+const WRESTLE_CYCLE_VERSES = [
+  {verse:'For to me to live is Christ, and to die is gain.', ref:'Philippians 1:21'},
+  {verse:'If any man will come after me, let him deny himself, and take up his cross, and follow me.', ref:'Matthew 16:24'},
+  {verse:'So likewise, whosoever he be of you that forsaketh not all that he hath, he cannot be my disciple.', ref:'Luke 14:33'},
+  {verse:'Wherefore seeing we also are compassed about with so great a cloud of witnesses, let us lay aside every weight, and the sin which doth so easily beset us, and let us run with patience the race that is set before us.', ref:'Hebrews 12:1'},
+];
+
+function wrestleDaysHeld(){
+  const w=state.wrestleQuest;
+  if(!w) return 0;
+  const start=new Date(w.startDate+'T00:00:00');
+  const now=new Date(todayStr()+'T00:00:00');
+  return Math.max(0, Math.floor((now-start)/(1000*60*60*24)));
+}
+
+function acceptWrestle(){
+  const input=document.getElementById('wrestleQuestInput');
+  const text=input?input.value.trim():'';
+  if(!text){ if(input) input.focus(); return; }
+  state.wrestleQuest={ asking:text, startDate:todayStr(), todayMarked:null };
+  // Create the uncounted daily habit
+  state.wrestleHabitId='wrestle_'+uid();
+  SFX.covenant();
+  closeWrestleAccept();
+  save(); render();
+}
+
+function openWrestleAccept(){
+  document.getElementById('wrestleAcceptScreen').classList.add('open');
+}
+function closeWrestleAccept(){
+  document.getElementById('wrestleAcceptScreen').classList.remove('open');
+}
+
+function submitWrestle(){
+  const days=wrestleDaysHeld();
+  // Archive it
+  const rec=getRecord();
+  rec.archive.unshift({weekOf:todayStr(), event:'wrestle', wrestleSubmit:true, daysHeld:days, asking:state.wrestleQuest?state.wrestleQuest.asking:''});
+  // Show closing screen
+  document.getElementById('wrestleCloseDays').textContent=days+(days===1?' day':' days');
+  document.getElementById('wrestleCloseScreen').classList.add('open');
+  // Clear the quest + habit
+  state.wrestleQuest=null;
+  state.wrestleHabitId=null;
+  save();
+}
+function closeWrestleClose(){
+  document.getElementById('wrestleCloseScreen').classList.remove('open');
+  render();
+}
+
+// The wrestle daily habit (rendered in the daily habits list, uncounted toward cap)
+function getWrestleHabitDisplay(){
+  const w=state.wrestleQuest;
+  if(!w) return null;
+  const days=wrestleDaysHeld();
+  let metaVerse='';
+  if(days>=7){
+    // After first week, cycle a verse by day
+    const idx=days % WRESTLE_CYCLE_VERSES.length;
+    const v=WRESTLE_CYCLE_VERSES[idx];
+    metaVerse=`"${v.verse}" \u2014 ${v.ref}`;
+  }
+  return { name:"Still wrestling - "+w.asking, meta:metaVerse, marked:w.todayMarked===todayStr() };
+}
+
+function toggleWrestleHabit(){
+  const w=state.wrestleQuest;
+  if(!w) return;
+  if(w.todayMarked===todayStr()){
+    w.todayMarked=null;
+    state.points=Math.max(0,state.points-1);
+    SFX.habitUncheck();
+  } else {
+    w.todayMarked=todayStr();
+    state.points+=1; // 1 point, no XP
+    SFX.habitCheck();
+  }
+  save(); render();
+}
+
+function renderWrestleHabit(){
+  const list=document.getElementById('habitsList');
+  if(!list) return;
+  const disp=getWrestleHabitDisplay();
+  if(!disp) return;
+  const div=document.createElement('div');
+  div.className='habit-item'+(disp.marked?' done':'');
+  div.innerHTML=`<div class="habit-check">${disp.marked?'\u2713':''}</div>
+    <div class="habit-info"><div class="habit-name">${disp.name}</div>${disp.meta?`<div class="habit-meta" style="line-height:1.5;">${disp.meta}</div>`:''}</div>
+    <div class="habit-xp">+1 pt</div>`;
+  div.addEventListener('click',toggleWrestleHabit);
+  list.appendChild(div);
+}
+
+// Render the opt-in / status block under the active vigil in the Vigil tab
+function wrestleVigilHTML(){
+  if(state.wrestleQuest){
+    const days=wrestleDaysHeld();
+    return `<div class="record-card">
+      <div class="record-card-title">We Who Wrestle With God</div>
+      <div class="record-consec-word" style="margin-bottom:10px;">Wrestling: "${state.wrestleQuest.asking}"</div>
+      <div class="record-consec-pct" style="margin-bottom:12px;">${days} ${days===1?'day':'days'} held</div>
+      <button class="record-btn" onclick="submitWrestle()">Submit</button>
+    </div>`;
+  } else {
+    return `<div class="record-card">
+      <div class="record-card-title">We Who Wrestle With God</div>
+      <div class="record-card-sub">"And he said to them all, If any man will come after me, let him deny himself, and take up his cross daily, and follow me." \u2014 Luke 9:23</div>
+      <button class="record-btn" onclick="openWrestleAccept()">Begin</button>
+    </div>`;
+  }
+}
+
+// ══════════════════════════════════════════
+// THE RECORD — engine
+
+// Limited-title icons by source event
+const VIGIL_TITLE_ICONS = {
+  'We Who Remember':'❖',  // ❖ seal marker
+  'We Who Abide':'❀',     // ❀ flower
+  'We Who Prevail':'⚔',   // ⚔ crossed swords (armor of God)
+};
+function getActiveLimitedTitleIcon(){
+  const rec=getRecord();
+  if(!rec.activeLimitedTitles||rec.activeLimitedTitles.length===0) return '';
+  // Prefer the rotating event title (not the consecrated one) for the icon
+  const rotating=rec.activeLimitedTitles.find(t=>VIGIL_TITLE_ICONS[t.source]);
+  if(rotating) return VIGIL_TITLE_ICONS[rotating.source];
+  return '';
+}
+
+
+// ── WE WHO PREVAIL (Armor of God) ──
+const ARMOR_PIECES = [
+  { day:1, line:'I put on the Belt of Truth' },
+  { day:2, line:'I put on the Breastplate of Righteousness' },
+  { day:3, line:'I fit my feet with the Gospel of Peace' },
+  { day:4, line:'I took up the Shield of Faith' },
+  { day:5, line:'I put on the Helmet of Salvation' },
+  { day:6, line:'I took up the Sword of the Spirit' },
+  { day:7, line:'Pause to pray for strength to stand my ground' },
+];
+function armorLineForDay(day){
+  const p=ARMOR_PIECES.find(x=>x.day===day);
+  return p?p.line:'';
+}
+
+// ── VIGIL ROTATION (Monday-anchored) ──
+const VIGIL_ANCHOR_MONDAY = '2026-06-15'; // rotation begins this Monday
+const VIGIL_ROTATION = ['remember','abide','prevail']; // Wrestle is now a perpetual opt-in, not in rotation
+
+function getMondayOf(dateStr){
+  const d=new Date(dateStr+'T00:00:00');
+  const day=d.getDay(); // 0=Sun,1=Mon...
+  const diff=(day===0?-6:1-day); // shift back to Monday
+  d.setDate(d.getDate()+diff);
+  return d.toLocaleDateString('en-CA');
+}
+
+function getActiveVigilEvent(){
+  const thisMonday=getMondayOf(todayStr());
+  const anchor=new Date(VIGIL_ANCHOR_MONDAY+'T00:00:00');
+  const cur=new Date(thisMonday+'T00:00:00');
+  const weeksSince=Math.floor((cur-anchor)/(1000*60*60*24*7));
+  const idx=((weeksSince%VIGIL_ROTATION.length)+VIGIL_ROTATION.length)%VIGIL_ROTATION.length;
+  return VIGIL_ROTATION[idx];
+}
+
+function getVigilDay(){
+  // Day within the current Mon-Sun vigil (1-7)
+  const thisMonday=getMondayOf(todayStr());
+  const start=new Date(thisMonday+'T00:00:00');
+  const now=new Date(todayStr()+'T00:00:00');
+  const diff=Math.floor((now-start)/(1000*60*60*24));
+  return Math.min(7, Math.max(1, diff+1));
+}
+
+
+// ══════════════════════════════════════════
+function getRecord(){
+  if(!state.record){
+    state.record = {
+      vigilMonday: getMondayOf(todayStr()),
+      participating: null, // null = not yet decided this vigil
+      wrestle: { whatImWrestling:'', heldDays:[false,false,false,false,false,false,false] },
+      remember: { verses: pickWeekVerses(), engagedDays:[false,false,false,false,false,false,false] },
+      abide: { fruitId:null, engagedDays:[false,false,false,false,false,false,false], harvestText:'' },
+      prevail: { engagedDays:[false,false,false,false,false,false,false] },
+      activeLimitedTitles: [],
+      archive: [],
+    };
+  }
+  if(!state.record.wrestle) state.record.wrestle={whatImWrestling:'',heldDays:[false,false,false,false,false,false,false]};
+  if(!state.record.remember) state.record.remember={verses:pickWeekVerses(),engagedDays:[false,false,false,false,false,false,false]};
+  if(!state.record.abide) state.record.abide={fruitId:null,engagedDays:[false,false,false,false,false,false,false],harvestText:''};
+  if(!state.record.activeLimitedTitles) state.record.activeLimitedTitles=[];
+  if(!state.record.archive) state.record.archive=[];
+  if(!state.record.prevail) state.record.prevail={engagedDays:[false,false,false,false,false,false,false]};
+  if(!state.wrestleQuest) state.wrestleQuest=null; // optional perpetual wrestle
+  if(state.record.vigilMonday===undefined) state.record.vigilMonday=getMondayOf(todayStr());
+  if(state.record.participating===undefined) state.record.participating=null;
+  // New vigil week detection: evaluate the prior week, then reset for the new one
+  const thisMonday=getMondayOf(todayStr());
+  if(state.record.vigilMonday!==thisMonday){
+    // Evaluate the completed vigil before resetting (only if a week actually elapsed)
+    try { evaluateVigilWeek(); } catch(e){}
+    state.record.vigilMonday=thisMonday;
+    state.record.participating=null;
+    state.record.wrestle={whatImWrestling:'',heldDays:[false,false,false,false,false,false,false]};
+    state.record.remember={verses:pickWeekVerses(),engagedDays:[false,false,false,false,false,false,false]};
+    state.record.abide={fruitId:null,engagedDays:[false,false,false,false,false,false,false],harvestText:''};
+    state.record.prevail={engagedDays:[false,false,false,false,false,false,false]};
+  }
+  return state.record;
+}
+
+function joinVigil(yes){
+  const rec=getRecord();
+  rec.participating=yes;
+  save(); render();
+}
+
+function getCycleDay(){
+  const rec=getRecord();
+  const start=new Date(rec.cycleStartDate+'T00:00:00');
+  const now=new Date(todayStr()+'T00:00:00');
+  const diffDays=Math.floor((now-start)/(1000*60*60*24));
+  return Math.min(7, Math.max(1, diffDays+1)); // 1-indexed, clamps 1-7
+}
+
+// Sum bonus % from active limited-time titles (stacks on top of race/title boosts)
+function getRecordBonus(){
+  const rec=getRecord();
+  let total=0;
+  rec.activeLimitedTitles.forEach(t=>{ total+=(t.bonusPct||0); });
+  return total;
+}
+
+// ── WE WHO WRESTLE ──
+function holdOn(){
+  const rec=getRecord();
+  const day=getVigilDay();
+  rec.wrestle.heldDays[day-1]=true;
+  SFX.riteTask();
+  save(); render();
+}
+
+function saveWrestleName(text){
+  const rec=getRecord();
+  rec.wrestle.whatImWrestling=text;
+  save();
+}
+
+// ── WE WHO REMEMBER ──
+function engageRemember(){
+  const rec=getRecord();
+  const day=getVigilDay();
+  rec.remember.engagedDays[day-1]=true;
+  SFX.riteTask();
+  save(); render();
+}
+
+// ── WE WHO ABIDE ──
+function selectFruit(fruitId){
+  const rec=getRecord();
+  rec.abide.fruitId=fruitId;
+  save(); render();
+}
+
+
+function engagePrevail(){
+  const rec=getRecord();
+  const day=getVigilDay();
+  rec.prevail.engagedDays[day-1]=true;
+  SFX.riteTask();
+  save(); render();
+}
+
+function engageAbide(){
+  const rec=getRecord();
+  const day=getVigilDay();
+  rec.abide.engagedDays[day-1]=true;
+  SFX.riteTask();
+  save(); render();
+}
+
+function saveHarvestText(text){
+  const rec=getRecord();
+  rec.abide.harvestText=text;
+  save();
+}
+
+// ── WE WHO ARE BEING CONSECRATED (constant heartbeat) ──
+
+function consecratedTier(pct){
+  if(pct>=90) return {points:50, descriptor:'Faithful'};
+  if(pct>=70) return {points:25, descriptor:'Steady'};
+  if(pct>=50) return {points:10, descriptor:'Present'};
+  if(pct>=30) return {points:-10, descriptor:'Slipping'};
+  if(pct>=10) return {points:-25, descriptor:'Adrift'};
+  return {points:-50, descriptor:'Abandoned'};
+}
+
+function getConsecratedHeartbeat(){
+  const hist=(state.history||[]).slice(0,7);
+  if(hist.length===0) return {pct:0, days:0};
+  let sumPct=0;
+  hist.forEach(d=>{ sumPct += d.total>0 ? (d.completed/d.total)*100 : 0; });
+  return {pct:Math.round(sumPct/hist.length), days:hist.length};
+}
+
+// ── EVALUATION / ARCHIVE ──
+function pctOf(arr){
+  const done=arr.filter(Boolean).length;
+  return Math.round((done/7)*100);
+}
+
+function evaluateVigilWeek(){
+  const rec=getRecord();
+  const activeEvent=getActiveVigilEvent();
+  const hb=getConsecratedHeartbeat();
+  const newTitles=[];
+  let archiveEntry={weekOf:rec.vigilMonday, event:activeEvent};
+
+  if(rec.participating){
+    if(activeEvent==='remember'){
+      const pct=pctOf(rec.remember.engagedDays);
+      archiveEntry.pct=pct;
+      const t=recordTier(pct);
+      if(t.bonus>0){
+        newTitles.push({id:'remember_'+Date.now(),name:'I Have Not Forgotten',bonusPct:t.bonus,source:'We Who Remember'});
+      }
+    } else if(activeEvent==='abide'){
+      const pct=pctOf(rec.abide.engagedDays);
+      archiveEntry.pct=pct;
+      archiveEntry.fruit=rec.abide.fruitId?(FRUITS.find(f=>f.id===rec.abide.fruitId)||{}).name:null;
+      archiveEntry.harvest=rec.abide.harvestText;
+      const t=recordTier(pct);
+      if(t.bonus>0&&rec.abide.fruitId){
+        const fruit=FRUITS.find(f=>f.id===rec.abide.fruitId);
+        newTitles.push({id:'abide_'+Date.now(),name:fruit?fruit.name:'Abiding',bonusPct:t.bonus,source:'We Who Abide'});
+      }
+    } else if(activeEvent==='prevail'){
+      const pct=pctOf(rec.prevail.engagedDays);
+      archiveEntry.pct=pct;
+      const t=recordTier(pct);
+      if(t.bonus>0){
+        newTitles.push({id:'prevail_'+Date.now(),name:'I Will Prevail',bonusPct:t.bonus,source:'We Who Prevail'});
+      }
+    }
+  } else {
+    archiveEntry.pct=0;
+    archiveEntry.skipped=true;
+  }
+
+  // Consecrated heartbeat — points swing with tiered descriptors (no title)
+  const consec=consecratedTier(hb.pct);
+  state.points=Math.max(0, state.points + consec.points);
+  let consecratedResult={pct:hb.pct, points:consec.points, descriptor:consec.descriptor};
+  archiveEntry.consecrated=consecratedResult;
+  archiveEntry.titlesEarned=newTitles.map(t=>t.name);
+
+  rec.archive.unshift(archiveEntry);
+  if(rec.archive.length>26) rec.archive=rec.archive.slice(0,26);
+  rec.activeLimitedTitles=newTitles;
+  // (getRecord handles the cycle reset for the new week)
+}
+
+// ── TEST-ONLY: advance the cycle day without waiting ──
+
+// ── RENDER ──
+
+
+
+function renderVigilTaskSection(){
+  const section=document.getElementById('vigilTaskSection');
+  const list=document.getElementById('vigilTaskList');
+  const titleEl=document.getElementById('vigilTaskTitle');
+  if(!section||!list) return;
+  const rec=getRecord();
+  // Only show if participating in this vigil
+  if(rec.participating!==true){ section.style.display='none'; return; }
+  const active=getActiveVigilEvent();
+  const day=getVigilDay();
+  let taskName='', done=false, onClick='', verse='';
+
+  if(active==='remember'){
+    const v=rec.remember.verses[day-1];
+    taskName='Review';
+    if(v) verse=`"${v.verse}" — ${v.ref}`;
+    done=rec.remember.engagedDays[day-1];
+    onClick='engageRemember()';
+    titleEl.textContent='Vigil — We Who Remember';
+  } else if(active==='abide'){
+    if(!rec.abide.fruitId){
+      // No fruit chosen yet — prompt to choose on the vigil tab
+      section.style.display='block';
+      titleEl.textContent='Vigil — We Who Abide';
+      list.innerHTML=`<div class="habit-item" onclick="switchTab('record',document.querySelectorAll('.tab-btn')[4])"><div class="habit-check"></div><div class="habit-info"><div class="habit-name">Choose a fruit to abide in</div><div class="habit-meta">Open the Vigil tab</div></div></div>`;
+      return;
+    }
+    const fruit=FRUITS.find(f=>f.id===rec.abide.fruitId);
+    const stage=abideStageForDay(day);
+    taskName=fruit?fruit.name:'Abide';
+    verse=abidePrompt(fruit.name, stage);
+    done=rec.abide.engagedDays[day-1];
+    onClick='engageAbide()';
+    titleEl.textContent='Vigil — We Who Abide';
+  } else if(active==='prevail'){
+    const armorLine=armorLineForDay(day);
+    taskName=day===7?'Pray':'Put On the Armor';
+    verse=armorLine;
+    done=rec.prevail.engagedDays[day-1];
+    onClick='engagePrevail()';
+    titleEl.textContent='Vigil — We Who Prevail';
+  } else {
+    section.style.display='none'; return;
+  }
+
+  section.style.display='block';
+  list.innerHTML=`<div class="habit-item${done?' done':''}" onclick="${done?'':onClick}">
+    <div class="habit-check">${done?'✓':''}</div>
+    <div class="habit-info">
+      <div class="habit-name">${taskName}</div>
+      ${verse?`<div class="habit-meta" style="line-height:1.5;">${verse}</div>`:''}
+    </div>
+  </div>`;
+}
+
+function renderVigilJoinPrompt(){
+  const el=document.getElementById('vigilJoinPrompt');
+  if(!el) return;
+  const rec=getRecord();
+  const eventNames={remember:'We Who Remember',abide:'We Who Abide',prevail:'We Who Prevail',wrestle:'We Who Wrestle With God'};
+  const active=getActiveVigilEvent();
+  // Priority 1: join prompt if undecided
+  if(rec.participating===null){
+    el.style.display='block';
+    el.className='vigil-join-prompt';
+    el.innerHTML=`<div class="vjp-q">Will you join this week's vigil?</div>
+      <div class="vjp-event">${eventNames[active]}</div>
+      <div class="vjp-btns">
+        <button class="vjp-join" onclick="joinVigil(true)">Join</button>
+        <button class="vjp-skip" onclick="joinVigil(false)">Not This Week</button>
+      </div>`;
+    return;
+  }
+  // Otherwise hidden (active title shown only via the class circle icon)
+  el.style.display='none';
+}
+
+const TITLE_WHY = {
+  'We Who Remember':'You kept this week\'s vigil of remembrance — returning to the verses written on past ranks and covenants. This title reflects how faithfully you sat with the Word that has been spoken over you.',
+  'We Who Abide':'You kept this week\'s vigil of abiding — choosing a fruit of the Spirit and tending it through notice, practice, testing, and harvest. This title reflects how you remained in the vine.',
+  'We Who Wrestle':'You kept this week\'s vigil of wrestling — holding on through what would not resolve. This title reflects your refusal to let go.',
+  'We Who Are Being Consecrated':'Your habits this week kept your word. Faithfulness above the mark earns this title — the weekly heartbeat of a consecrated life.',
+};
+function showActiveTitleScreen(){
+  const rec=getRecord();
+  const rotating=rec.activeLimitedTitles.find(t=>VIGIL_TITLE_ICONS[t.source]);
+  if(!rotating){ return; }
+  document.getElementById('tsIcon').textContent=VIGIL_TITLE_ICONS[rotating.source]||'❖';
+  document.getElementById('tsName').textContent=rotating.name;
+  document.getElementById('tsSource').textContent=rotating.source;
+  document.getElementById('tsBonus').textContent='+'+Math.round(rotating.bonusPct*100)+'% XP · active until this vigil ends';
+  document.getElementById('tsWhy').textContent=TITLE_WHY[rotating.source]||'';
+  document.getElementById('titleScreen').classList.add('open');
+}
+function closeTitleScreen(){
+  document.getElementById('titleScreen').classList.remove('open');
+}
+
+function renderRecordPanel(){
+  const panel=document.getElementById('recordPanel');
+  if(!panel) return;
+  const rec=getRecord();
+  const day=getVigilDay();
+  const activeEvent=getActiveVigilEvent();
+  const eventNames={remember:'We Who Remember',abide:'We Who Abide',prevail:'We Who Prevail',wrestle:'We Who Wrestle With God'};
+
+  let html=`<div class="record-cycle-header"><div class="record-vigil-day">Vigil: Day ${day} of 7</div></div>`;
+
+  // ── ACTIVE LIMITED TITLES (above consecrated) ──
+  if(rec.activeLimitedTitles.length>0){
+    html+=`<div class="record-card">
+      <div class="record-card-title">Active Limited Titles</div>
+      <div class="record-titles">`;
+    rec.activeLimitedTitles.forEach(t=>{
+      html+=`<div class="record-title-chip"><span>${t.name}</span><span>+${Math.round(t.bonusPct*100)}% \u00b7 ${t.source}</span></div>`;
+    });
+    html+=`</div></div>`;
+  }
+
+  // ── WE WHO ARE BEING CONSECRATED (always present, top) ──
+  const hb=getConsecratedHeartbeat();
+  const pass=hb.pct>=50;
+  const barColor=pass?'linear-gradient(90deg,#6a8a5a,#8abf7a)':'linear-gradient(90deg,#8a5a5a,#bf7a7a)';
+  html+=`<div class="record-card">
+    <div class="record-card-title">We Who Are Being Consecrated</div>
+    <div class="record-consec-word">Did your habits keep your word?</div>
+    <div class="record-consec-bar-track"><div class="record-consec-bar-fill" style="width:${hb.pct}%;background:${barColor};"></div></div>
+    <div class="record-consec-pct">${hb.pct}% \u00b7 last ${hb.days} day${hb.days===1?'':'s'}</div>
+  </div>`;
+
+  // ── PARTICIPATION (gate is on Today page) ──
+  if(rec.participating===false){
+    html+=`<div class="record-card">
+      <div class="record-card-title">This Vigil</div>
+      <div class="record-card-sub" style="margin-bottom:0;">You set this vigil aside this week. The next begins Monday.</div>
+    </div>`;
+  } else if(rec.participating===null){
+    html+=`<div class="record-card">
+      <div class="record-card-title">${eventNames[activeEvent]}</div>
+      <div class="record-join-prompt">
+        <div class="record-join-text">Will you join this week's vigil?</div>
+        <div class="record-join-btns">
+          <button class="record-btn" onclick="joinVigil(true)">Join</button>
+          <button class="record-btn" style="border-color:var(--border);color:var(--text-dim);" onclick="joinVigil(false)">Not This Week</button>
+        </div>
+      </div>
+    </div>`;
+  } else {
+    // ── ACTIVE EVENT ──
+    if(activeEvent==='remember'){
+      const verseToday=rec.remember.verses[day-1];
+      html+=`<div class="record-card">
+        <div class="record-card-title">We Who Remember</div>
+        <div class="record-card-sub">Remember the past and write it on your heart.</div>`;
+      if(verseToday){
+        html+=`<div class="record-verse">"${verseToday.verse}"</div>
+        <div class="record-ref">${verseToday.ref} \u00b7 ${verseToday.source}</div>`;
+      }
+      html+=`<div class="record-dots">`;
+      for(let i=0;i<7;i++){
+        const done=rec.remember.engagedDays[i];
+        const isToday=(i+1)===day;
+        html+=`<div class="record-dot ${done?'held':''} ${isToday&&!done?'today':''}">${done?'\u2713':(i+1)}</div>`;
+      }
+      html+=`</div>`;
+      const remToday=rec.remember.engagedDays[day-1];
+      html+=`<button class="record-btn ${remToday?'done':''}" ${remToday?'disabled':''} onclick="engageRemember()">${remToday?'Reviewed Today':'Review'}</button>
+      </div>`;
+    } else if(activeEvent==='abide'){
+      html+=`<div class="record-card">
+        <div class="record-card-title">We Who Abide</div>
+        <div class="record-card-sub">Choose a fruit of the Spirit to abide in this week.</div>`;
+      if(!rec.abide.fruitId){
+        html+=`<div class="record-fruit-grid">`;
+        FRUITS.forEach(f=>{ html+=`<div class="record-fruit-pill" onclick="selectFruit('${f.id}')">${f.name}</div>`; });
+        html+=`</div>`;
+      } else {
+        const fruit=FRUITS.find(f=>f.id===rec.abide.fruitId);
+        const stage=abideStageForDay(day);
+        const stageLabels={notice:'Notice',practice:'Practice',test:'Test',harvest:'Harvest'};
+        html+=`<div class="record-fruit-grid"><div class="record-fruit-pill selected">${fruit.name}</div></div>
+        <div class="record-stage-label">${stageLabels[stage]} \u2014 Day ${day}</div>
+        <div class="record-prompt">${abidePrompt(fruit.name, stage)}</div>`;
+        if(stage==='harvest'){
+          html+=`<textarea class="record-input" id="harvestInput" placeholder="What grew this week?" onblur="saveHarvestText(this.value)">${rec.abide.harvestText}</textarea>`;
+        }
+        html+=`<div class="record-dots">`;
+        for(let i=0;i<7;i++){
+          const done=rec.abide.engagedDays[i];
+          const isToday=(i+1)===day;
+          html+=`<div class="record-dot ${done?'held':''} ${isToday&&!done?'today':''}">${done?'\u2713':(i+1)}</div>`;
+        }
+        html+=`</div>`;
+        const abToday=rec.abide.engagedDays[day-1];
+        html+=`<button class="record-btn ${abToday?'done':''}" ${abToday?'disabled':''} onclick="engageAbide()">${abToday?'Abided Today':'Abide'}</button>`;
+      }
+      html+=`</div>`;
+    } else if(activeEvent==='prevail'){
+      const armorLine=armorLineForDay(day);
+      html+=`<div class="record-card">
+        <div class="record-card-title">We Who Prevail</div>
+        <div class="record-card-sub">Put on the whole armor of God, piece by piece.</div>
+        <div class="record-prompt">${armorLine}</div>
+        <div class="record-dots">`;
+      for(let i=0;i<7;i++){
+        const done=rec.prevail.engagedDays[i];
+        const isToday=(i+1)===day;
+        html+=`<div class="record-dot ${done?'held':''} ${isToday&&!done?'today':''}">${done?'\u2713':(i+1)}</div>`;
+      }
+      html+=`</div>`;
+      const prevToday=rec.prevail.engagedDays[day-1];
+      html+=`<button class="record-btn ${prevToday?'done':''}" ${prevToday?'disabled':''} onclick="engagePrevail()">${prevToday?(day===7?'Prayed Today':'Worn Today'):(day===7?'Pray':'Put It On')}</button>
+      </div>`;
+    }
+  }
+
+  // ── WE WHO WRESTLE (perpetual opt-in, above archive) ──
+  html+=wrestleVigilHTML();
+
+  // ── ARCHIVE ──
+  html+=`<div class="record-card">
+    <div class="record-card-title">Archive</div>`;
+  if(rec.archive.length===0){
+    html+=`<div class="record-card-sub" style="margin-bottom:0;">No completed vigils yet.</div>`;
+  } else {
+    rec.archive.forEach(a=>{
+      html+=`<div class="record-archive-item">
+        <div class="record-archive-week">Week of ${a.weekOf}</div>`;
+      if(a.event==='remember') html+=`<div class="record-archive-line">Remember \u2014 ${a.pct}%</div>`;
+      else if(a.event==='abide') html+=`<div class="record-archive-line">Abide \u2014 ${a.pct}%${a.fruit?' \u2014 '+a.fruit:''}</div>`;
+      else if(a.event==='wrestle') html+=`<div class="record-archive-line">Wrestle \u2014 ${a.daysHeld} ${a.daysHeld===1?'day':'days'}${a.asking?' \u2014 "'+a.asking+'"':''}</div>`;
+      if(a.consecrated){
+        const pts=a.consecrated.points;
+        html+=`<div class="record-archive-line">Consecrated: ${a.consecrated.descriptor} (${a.consecrated.pct}%) · ${pts>=0?'+':''}${pts} pts</div>`;
+      }
+      if(a.titlesEarned&&a.titlesEarned.length>0) html+=`<div class="record-archive-line">Titles: ${a.titlesEarned.join(', ')}</div>`;
+      html+=`</div>`;
+    });
+  }
+  html+=`</div>`;
+
+  panel.innerHTML=html;
+}
 
 
 // ══════════════════════════════════════════
