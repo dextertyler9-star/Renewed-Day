@@ -301,7 +301,7 @@
   .rite-status.upcoming { background:#2a2a1a; color:#a0a060; }
   .rite-status.completed { background:#1a2a1a; color:#4a8a4a; }
   .rite-discipline { font-family:'Oswald',sans-serif; font-size:13px; letter-spacing:0.1em; text-transform:uppercase; color:#4a7aaa; margin-bottom:8px; }
-  .rite-verse { font-size:14px; font-style:italic; color:#8090a0; line-height:1.6; margin-bottom:3px; }
+  .rite-verse { font-size:14px; font-style:italic; color:#9aacbc; line-height:1.6; margin-bottom:3px; }
   .rite-meta { font-family:'Oswald',sans-serif; font-size:13px; letter-spacing:0.06em; color:#7a8a9a; margin-bottom:10px; text-transform:uppercase; }
   .rite-bonus { font-size:13px; color:var(--copper); margin-bottom:10px; line-height:1.5; }
   .rite-challenge-label { font-family:'Oswald',sans-serif; font-size:12px; letter-spacing:0.14em; text-transform:uppercase; color:#3a4858; margin-bottom:6px; }
@@ -461,6 +461,23 @@
   .ttb-chip-icon { font-size:18px; color:var(--gold); }
   .ttb-chip-name { font-family:'Oswald',sans-serif; font-size:13px; letter-spacing:0.06em; text-transform:uppercase; color:var(--gold); flex:1; }
   .ttb-chip-bonus { font-family:'Oswald',sans-serif; font-size:12px; color:var(--text-dim); }
+
+  .header-menu-btn { background:none; border:none; color:var(--gold-dim); font-size:18px; cursor:pointer; padding:0 2px; line-height:1; }
+  .header-menu-btn:hover { color:var(--gold); }
+  .header-menu-panel { display:none; background:var(--card); border:1px solid var(--border); border-radius:10px; margin:0 20px 8px; padding:14px 16px; }
+  .header-menu-panel.open { display:block; animation:fade-in 0.25s ease; }
+  .hmp-row { display:flex; align-items:center; justify-content:space-between; padding:8px 0; }
+  .hmp-label { font-family:'Oswald',sans-serif; font-size:13px; letter-spacing:0.1em; text-transform:uppercase; color:var(--text); }
+  .hmp-toggle { display:flex; gap:6px; }
+  .hmp-opt { font-family:'Oswald',sans-serif; font-size:13px; letter-spacing:0.08em; text-transform:uppercase; padding:5px 14px; border-radius:6px; border:1px solid var(--border); background:none; color:var(--text-dim); cursor:pointer; }
+  .hmp-opt.active { border-color:var(--gold-dim); color:var(--gold); background:rgba(201,168,76,0.08); }
+  .hmp-divider { height:1px; background:var(--border); margin:6px 0; }
+  .hmp-action { font-family:'Oswald',sans-serif; font-size:13px; letter-spacing:0.08em; text-transform:uppercase; padding:10px; border-radius:7px; border:1px solid var(--gold-dim); background:none; color:var(--gold); cursor:pointer; }
+  .hmp-action:hover { background:rgba(201,168,76,0.08); }
+  .hmp-danger { border-color:#5a2a2a; color:#c06060; }
+  .hmp-danger:hover { background:rgba(192,96,96,0.08); }
+  .hmp-input { width:100%; background:#0c0c0e; border:1px solid var(--border); border-radius:7px; padding:9px 11px; color:var(--text); font-size:13px; font-family:'Inter',sans-serif; resize:vertical; min-height:54px; box-sizing:border-box; }
+  .hmp-input:focus { outline:none; border-color:var(--gold-dim); }
   ::-webkit-scrollbar { width:4px; }
   ::-webkit-scrollbar-track { background:transparent; }
   ::-webkit-scrollbar-thumb { background:#2a2a2a; border-radius:2px; }
@@ -475,8 +492,41 @@
       <div><div class="logo">Renewed Day</div><div class="logo-sub">The Imago Protocol</div></div>
       <div class="header-date-col">
         <div class="date-label" id="dateLabel"></div>
-        <div class="build-version">v0.4.0</div>
+        <div style="display:flex;align-items:center;gap:6px;justify-content:flex-end;">
+          <div class="build-version">v0.4.0</div>
+          <button class="header-menu-btn" onclick="toggleHeaderMenu()" aria-label="Menu">&#9776;</button>
+        </div>
       </div>
+    </div>
+  </div>
+
+  <!-- HEADER MENU PANEL -->
+  <div class="header-menu-panel" id="headerMenuPanel">
+    <div class="hmp-row">
+      <span class="hmp-label">Sound</span>
+      <div class="hmp-toggle">
+        <button class="hmp-opt" id="soundOnBtn" onclick="setSound(true)">On</button>
+        <button class="hmp-opt" id="soundOffBtn" onclick="setSound(false)">Off</button>
+      </div>
+    </div>
+    <div class="hmp-row">
+      <span class="hmp-label">Haptics</span>
+      <div class="hmp-toggle">
+        <button class="hmp-opt" id="hapticsOnBtn" onclick="setHaptics(true)">On</button>
+        <button class="hmp-opt" id="hapticsOffBtn" onclick="setHaptics(false)">Off</button>
+      </div>
+    </div>
+    <div class="hmp-divider"></div>
+    <div class="hmp-row" style="flex-direction:column;align-items:stretch;gap:8px;">
+      <span class="hmp-label">Backup &amp; Restore</span>
+      <button class="hmp-action" onclick="backupState()">Copy Backup Code</button>
+      <textarea class="hmp-input" id="restoreInput" placeholder="Paste backup code here to restore..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-1p-ignore data-lpignore="true" data-form-type="other"></textarea>
+      <button class="hmp-action" onclick="restoreState()">Restore from Code</button>
+    </div>
+    <div class="hmp-divider"></div>
+    <div class="hmp-row" style="flex-direction:column;align-items:stretch;gap:8px;">
+      <span class="hmp-label" style="color:#a05050;">Start Fresh</span>
+      <button class="hmp-action hmp-danger" onclick="startFresh()">Wipe &amp; Reset to Defaults</button>
     </div>
   </div>
 
@@ -1273,6 +1323,7 @@ function load(){
   if(!state.riteTaskCounts) state.riteTaskCounts={};
   if(!state.taskLog) state.taskLog=[];
   if(state.highestRankXP===undefined) state.highestRankXP=0;
+  if(state.hapticsEnabled===undefined) state.hapticsEnabled=false;
   // Backfill floor for existing users
   setTimeout(()=>{ try{ updateXPFloor(); save(); }catch(e){} }, 100);
   if(state.playerRace===undefined) state.playerRace=null;
@@ -1811,6 +1862,7 @@ function toggleHabit(id){
     state.points+=1;
     triggerXPPulse();
     SFX.habitCheck();
+    buzz(15);
   }
 
   if(state.today[id]){
@@ -1845,7 +1897,7 @@ function togglePenalty(id){
   if(!h) return;
   const pxp=calcPenaltyXPFinal(h);
   if(state.today[id]){ state.today[id]=false; state.totalXP+=pxp; SFX.penaltyUncheck(); }
-  else { state.today[id]=true; state.totalXP=Math.max(getXPFloor(),state.totalXP-pxp); SFX.penaltyCheck(); }
+  else { state.today[id]=true; state.totalXP=Math.max(getXPFloor(),state.totalXP-pxp); SFX.penaltyCheck(); buzz(25); }
   save(); render();
 }
 
@@ -1888,6 +1940,7 @@ function completeTask(id){
   }
   triggerXPPulse();
   SFX.taskComplete();
+  buzz(20);
   save(); render();
 }
 
@@ -1922,7 +1975,7 @@ function triggerXPPulse(){
 // RANK UP SCREEN
 // ══════════════════════════════════════════
 function showRankUp(rank,bonusPts,isRaceChange){
-  if(isRaceChange) SFX.classUp(); else SFX.rankUp();
+  if(isRaceChange){ SFX.classUp(); buzz(60); } else { SFX.rankUp(); buzz(40); }
   const screen=document.getElementById('rankupScreen');
   const inner=document.getElementById('rankupInner');
   screen.style.opacity='0'; screen.classList.add('show');
@@ -2700,6 +2753,7 @@ function toggleRaceHabit(rh){
     state.points+=1;
     triggerXPPulse();
     SFX.habitCheck();
+    buzz(15);
   }
   if(state.today[rh.id]){
     const rankAfter=getCurrentRank(state.totalXP);
@@ -2758,10 +2812,23 @@ let _audioWarmed=false;
 function warmAudio(){
   if(_audioWarmed) return;
   _audioWarmed=true;
+  startAudioKeepAlive();
   try{ const ctx=getAudioCtx(); const o=ctx.createOscillator(); const g=ctx.createGain(); g.gain.value=0; o.connect(g); g.connect(ctx.destination); o.start(); o.stop(ctx.currentTime+0.01); }catch(e){}
 }
 document.addEventListener('touchstart', warmAudio, {once:false, passive:true});
 document.addEventListener('mousedown', warmAudio, {once:false, passive:true});
+// Keep the audio context awake to reduce first-tone latency
+document.addEventListener('visibilitychange', ()=>{ if(!document.hidden && _audioCtx && _audioCtx.state==='suspended'){ _audioCtx.resume(); } });
+function startAudioKeepAlive(){
+  try {
+    const ctx=getAudioCtx();
+    const o=ctx.createOscillator(); const g=ctx.createGain();
+    g.gain.value=0.0001; // effectively silent
+    o.frequency.value=20; // sub-audible
+    o.connect(g); g.connect(ctx.destination);
+    o.start();
+  } catch(e){}
+}
 
 function soundOn(){ return state.soundEnabled!==false; }
 
@@ -3586,12 +3653,76 @@ function renderRecordPanel(){
 }
 
 
+
+// ══════════════════════════════════════════
+// HEADER MENU / SETTINGS
+// ══════════════════════════════════════════
+function toggleHeaderMenu(){
+  const p=document.getElementById('headerMenuPanel');
+  if(!p) return;
+  p.classList.toggle('open');
+  if(p.classList.contains('open')) syncMenuState();
+}
+function syncMenuState(){
+  const soundOn=state.soundEnabled!==false;
+  const hapticsOn=state.hapticsEnabled===true;
+  const so=document.getElementById('soundOnBtn'), sf=document.getElementById('soundOffBtn');
+  const ho=document.getElementById('hapticsOnBtn'), hf=document.getElementById('hapticsOffBtn');
+  if(so&&sf){ so.classList.toggle('active',soundOn); sf.classList.toggle('active',!soundOn); }
+  if(ho&&hf){ ho.classList.toggle('active',hapticsOn); hf.classList.toggle('active',!hapticsOn); }
+}
+function setSound(on){ state.soundEnabled=on; save(); syncMenuState(); if(on){ warmAudio(); SFX.habitCheck(); } }
+function setHaptics(on){ state.hapticsEnabled=on; save(); syncMenuState(); if(on) buzz(20); }
+
+function buzz(ms){
+  if(state.hapticsEnabled!==true) return;
+  try { if(navigator.vibrate) navigator.vibrate(ms); } catch(e){}
+}
+
+// ── Backup & Restore (copy/paste string) ──
+function backupState(){
+  try {
+    const json=localStorage.getItem('rd_state_v2')||JSON.stringify(state);
+    const code=btoa(unescape(encodeURIComponent(json)));
+    if(navigator.clipboard&&navigator.clipboard.writeText){
+      navigator.clipboard.writeText(code).then(()=>alert('Backup code copied to clipboard. Paste it somewhere safe, then paste it into the Restore box on your new device.')).catch(()=>fallbackCopy(code));
+    } else { fallbackCopy(code); }
+  } catch(e){ alert('Backup failed: '+e.message); }
+}
+function fallbackCopy(code){
+  const ta=document.getElementById('restoreInput');
+  if(ta){ ta.value=code; ta.select(); try{document.execCommand('copy');}catch(e){} }
+  alert('Backup code placed in the box below. Copy it and save it somewhere safe.');
+}
+function restoreState(){
+  const ta=document.getElementById('restoreInput');
+  if(!ta||!ta.value.trim()){ alert('Paste a backup code first.'); return; }
+  if(!confirm('Restore will overwrite everything currently on this device. Continue?')) return;
+  try {
+    const json=decodeURIComponent(escape(atob(ta.value.trim())));
+    const parsed=JSON.parse(json); // validate
+    localStorage.setItem('rd_state_v2', json);
+    alert('Restored. The app will now reload.');
+    location.reload();
+  } catch(e){ alert('That code could not be read. Make sure you copied the whole thing.'); }
+}
+
+// ── Start Fresh ──
+function startFresh(){
+  if(!confirm('This will permanently erase all progress on this device and reset to defaults. This cannot be undone. Continue?')) return;
+  if(!confirm('Are you absolutely sure? Everything will be lost.')) return;
+  try { localStorage.removeItem('rd_state_v2'); } catch(e){}
+  location.reload();
+}
+
+
 // ══════════════════════════════════════════
 // INIT
 // ══════════════════════════════════════════
 load();
 checkDayReset();
 render();
+syncMenuState();
 showVerseSplash();
 if(state.verseSeenDate===todayStr()) processFailedTaskQueue();
 if(state.pendingCovenant){
