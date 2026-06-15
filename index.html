@@ -1324,6 +1324,22 @@ function load(){
   if(!state.taskLog) state.taskLog=[];
   if(state.highestRankXP===undefined) state.highestRankXP=0;
   if(state.hapticsEnabled===undefined) state.hapticsEnabled=false;
+  // One-time cleanup: remove duplicate vigil archive entries from the recursion bug
+  if(state.record && state.record.archive && !state.record._dedupDone){
+    const seen=new Set();
+    const cleaned=[];
+    for(const a of state.record.archive){
+      const key=(a.weekOf||'')+'|'+(a.event||'')+'|'+(a.consecrated?a.consecrated.pct:'')+'|'+(a.consecrated?a.consecrated.points:'')+'|'+(a.pct||0);
+      if(seen.has(key)) continue;
+      seen.add(key);
+      cleaned.push(a);
+    }
+    if(cleaned.length!==state.record.archive.length){
+      state.record.archive=cleaned;
+    }
+    state.record._dedupDone=true;
+    save();
+  }
   // Backfill floor for existing users
   setTimeout(()=>{ try{ updateXPFloor(); save(); }catch(e){} }, 100);
   if(state.playerRace===undefined) state.playerRace=null;
@@ -3193,13 +3209,15 @@ function getMondayOf(dateStr){
   return d.toLocaleDateString('en-CA');
 }
 
-function getActiveVigilEvent(){
-  const thisMonday=getMondayOf(todayStr());
+function getActiveVigilEventFor(mondayStr){
   const anchor=new Date(VIGIL_ANCHOR_MONDAY+'T00:00:00');
-  const cur=new Date(thisMonday+'T00:00:00');
+  const cur=new Date(mondayStr+'T00:00:00');
   const weeksSince=Math.floor((cur-anchor)/(1000*60*60*24*7));
   const idx=((weeksSince%VIGIL_ROTATION.length)+VIGIL_ROTATION.length)%VIGIL_ROTATION.length;
   return VIGIL_ROTATION[idx];
+}
+function getActiveVigilEvent(){
+  return getActiveVigilEventFor(getMondayOf(todayStr()));
 }
 
 function getVigilDay(){
@@ -3213,6 +3231,7 @@ function getVigilDay(){
 
 
 // ══════════════════════════════════════════
+let _vigilEvalLock=false;
 function getRecord(){
   if(!state.record){
     state.record = {
@@ -3235,17 +3254,31 @@ function getRecord(){
   if(!state.wrestleQuest) state.wrestleQuest=null; // optional perpetual wrestle
   if(state.record.vigilMonday===undefined) state.record.vigilMonday=getMondayOf(todayStr());
   if(state.record.participating===undefined) state.record.participating=null;
-  // New vigil week detection: evaluate the prior week, then reset for the new one
+  // New vigil week detection: evaluate the prior week ONCE, then reset for the new one
   const thisMonday=getMondayOf(todayStr());
-  if(state.record.vigilMonday!==thisMonday){
-    // Evaluate the completed vigil before resetting (only if a week actually elapsed)
-    try { evaluateVigilWeek(); } catch(e){}
+  if(state.record.vigilMonday!==thisMonday && !_vigilEvalLock){
+    _vigilEvalLock=true;
+    // Snapshot the completed vigil and the Monday it belonged to
+    const finishedMonday=state.record.vigilMonday;
+    const snapshot={
+      weekOf: finishedMonday,
+      activeEvent: getActiveVigilEventFor(finishedMonday),
+      participating: state.record.participating,
+      remember: state.record.remember,
+      abide: state.record.abide,
+      prevail: state.record.prevail,
+    };
+    // Advance the week FIRST so evaluation cannot re-enter this block
     state.record.vigilMonday=thisMonday;
     state.record.participating=null;
     state.record.wrestle={whatImWrestling:'',heldDays:[false,false,false,false,false,false,false]};
     state.record.remember={verses:pickWeekVerses(),engagedDays:[false,false,false,false,false,false,false]};
     state.record.abide={fruitId:null,engagedDays:[false,false,false,false,false,false,false],harvestText:''};
     state.record.prevail={engagedDays:[false,false,false,false,false,false,false]};
+    // Now evaluate the finished week from the snapshot (only counts as one week,
+    // regardless of how many weeks elapsed — no compounding)
+    try { evaluateVigilWeek(snapshot); } catch(e){}
+    _vigilEvalLock=false;
   }
   return state.record;
 }
@@ -3351,33 +3384,34 @@ function pctOf(arr){
   return Math.round((done/7)*100);
 }
 
-function evaluateVigilWeek(){
-  const rec=getRecord();
-  const activeEvent=getActiveVigilEvent();
+function evaluateVigilWeek(snap){
+  // snap = {weekOf, activeEvent, participating, remember, abide, prevail}
+  const rec=state.record; // for archive + activeLimitedTitles only
+  const activeEvent=snap.activeEvent;
   const hb=getConsecratedHeartbeat();
   const newTitles=[];
-  let archiveEntry={weekOf:rec.vigilMonday, event:activeEvent};
+  let archiveEntry={weekOf:snap.weekOf, event:activeEvent};
 
-  if(rec.participating){
+  if(snap.participating){
     if(activeEvent==='remember'){
-      const pct=pctOf(rec.remember.engagedDays);
+      const pct=pctOf(snap.remember.engagedDays);
       archiveEntry.pct=pct;
       const t=recordTier(pct);
       if(t.bonus>0){
         newTitles.push({id:'remember_'+Date.now(),name:'I Have Not Forgotten',bonusPct:t.bonus,source:'We Who Remember'});
       }
     } else if(activeEvent==='abide'){
-      const pct=pctOf(rec.abide.engagedDays);
+      const pct=pctOf(snap.abide.engagedDays);
       archiveEntry.pct=pct;
-      archiveEntry.fruit=rec.abide.fruitId?(FRUITS.find(f=>f.id===rec.abide.fruitId)||{}).name:null;
-      archiveEntry.harvest=rec.abide.harvestText;
+      archiveEntry.fruit=snap.abide.fruitId?(FRUITS.find(f=>f.id===snap.abide.fruitId)||{}).name:null;
+      archiveEntry.harvest=snap.abide.harvestText;
       const t=recordTier(pct);
-      if(t.bonus>0&&rec.abide.fruitId){
-        const fruit=FRUITS.find(f=>f.id===rec.abide.fruitId);
+      if(t.bonus>0&&snap.abide.fruitId){
+        const fruit=FRUITS.find(f=>f.id===snap.abide.fruitId);
         newTitles.push({id:'abide_'+Date.now(),name:fruit?fruit.name:'Abiding',bonusPct:t.bonus,source:'We Who Abide'});
       }
     } else if(activeEvent==='prevail'){
-      const pct=pctOf(rec.prevail.engagedDays);
+      const pct=pctOf(snap.prevail.engagedDays);
       archiveEntry.pct=pct;
       const t=recordTier(pct);
       if(t.bonus>0){
@@ -3392,14 +3426,12 @@ function evaluateVigilWeek(){
   // Consecrated heartbeat — points swing with tiered descriptors (no title)
   const consec=consecratedTier(hb.pct);
   state.points=Math.max(0, state.points + consec.points);
-  let consecratedResult={pct:hb.pct, points:consec.points, descriptor:consec.descriptor};
-  archiveEntry.consecrated=consecratedResult;
+  archiveEntry.consecrated={pct:hb.pct, points:consec.points, descriptor:consec.descriptor};
   archiveEntry.titlesEarned=newTitles.map(t=>t.name);
 
   rec.archive.unshift(archiveEntry);
   if(rec.archive.length>26) rec.archive=rec.archive.slice(0,26);
   rec.activeLimitedTitles=newTitles;
-  // (getRecord handles the cycle reset for the new week)
 }
 
 // ── TEST-ONLY: advance the cycle day without waiting ──
