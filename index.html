@@ -86,13 +86,15 @@
   .rank-card { margin:14px 20px; background:var(--card); border:1px solid var(--border); border-radius:10px; padding:16px 18px 14px; }
   .rank-row { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:10px; gap:10px; }
   .rank-labels { flex:1; }
-  .race-eyebrow { font-size:14px; color:var(--gold-dim); text-transform:uppercase; letter-spacing:0.18em; margin-bottom:4px; font-family:'Oswald',sans-serif; font-weight:600; }
+  .race-eyebrow { font-size:14px; color:var(--gold-dim); text-transform:uppercase; letter-spacing:0.18em; margin-bottom:4px; font-family:'Oswald',sans-serif; font-weight:600; line-height:1; }
   .rank-name { font-family:'Oswald',sans-serif; font-size:24px; font-weight:700; color:var(--gold); letter-spacing:0.06em; text-transform:uppercase; line-height:1; margin-bottom:3px; cursor:pointer; animation:rank-glow-pulse 4s ease-in-out infinite; }
   @keyframes rank-glow-pulse {
     0%, 100% { text-shadow: 0 0 var(--g1s,6px) rgba(201,168,76,var(--g1a,0.15)), 0 0 var(--g2s,14px) rgba(201,168,76,var(--g2a,0.07)); }
     50% { text-shadow: 0 0 var(--g1sh,10px) rgba(201,168,76,var(--g1ah,0.3)), 0 0 var(--g2sh,24px) rgba(201,168,76,var(--g2ah,0.15)), 0 0 var(--g3sh,40px) rgba(201,168,76,var(--g3ah,0.06)); }
   }
-  .rank-badge { width:44px; height:44px; border-radius:50%; border:2px solid var(--gold-dim); display:flex; align-items:center; justify-content:center; font-size:21px; background:var(--card2); flex-shrink:0; color:var(--gold); line-height:1; align-self:flex-start; margin-top:0; }
+  .rank-badge.akrasia { border-color:#a83232; color:#e05a5a; box-shadow:0 0 10px rgba(200,50,50,0.55), inset 0 0 6px rgba(200,50,50,0.3); animation:akrasia-pulse 2.2s ease-in-out infinite; }
+  @keyframes akrasia-pulse { 0%,100%{ box-shadow:0 0 8px rgba(200,50,50,0.45), inset 0 0 5px rgba(200,50,50,0.25);} 50%{ box-shadow:0 0 16px rgba(220,70,70,0.75), inset 0 0 9px rgba(220,70,70,0.4);} }
+  .rank-badge { width:42px; height:42px; border-radius:50%; border:2px solid var(--gold-dim); display:flex; align-items:center; justify-content:center; font-size:20px; background:var(--card2); flex-shrink:0; color:var(--gold); line-height:1; align-self:flex-start; margin-top:0; }
   .xp-row { display:flex; justify-content:space-between; align-items:center; margin-bottom:5px; }
   .xp-label { font-size:13px; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.08em; }
   .xp-nums { font-family:'Oswald',sans-serif; font-size:14px; color:var(--gold); }
@@ -493,7 +495,7 @@
       <div class="header-date-col">
         <div class="date-label" id="dateLabel"></div>
         <div style="display:flex;align-items:center;gap:6px;justify-content:flex-end;">
-          <div class="build-version">v0.4.0</div>
+          <div class="build-version">v0.6</div>
           <button class="header-menu-btn" onclick="toggleHeaderMenu()" aria-label="Menu">&#9776;</button>
         </div>
       </div>
@@ -1294,6 +1296,7 @@ function load(){
       {id:uid(),name:'7+ hours of sleep',             category:'Physical',  difficulty:'Common', streak:0},
       {id:uid(),name:'Prayed',                        category:'Spiritual', difficulty:'Hard',   streak:0},
       {id:uid(),name:'Read Bible or listened to sermon',category:'Spiritual',difficulty:'Hard',  streak:0},
+      {id:uid(),name:'Learn something new',           category:'Mental',    difficulty:'Common', streak:0},
     ];
   }
   if(!state.penalties||state.penalties.length===0){
@@ -1580,13 +1583,23 @@ function render(){
   const _ltIcon=getActiveLimitedTitleIcon();
   const _badge=document.getElementById('rankBadge');
   if(_ltIcon){
+    // A vigil title takes the circle (gold), even during Akrasia
     _badge.textContent=_ltIcon;
     _badge.style.display='flex';
     _badge.style.cursor='pointer';
+    _badge.classList.remove('akrasia');
     _badge.onclick=showActiveTitleScreen;
+  } else if(hasAkrasia()){
+    // No vigil title earned yet — the red mark of Akrasia shows
+    _badge.textContent=AKRASIA_ICON;
+    _badge.style.display='flex';
+    _badge.style.cursor='pointer';
+    _badge.classList.add('akrasia');
+    _badge.onclick=showAkrasiaScreen;
   } else {
     _badge.textContent='';
     _badge.style.display='none';
+    _badge.classList.remove('akrasia');
     _badge.onclick=null;
   }
 
@@ -2175,6 +2188,7 @@ document.getElementById('confirmModal').addEventListener('click',e=>{if(e.target
 // TITLE SYSTEM
 // ══════════════════════════════════════════
 function getEquippedTitle(){
+  if(hasAkrasia()) return null; // class titles sealed under Akrasia
   if(state.equippedTitle===null||state.equippedTitle===undefined) return null;
   return RACE_TITLES[state.equippedTitle]||null;
 }
@@ -2198,6 +2212,10 @@ function renderTitleArea(){
     div.className='title-option'+(state.equippedTitle===ri?' equipped':'');
     div.innerHTML=`<div class="title-option-name">${t.name}${state.equippedTitle===ri?' ✓':''}</div><div class="title-option-bonus">${t.bonus}</div>`;
     div.addEventListener('click',()=>{
+      if(hasAkrasia()){
+        showAkrasiaSealedScreen();
+        return;
+      }
       state.equippedTitle=(state.equippedTitle===ri?null:ri);
       save();render();
       document.getElementById('titleDropdown').classList.remove('open');
@@ -3182,6 +3200,24 @@ function getActiveLimitedTitleIcon(){
 }
 
 
+
+// ══════════════════════════════════════════
+// AKRASIA — weakness of will (3 weeks below 50%)
+// ══════════════════════════════════════════
+const AKRASIA_ICON = '\u0482'; // ҂ slanted fracture-like mark, glowing red
+const AKRASIA_THRESHOLD = 3;    // consecutive sub-50% vigil weeks to trigger
+
+function hasAkrasia(){ return state.record && state.record.akrasia===true; }
+
+function getAkrasiaInfo(){
+  return {
+    name:'Akrasia',
+    icon:AKRASIA_ICON,
+    source:'Weakness of Will',
+    why:'Three vigil weeks in a row, your habits fell below half. Akrasia is the ancient name for knowing the good and failing to do it. While you carry this mark, Consecrated takes no more points from you, and class titles are sealed \u2014 only a vigil title can be worn. One vigil week at half or better lifts it.',
+  };
+}
+
 // ── WE WHO PREVAIL (Armor of God) ──
 const ARMOR_PIECES = [
   { day:1, line:'I put on the Belt of Truth' },
@@ -3251,6 +3287,8 @@ function getRecord(){
   if(!state.record.activeLimitedTitles) state.record.activeLimitedTitles=[];
   if(!state.record.archive) state.record.archive=[];
   if(!state.record.prevail) state.record.prevail={engagedDays:[false,false,false,false,false,false,false]};
+  if(state.record.subFiftyStreak===undefined) state.record.subFiftyStreak=0;
+  if(state.record.akrasia===undefined) state.record.akrasia=false;
   if(!state.wrestleQuest) state.wrestleQuest=null; // optional perpetual wrestle
   if(state.record.vigilMonday===undefined) state.record.vigilMonday=getMondayOf(todayStr());
   if(state.record.participating===undefined) state.record.participating=null;
@@ -3371,11 +3409,29 @@ function consecratedTier(pct){
 }
 
 function getConsecratedHeartbeat(){
-  const hist=(state.history||[]).slice(0,7);
-  if(hist.length===0) return {pct:0, days:0};
-  let sumPct=0;
-  hist.forEach(d=>{ sumPct += d.total>0 ? (d.completed/d.total)*100 : 0; });
-  return {pct:Math.round(sumPct/hist.length), days:hist.length};
+  // Measure only the vigil days elapsed so far this week (Monday through today)
+  const thisMonday=getMondayOf(todayStr());
+  const vigilDay=getVigilDay(); // 1..7 (days elapsed incl. today)
+  const daysLeft=Math.max(0, 7-vigilDay);
+  // Collect history entries that fall within this vigil week (Mon..today)
+  const monDate=new Date(thisMonday+'T00:00:00');
+  let sumPct=0, counted=0;
+  (state.history||[]).forEach(d=>{
+    if(!d.date) return;
+    const dd=new Date(d.date+'T00:00:00');
+    if(dd>=monDate && dd<new Date(todayStr()+'T00:00:00')){
+      sumPct += d.total>0 ? (d.completed/d.total)*100 : 0;
+      counted++;
+    }
+  });
+  // Include today's in-progress completion as an elapsed day
+  const habitsDoneToday=state.habits.filter(h=>state.today[h.id]).length;
+  if(state.habits.length>0){
+    sumPct += (habitsDoneToday/state.habits.length)*100;
+    counted++;
+  }
+  const pct = counted>0 ? Math.round(sumPct/counted) : 0;
+  return {pct, days:counted, daysLeft};
 }
 
 // ── EVALUATION / ARCHIVE ──
@@ -3425,8 +3481,22 @@ function evaluateVigilWeek(snap){
 
   // Consecrated heartbeat — points swing with tiered descriptors (no title)
   const consec=consecratedTier(hb.pct);
-  state.points=Math.max(0, state.points + consec.points);
-  archiveEntry.consecrated={pct:hb.pct, points:consec.points, descriptor:consec.descriptor};
+  // Track the consecutive sub-50% streak
+  if(hb.pct<50){
+    rec.subFiftyStreak=(rec.subFiftyStreak||0)+1;
+  } else {
+    rec.subFiftyStreak=0;
+    if(rec.akrasia){ rec.akrasia=false; } // a 50%+ week lifts Akrasia
+  }
+  // Akrasia trigger: 3 consecutive sub-50% weeks
+  if(rec.subFiftyStreak>=AKRASIA_THRESHOLD){ rec.akrasia=true; }
+  // While Akrasia is active, Consecrated takes no more points (the bleeding stops)
+  if(!rec.akrasia){
+    state.points=Math.max(0, state.points + consec.points);
+    archiveEntry.consecrated={pct:hb.pct, points:consec.points, descriptor:consec.descriptor};
+  } else {
+    archiveEntry.consecrated={pct:hb.pct, points:0, descriptor:consec.descriptor, akrasia:true};
+  }
   archiveEntry.titlesEarned=newTitles.map(t=>t.name);
 
   rec.archive.unshift(archiveEntry);
@@ -3523,11 +3593,45 @@ const TITLE_WHY = {
   'We Who Wrestle':'You kept this week\'s vigil of wrestling — holding on through what would not resolve. This title reflects your refusal to let go.',
   'We Who Are Being Consecrated':'Your habits this week kept your word. Faithfulness above the mark earns this title — the weekly heartbeat of a consecrated life.',
 };
+
+
+
+
+function showAkrasiaSealedScreen(){
+  const ts=document.getElementById('titleScreen');
+  document.getElementById('tsIcon').textContent=AKRASIA_ICON;
+  document.getElementById('tsIcon').style.color='#e05a5a';
+  document.getElementById('tsName').textContent='Sealed';
+  document.getElementById('tsName').style.color='#e05a5a';
+  document.getElementById('tsSource').textContent='Akrasia';
+  document.getElementById('tsBonus').textContent='Class titles cannot be worn right now';
+  document.getElementById('tsWhy').textContent='You are still under the effects of Akrasia. Complete one vigil week with your habits at fifty percent or above, and the mark will lift \u2014 then your class titles can be worn again.';
+  ts.classList.add('open');
+  ts.classList.add('akrasia-screen');
+}
+
+function showAkrasiaScreen(){
+  const info=getAkrasiaInfo();
+  const ts=document.getElementById('titleScreen');
+  document.getElementById('tsIcon').textContent=info.icon;
+  document.getElementById('tsIcon').style.color='#e05a5a';
+  document.getElementById('tsName').textContent=info.name;
+  document.getElementById('tsName').style.color='#e05a5a';
+  document.getElementById('tsSource').textContent=info.source;
+  document.getElementById('tsBonus').textContent='Consecrated takes no points · class titles sealed';
+  document.getElementById('tsWhy').textContent=info.why;
+  ts.classList.add('open');
+  ts.classList.add('akrasia-screen');
+}
+
 function showActiveTitleScreen(){
   const rec=getRecord();
   const rotating=rec.activeLimitedTitles.find(t=>VIGIL_TITLE_ICONS[t.source]);
   if(!rotating){ return; }
   document.getElementById('tsIcon').textContent=VIGIL_TITLE_ICONS[rotating.source]||'❖';
+  document.getElementById('tsIcon').style.color='';
+  document.getElementById('tsName').style.color='';
+  document.getElementById('titleScreen').classList.remove('akrasia-screen');
   document.getElementById('tsName').textContent=rotating.name;
   document.getElementById('tsSource').textContent=rotating.source;
   document.getElementById('tsBonus').textContent='+'+Math.round(rotating.bonusPct*100)+'% XP · active until this vigil ends';
@@ -3567,8 +3671,13 @@ function renderRecordPanel(){
     <div class="record-card-title">We Who Are Being Consecrated</div>
     <div class="record-consec-word">Did your habits keep your word?</div>
     <div class="record-consec-bar-track"><div class="record-consec-bar-fill" style="width:${hb.pct}%;background:${barColor};"></div></div>
-    <div class="record-consec-pct">${hb.pct}% \u00b7 last ${hb.days} day${hb.days===1?'':'s'}</div>
+    <div class="record-consec-pct">${hb.pct}% \u00b7 ${hb.daysLeft} day${hb.daysLeft===1?'':'s'} left</div>
   </div>`;
+
+  // ── WE WHO WRESTLE — when ACTIVE, sits directly under Consecrated ──
+  if(state.wrestleQuest){
+    html+=wrestleVigilHTML();
+  }
 
   // ── PARTICIPATION (gate is on Today page) ──
   if(rec.participating===false){
@@ -3656,8 +3765,10 @@ function renderRecordPanel(){
     }
   }
 
-  // ── WE WHO WRESTLE (perpetual opt-in, above archive) ──
-  html+=wrestleVigilHTML();
+  // ── WE WHO WRESTLE — when INACTIVE, the Begin prompt sits above the archive ──
+  if(!state.wrestleQuest){
+    html+=wrestleVigilHTML();
+  }
 
   // ── ARCHIVE ──
   html+=`<div class="record-card">
@@ -3736,6 +3847,7 @@ function restoreState(){
     localStorage.setItem('rd_state_v2', json);
     alert('Restored. The app will now reload.');
     location.reload();
+
   } catch(e){ alert('That code could not be read. Make sure you copied the whole thing.'); }
 }
 
