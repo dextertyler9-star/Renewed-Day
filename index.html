@@ -495,7 +495,7 @@
       <div class="header-date-col">
         <div class="date-label" id="dateLabel"></div>
         <div style="display:flex;align-items:center;gap:6px;justify-content:flex-end;">
-          <div class="build-version">v0.6</div>
+          <div class="build-version">v0.7</div>
           <button class="header-menu-btn" onclick="toggleHeaderMenu()" aria-label="Menu">&#9776;</button>
         </div>
       </div>
@@ -606,7 +606,7 @@
     <!-- RACE HABITS SECTION -->
     <div id="raceHabitsSection" style="display:none;">
       <div class="section-header">
-        <div class="section-title" id="raceHabitsTitle" style="color:var(--copper);">Race</div>
+        <div class="section-title" id="raceHabitsTitle" style="color:var(--copper);">Calling</div>
       </div>
       <div class="habits-list" id="raceHabitsList"></div>
       <div class="divider"></div>
@@ -637,6 +637,23 @@
 
   <!-- TAB: TASKS -->
   <div class="tab-panel" id="tab-tasks">
+    <!-- LIMITED-TIME TASKS (special, pinned to top) -->
+    <div id="limitedTasksSection" style="display:none;">
+      <div id="inscriptionTaskBlock" style="display:none;">
+        <div class="section-header">
+          <div class="section-title" style="color:var(--gold-dim);">Rank Inscription</div>
+        </div>
+        <div class="habits-list" id="inscriptionTaskList"></div>
+      </div>
+      <div id="riteTaskBlock" style="display:none;">
+        <div class="section-header">
+          <div class="section-title" style="color:#6a9ac0;">Seasonal Rite</div>
+        </div>
+        <div class="habits-list" id="riteTaskListTab"></div>
+      </div>
+      <div class="divider"></div>
+    </div>
+
     <div class="section-header">
       <div class="section-title">One-time Tasks</div>
       <button class="add-btn" onclick="openAddTaskModal('onetime')">+ Add</button>
@@ -707,7 +724,7 @@
       <div class="rpb-icon">✧</div>
     </div>
     <div class="section-header" style="padding-top:4px;">
-      <div class="section-title">Race</div>
+      <div class="section-title">Calling</div>
     </div>
     <div id="raceUpgradeArea"></div>
 
@@ -756,10 +773,10 @@
 <!-- RACE CHANGE PROMPT -->
 <div class="race-select-screen" id="raceChangePrompt" style="justify-content:center;">
   <div class="rs-eyebrow">A New Class Begins</div>
-  <div class="rs-title" style="font-size:22px;">Choose a New Race?</div>
+  <div class="rs-title" style="font-size:22px;">Choose a New Calling?</div>
   <div class="rs-sub" id="raceChangeSubtext"></div>
   <div style="display:flex;flex-direction:column;gap:10px;width:100%;max-width:320px;margin-top:8px;">
-    <button class="fs-btn" style="width:100%;" onclick="raceChangeChooseNew()">Choose New Race</button>
+    <button class="fs-btn" style="width:100%;" onclick="raceChangeChooseNew()">Choose New Calling</button>
     <button class="fs-btn" style="width:100%;background:none;border-color:var(--border);color:var(--text-dim);" onclick="raceChangeKeep()" id="raceKeepBtn">Continue as Intercessor</button>
   </div>
 </div>
@@ -767,8 +784,8 @@
 <!-- RACE SELECTION SCREEN -->
 <div class="race-select-screen" id="raceSelectScreen">
   <div class="rs-eyebrow">A Path Must Be Chosen</div>
-  <div class="rs-title">Choose Your Race</div>
-  <div class="rs-sub" id="rsSub">Each race walks a different discipline. Your choice grants a daily habit and shapes your formation for this class.</div>
+  <div class="rs-title">Choose Your Calling</div>
+  <div class="rs-sub" id="rsSub">Each calling walks a different discipline. Your choice grants a daily habit and shapes your formation for this class.</div>
   <div class="rs-list" id="rsList"></div>
 </div>
 
@@ -1719,10 +1736,36 @@ function renderPenalties(){
 }
 
 function renderTasks(){
-  const onetime=state.tasks.filter(t=>t.type==='onetime'&&!state.today[t.id]);
-  const timed=state.tasks.filter(t=>t.type==='timed');
   const today=todayStr();
+  // Special "limited-time" tasks: rank inscription tasks (and any future rite/event tasks)
+  const inscriptionTasks=state.tasks.filter(t=>t.inscription&&!state.today[t.id]);
+  const riteTasksTab=state.tasks.filter(t=>t.riteTask&&!state.today[t.id]);
+  // Normal tasks (exclude the special ones)
+  const onetime=state.tasks.filter(t=>t.type==='onetime'&&!t.inscription&&!t.riteTask&&!state.today[t.id]);
+  const timed=state.tasks.filter(t=>t.type==='timed'&&!t.inscription&&!t.riteTask);
 
+  // ── Limited-Time section ──
+  const limitedSection=document.getElementById('limitedTasksSection');
+  const inscBlock=document.getElementById('inscriptionTaskBlock');
+  const inscList=document.getElementById('inscriptionTaskList');
+  const riteBlock=document.getElementById('riteTaskBlock');
+  const riteListTab=document.getElementById('riteTaskListTab');
+
+  if(inscriptionTasks.length>0){
+    inscBlock.style.display='block';
+    inscList.innerHTML='';
+    for(const t of inscriptionTasks){ inscList.appendChild(buildTaskEl(t,today)); }
+  } else { inscBlock.style.display='none'; }
+
+  if(riteTasksTab.length>0){
+    riteBlock.style.display='block';
+    riteListTab.innerHTML='';
+    for(const t of riteTasksTab){ riteListTab.appendChild(buildTaskEl(t,today)); }
+  } else { riteBlock.style.display='none'; }
+
+  limitedSection.style.display=(inscriptionTasks.length>0||riteTasksTab.length>0)?'block':'none';
+
+  // ── Normal tasks ──
   const otList=document.getElementById('onetimeTaskList');
   if(onetime.length===0){ otList.innerHTML=`<div class="empty-state"><strong>No One-time Tasks</strong></div>`; }
   else {
@@ -1764,7 +1807,7 @@ function buildTaskEl(t,today){
       ${countdownHtml}
       <span class="task-xp">+${effectiveXP} XP · 2 pts</span>
     </div>
-    ${t.inscription&&t.verse?`<div style="margin-top:8px;padding:9px 11px;background:var(--card2);border-left:2px solid var(--gold-dim);border-radius:6px;"><div style="font-size:13px;font-style:italic;color:#c0a870;line-height:1.55;margin-bottom:3px;">"${t.verse}"</div><div style="font-family:'Oswald',sans-serif;font-size:12px;color:var(--gold-dim);letter-spacing:0.06em;">${t.ref}</div></div>`:''}
+    ${t.inscription&&t.verse?`<div style="margin-top:8px;padding:9px 11px;background:var(--card2);border-left:2px solid var(--gold-dim);border-radius:6px;"><div style="font-size:13px;font-style:italic;color:#c0a870;line-height:1.55;margin-bottom:3px;">"${t.verse}"</div><div style="font-family:'Oswald',sans-serif;font-size:12px;color:var(--gold-dim);letter-spacing:0.06em;margin-bottom:6px;">${t.ref}</div><div style="font-size:13px;color:#9aacbc;line-height:1.5;">Use your rank inscription verse in a conversation.</div></div>`:''}
     ${!done?`<div class="task-actions">
       <button class="task-complete-btn">Mark Complete</button>
       <button class="task-del-btn">×</button>
@@ -2015,7 +2058,7 @@ function showRankUp(rank,bonusPts,isRaceChange){
       <div class="ru-race-unlock ru-a0">New Class Unlocked</div>
       <div class="ru-race-big ru-a0" style="text-shadow:0 0 30px rgba(201,168,76,0.6),0 0 60px rgba(201,168,76,0.3);">${rank.raceName}</div>
       <div class="ru-divider ru-a1"></div>
-      <div class="ru-eyebrow ru-a1">Race ${rank.raceNum} — Rank I</div>
+      <div class="ru-eyebrow ru-a1">Calling ${rank.raceNum} — Rank I</div>
       <div class="ru-rank ru-a2">${rank.rankName}</div>
       <div class="ru-verse ru-a3">"${rank.verse}"</div>
       <div class="ru-ref ru-a3">${rank.ref}</div>
@@ -2024,7 +2067,7 @@ function showRankUp(rank,bonusPts,isRaceChange){
   } else {
     inner.innerHTML=`
       <div class="ru-eyebrow ru-a0">Rank Achieved</div>
-      <div class="ru-eyebrow ru-a0" style="margin-bottom:10px;">Race ${rank.raceNum} — ${rank.raceName}</div>
+      <div class="ru-eyebrow ru-a0" style="margin-bottom:10px;">Calling ${rank.raceNum} — ${rank.raceName}</div>
       <div class="ru-rank ru-a1">${rank.rankName}</div>
       <div class="ru-verse ru-a2">"${rank.verse}"</div>
       <div class="ru-ref ru-a2">${rank.ref}</div>
@@ -2726,7 +2769,7 @@ function renderRaceUpgradeArea(){
   const rank=getCurrentRank(state.totalXP);
 
   if(!race){
-    area.innerHTML='<div class="race-none-card">No race chosen yet. Your race will be chosen at your first rank.</div>';
+    area.innerHTML='<div class="race-none-card">No calling chosen yet. Your calling will be chosen at your first rank.</div>';
     return;
   }
 
@@ -2735,20 +2778,8 @@ function renderRaceUpgradeArea(){
   const canUpgrade=tier<3&&state.points>=RACE_UPGRADE_COST;
   const nextBoost=tier<3?RACE_XP_BOOST[tier]:null;
 
-  let habitsHtml='';
-  race.habits.forEach((h,i)=>{
-    const unlocked=i<tier;
-    habitsHtml+=`
-      <div class="ruc-habit-row">
-        <span class="ruc-habit-status ${unlocked?'unlocked':'locked'}">${unlocked?'Active':'Tier '+(i+1)}</span>
-        <div style="flex:1;">
-          <div class="ruc-habit-text ${unlocked?'':'locked'}">${h.name}</div>
-          <div class="ruc-habit-diff">${h.difficulty}</div>
-        </div>
-      </div>`;
-  });
-
-  const cov=RACE_COVENANTS[rank.raceIndex];
+  // Current tier's active habit (the one unlocked at this tier)
+  const currentHabit=race.habits[tier-1];
 
   area.innerHTML=`
     <div class="race-upgrade-card">
@@ -2761,9 +2792,14 @@ function renderRaceUpgradeArea(){
       </div>
       <div class="race-upgrade-body" id="raceUpgradeBody">
         ${boost>0?`<div class="ruc-boost">Active boost: +${Math.round(boost*100)}% XP on all habits</div>`:''}
-        ${habitsHtml}
-        ${tier<3?`<button class="ruc-upgrade-btn" ${canUpgrade?'':'disabled'} onclick="upgradeRace()">Upgrade to Tier ${tier+1} — ${RACE_UPGRADE_COST} points${nextBoost?` · +${Math.round(nextBoost*100)}% XP`:''}</button>`:''}
-
+        ${currentHabit?`<div class="ruc-habit-row">
+          <span class="ruc-habit-status unlocked">Active</span>
+          <div style="flex:1;">
+            <div class="ruc-habit-text">${currentHabit.name}</div>
+            <div class="ruc-habit-diff">${currentHabit.difficulty}</div>
+          </div>
+        </div>`:''}
+        ${tier<3?`<button class="ruc-upgrade-btn" ${canUpgrade?'':'disabled'} onclick="upgradeRace()">Upgrade — ${RACE_UPGRADE_COST} points${nextBoost?` · +${Math.round(nextBoost*100)}% XP`:''}</button>`:''}
       </div>
     </div>`;
 }
@@ -3073,8 +3109,19 @@ const WRESTLE_CYCLE_VERSES = [
   {verse:'Wherefore seeing we also are compassed about with so great a cloud of witnesses, let us lay aside every weight, and the sin which doth so easily beset us, and let us run with patience the race that is set before us.', ref:'Hebrews 12:1'},
 ];
 
-function wrestleDaysHeld(){
-  const w=state.wrestleQuest;
+const MAX_WRESTLES = 3;
+
+// Migrate legacy single wrestleQuest → wrestleQuests array
+function getWrestles(){
+  if(!Array.isArray(state.wrestleQuests)){
+    state.wrestleQuests = [];
+    if(state.wrestleQuest){ state.wrestleQuests.push({...state.wrestleQuest, id:'wrestle_'+uid()}); }
+    state.wrestleQuest=null;
+  }
+  return state.wrestleQuests;
+}
+
+function wrestleDaysHeldOf(w){
   if(!w) return 0;
   const start=new Date(w.startDate+'T00:00:00');
   const now=new Date(todayStr()+'T00:00:00');
@@ -3085,32 +3132,37 @@ function acceptWrestle(){
   const input=document.getElementById('wrestleQuestInput');
   const text=input?input.value.trim():'';
   if(!text){ if(input) input.focus(); return; }
-  state.wrestleQuest={ asking:text, startDate:todayStr(), todayMarked:null };
-  // Create the uncounted daily habit
-  state.wrestleHabitId='wrestle_'+uid();
+  const list=getWrestles();
+  if(list.length>=MAX_WRESTLES){ closeWrestleAccept(); return; }
+  list.push({ id:'wrestle_'+uid(), asking:text, startDate:todayStr(), todayMarked:null });
   SFX.covenant();
+  if(input) input.value='';
   closeWrestleAccept();
   save(); render();
 }
 
 function openWrestleAccept(){
+  const list=getWrestles();
+  if(list.length>=MAX_WRESTLES) return;
+  const input=document.getElementById('wrestleQuestInput');
+  if(input) input.value='';
   document.getElementById('wrestleAcceptScreen').classList.add('open');
 }
 function closeWrestleAccept(){
   document.getElementById('wrestleAcceptScreen').classList.remove('open');
 }
 
-function submitWrestle(){
-  const days=wrestleDaysHeld();
-  // Archive it
+function submitWrestle(id){
+  const list=getWrestles();
+  const idx=list.findIndex(w=>w.id===id);
+  if(idx<0) return;
+  const w=list[idx];
+  const days=wrestleDaysHeldOf(w);
   const rec=getRecord();
-  rec.archive.unshift({weekOf:todayStr(), event:'wrestle', wrestleSubmit:true, daysHeld:days, asking:state.wrestleQuest?state.wrestleQuest.asking:''});
-  // Show closing screen
+  rec.archive.unshift({weekOf:todayStr(), event:'wrestle', wrestleSubmit:true, daysHeld:days, asking:w.asking});
   document.getElementById('wrestleCloseDays').textContent=days+(days===1?' day':' days');
   document.getElementById('wrestleCloseScreen').classList.add('open');
-  // Clear the quest + habit
-  state.wrestleQuest=null;
-  state.wrestleHabitId=null;
+  list.splice(idx,1);
   save();
 }
 function closeWrestleClose(){
@@ -3118,23 +3170,9 @@ function closeWrestleClose(){
   render();
 }
 
-// The wrestle daily habit (rendered in the daily habits list, uncounted toward cap)
-function getWrestleHabitDisplay(){
-  const w=state.wrestleQuest;
-  if(!w) return null;
-  const days=wrestleDaysHeld();
-  let metaVerse='';
-  if(days>=7){
-    // After first week, cycle a verse by day
-    const idx=days % WRESTLE_CYCLE_VERSES.length;
-    const v=WRESTLE_CYCLE_VERSES[idx];
-    metaVerse=`"${v.verse}" \u2014 ${v.ref}`;
-  }
-  return { name:"Still wrestling - "+w.asking, meta:metaVerse, marked:w.todayMarked===todayStr() };
-}
-
-function toggleWrestleHabit(){
-  const w=state.wrestleQuest;
+function toggleWrestleHabit(id){
+  const list=getWrestles();
+  const w=list.find(x=>x.id===id);
   if(!w) return;
   if(w.todayMarked===todayStr()){
     w.todayMarked=null;
@@ -3148,30 +3186,50 @@ function toggleWrestleHabit(){
   save(); render();
 }
 
+// Wrestle daily habits (rendered in the daily habits list, uncounted toward cap)
 function renderWrestleHabit(){
-  const list=document.getElementById('habitsList');
-  if(!list) return;
-  const disp=getWrestleHabitDisplay();
-  if(!disp) return;
-  const div=document.createElement('div');
-  div.className='habit-item'+(disp.marked?' done':'');
-  div.innerHTML=`<div class="habit-check">${disp.marked?'\u2713':''}</div>
-    <div class="habit-info"><div class="habit-name">${disp.name}</div>${disp.meta?`<div class="habit-meta" style="line-height:1.5;">${disp.meta}</div>`:''}</div>
-    <div class="habit-xp">+1 pt</div>`;
-  div.addEventListener('click',toggleWrestleHabit);
-  list.appendChild(div);
+  const listEl=document.getElementById('habitsList');
+  if(!listEl) return;
+  const wrestles=getWrestles();
+  wrestles.forEach(w=>{
+    const days=wrestleDaysHeldOf(w);
+    let metaVerse='';
+    if(days>=7){
+      const idx=days % WRESTLE_CYCLE_VERSES.length;
+      const v=WRESTLE_CYCLE_VERSES[idx];
+      metaVerse=`"${v.verse}" \u2014 ${v.ref}`;
+    }
+    const marked=w.todayMarked===todayStr();
+    const div=document.createElement('div');
+    div.className='habit-item'+(marked?' done':'');
+    div.innerHTML=`<div class="habit-check">${marked?'\u2713':''}</div>
+      <div class="habit-info"><div class="habit-name">Still wrestling - ${w.asking}</div>${metaVerse?`<div class="habit-meta" style="line-height:1.5;">${metaVerse}</div>`:''}</div>
+      <div class="habit-xp">+1 pt</div>`;
+    div.addEventListener('click',()=>toggleWrestleHabit(w.id));
+    listEl.appendChild(div);
+  });
 }
 
 // Render the opt-in / status block under the active vigil in the Vigil tab
 function wrestleVigilHTML(){
-  if(state.wrestleQuest){
-    const days=wrestleDaysHeld();
-    return `<div class="record-card">
-      <div class="record-card-title">We Who Wrestle With God</div>
-      <div class="record-consec-word" style="margin-bottom:10px;">Wrestling: "${state.wrestleQuest.asking}"</div>
-      <div class="record-consec-pct" style="margin-bottom:12px;">${days} ${days===1?'day':'days'} held</div>
-      <button class="record-btn" onclick="submitWrestle()">Submit</button>
-    </div>`;
+  const wrestles=getWrestles();
+  if(wrestles.length>0){
+    let inner=`<div class="record-card">
+      <div class="record-card-title">We Who Wrestle With God</div>`;
+    wrestles.forEach((w,i)=>{
+      const days=wrestleDaysHeldOf(w);
+      inner+=`<div style="${i>0?'margin-top:14px;padding-top:14px;border-top:1px solid var(--border);':''}">
+        <div class="record-consec-word" style="margin-bottom:6px;">Wrestling: "${w.asking}"</div>
+        <div class="record-consec-pct" style="margin-bottom:10px;">${days} ${days===1?'day':'days'} held</div>
+        <button class="record-btn" onclick="submitWrestle('${w.id}')">Submit</button>
+      </div>`;
+    });
+    // "Wrestle With More" button if under the cap
+    if(wrestles.length<MAX_WRESTLES){
+      inner+=`<button class="record-btn" style="margin-top:12px;border-color:var(--border);color:var(--text-dim);" onclick="openWrestleAccept()">Wrestle With More</button>`;
+    }
+    inner+=`</div>`;
+    return inner;
   } else {
     return `<div class="record-card">
       <div class="record-card-title">We Who Wrestle With God</div>
@@ -3289,7 +3347,7 @@ function getRecord(){
   if(!state.record.prevail) state.record.prevail={engagedDays:[false,false,false,false,false,false,false]};
   if(state.record.subFiftyStreak===undefined) state.record.subFiftyStreak=0;
   if(state.record.akrasia===undefined) state.record.akrasia=false;
-  if(!state.wrestleQuest) state.wrestleQuest=null; // optional perpetual wrestle
+  if(!Array.isArray(state.wrestleQuests)) getWrestles(); // migrate single → array (up to 3)
   if(state.record.vigilMonday===undefined) state.record.vigilMonday=getMondayOf(todayStr());
   if(state.record.participating===undefined) state.record.participating=null;
   // New vigil week detection: evaluate the prior week ONCE, then reset for the new one
@@ -3675,7 +3733,7 @@ function renderRecordPanel(){
   </div>`;
 
   // ── WE WHO WRESTLE — when ACTIVE, sits directly under Consecrated ──
-  if(state.wrestleQuest){
+  if(getWrestles().length>0){
     html+=wrestleVigilHTML();
   }
 
@@ -3766,7 +3824,7 @@ function renderRecordPanel(){
   }
 
   // ── WE WHO WRESTLE — when INACTIVE, the Begin prompt sits above the archive ──
-  if(!state.wrestleQuest){
+  if(getWrestles().length===0){
     html+=wrestleVigilHTML();
   }
 
