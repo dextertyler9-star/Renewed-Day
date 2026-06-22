@@ -480,6 +480,9 @@
   .hmp-danger:hover { background:rgba(192,96,96,0.08); }
   .hmp-input { width:100%; background:#0c0c0e; border:1px solid var(--border); border-radius:7px; padding:9px 11px; color:var(--text); font-size:13px; font-family:'Inter',sans-serif; resize:vertical; min-height:54px; box-sizing:border-box; }
   .hmp-input:focus { outline:none; border-color:var(--gold-dim); }
+
+  .restore-amt { font-family:'Oswald',sans-serif; font-size:16px; font-weight:600; color:var(--gold); border:1px solid var(--gold-dim); background:none; padding:12px 0; border-radius:8px; cursor:pointer; width:70px; }
+  .restore-amt:hover { background:rgba(201,168,76,0.1); }
   ::-webkit-scrollbar { width:4px; }
   ::-webkit-scrollbar-track { background:transparent; }
   ::-webkit-scrollbar-thumb { background:#2a2a2a; border-radius:2px; }
@@ -495,7 +498,7 @@
       <div class="header-date-col">
         <div class="date-label" id="dateLabel"></div>
         <div style="display:flex;align-items:center;gap:6px;justify-content:flex-end;">
-          <div class="build-version">v0.7</div>
+          <div class="build-version">v0.8</div>
           <button class="header-menu-btn" onclick="toggleHeaderMenu()" aria-label="Menu">&#9776;</button>
         </div>
       </div>
@@ -690,6 +693,26 @@
     <div class="ts-bonus" id="tsBonus">+10% XP</div>
     <div class="ts-why" id="tsWhy"></div>
     <button class="ts-btn" onclick="closeTitleScreen()">Accept</button>
+  </div>
+
+  <!-- ONE-TIME POINT RESTORATION (consecrated bug) -->
+  <div class="title-screen" id="restoreScreen">
+    <div class="ts-eyebrow">A Correction</div>
+    <div class="ts-name" style="font-size:24px;">Points Restored</div>
+    <div class="ts-why" style="margin-top:16px;max-width:340px;">A bug in the weekly vigil evaluation took points from some accounts at the Sunday reset. Pick the amount closest to what you lost, or enter your own. I trust you.</div>
+    <div id="restoreBtnGrid" style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-width:330px;margin:22px 0 14px;">
+      <button class="restore-amt" onclick="restorePoints(15)">+15</button>
+      <button class="restore-amt" onclick="restorePoints(20)">+20</button>
+      <button class="restore-amt" onclick="restorePoints(25)">+25</button>
+      <button class="restore-amt" onclick="restorePoints(30)">+30</button>
+      <button class="restore-amt" onclick="restorePoints(35)">+35</button>
+      <button class="restore-amt" onclick="restorePoints(40)">+40</button>
+      <button class="restore-amt" onclick="restorePoints(45)">+45</button>
+      <button class="restore-amt" onclick="restorePoints(50)">+50</button>
+    </div>
+    <input class="field-input" id="restoreCustomInput" type="number" min="1" max="500" placeholder="Or enter an amount" autocomplete="off" data-1p-ignore data-lpignore="true" data-form-type="other" style="max-width:200px;text-align:center;margin-bottom:12px;">
+    <button class="ts-btn" onclick="restorePointsCustom()">Restore Custom Amount</button>
+    <button class="ts-btn" style="border:none;color:var(--text-dim);margin-top:8px;" onclick="dismissRestore()">No points were lost</button>
   </div>
 
   <!-- THE RECORD -->
@@ -3466,28 +3489,39 @@ function consecratedTier(pct){
   return {points:-50, descriptor:'Abandoned'};
 }
 
-function getConsecratedHeartbeat(){
-  // Measure only the vigil days elapsed so far this week (Monday through today)
-  const thisMonday=getMondayOf(todayStr());
-  const vigilDay=getVigilDay(); // 1..7 (days elapsed incl. today)
-  const daysLeft=Math.max(0, 7-vigilDay);
-  // Collect history entries that fall within this vigil week (Mon..today)
-  const monDate=new Date(thisMonday+'T00:00:00');
+function getConsecratedHeartbeat(forMonday){
+  // Live display (no arg): measure the current vigil week, Monday..today.
+  // Evaluation (forMonday given): measure the FINISHED week, that Monday..the following Sunday.
+  const evaluating = !!forMonday;
+  const weekMonday = forMonday || getMondayOf(todayStr());
+  const monDate=new Date(weekMonday+'T00:00:00');
+  // End of the window: for a finished week, the whole Mon..Sun span; for the live week, up to (not incl.) today.
+  let windowEnd;
+  if(evaluating){
+    windowEnd=new Date(weekMonday+'T00:00:00');
+    windowEnd.setDate(windowEnd.getDate()+7); // exclusive: the next Monday
+  } else {
+    windowEnd=new Date(todayStr()+'T00:00:00'); // exclusive: today (today added separately below)
+  }
   let sumPct=0, counted=0;
   (state.history||[]).forEach(d=>{
     if(!d.date) return;
     const dd=new Date(d.date+'T00:00:00');
-    if(dd>=monDate && dd<new Date(todayStr()+'T00:00:00')){
+    if(dd>=monDate && dd<windowEnd){
       sumPct += d.total>0 ? (d.completed/d.total)*100 : 0;
       counted++;
     }
   });
-  // Include today's in-progress completion as an elapsed day
-  const habitsDoneToday=state.habits.filter(h=>state.today[h.id]).length;
-  if(state.habits.length>0){
-    sumPct += (habitsDoneToday/state.habits.length)*100;
-    counted++;
+  // For the live (current) week only, include today's in-progress completion as an elapsed day.
+  if(!evaluating){
+    const habitsDoneToday=state.habits.filter(h=>state.today[h.id]).length;
+    if(state.habits.length>0){
+      sumPct += (habitsDoneToday/state.habits.length)*100;
+      counted++;
+    }
   }
+  const vigilDay=getVigilDay();
+  const daysLeft=Math.max(0, 7-vigilDay);
   const pct = counted>0 ? Math.round(sumPct/counted) : 0;
   return {pct, days:counted, daysLeft};
 }
@@ -3502,7 +3536,7 @@ function evaluateVigilWeek(snap){
   // snap = {weekOf, activeEvent, participating, remember, abide, prevail}
   const rec=state.record; // for archive + activeLimitedTitles only
   const activeEvent=snap.activeEvent;
-  const hb=getConsecratedHeartbeat();
+  const hb=getConsecratedHeartbeat(snap.weekOf); // measure the FINISHED week, not the new one
   const newTitles=[];
   let archiveEntry={weekOf:snap.weekOf, event:activeEvent};
 
@@ -3918,6 +3952,38 @@ function startFresh(){
 }
 
 
+
+// ── One-time point restoration (consecrated bug, v0.8) ──
+function showRestoreScreenIfNeeded(){
+  if(state.consecratedRestoreDone) return;
+  // Defer if another overlay is currently open (e.g. the daily verse splash);
+  // it will show on a later open once the screen is clear.
+  const verseOpen=document.getElementById('verseSplash')&&document.getElementById('verseSplash').classList.contains('open');
+  const anyTitleOpen=Array.from(document.querySelectorAll('.title-screen.open')).length>0;
+  if(verseOpen||anyTitleOpen) return;
+  const s=document.getElementById('restoreScreen');
+  if(s) s.classList.add('open');
+}
+function restorePoints(amount){
+  state.points=(state.points||0)+amount;
+  state.consecratedRestoreDone=true;
+  SFX.redeem();
+  save();
+  document.getElementById('restoreScreen').classList.remove('open');
+  render();
+}
+function restorePointsCustom(){
+  const inp=document.getElementById('restoreCustomInput');
+  const v=parseInt(inp&&inp.value,10);
+  if(!v||v<1){ if(inp) inp.focus(); return; }
+  restorePoints(Math.min(v,500));
+}
+function dismissRestore(){
+  state.consecratedRestoreDone=true;
+  save();
+  document.getElementById('restoreScreen').classList.remove('open');
+}
+
 // ══════════════════════════════════════════
 // INIT
 // ══════════════════════════════════════════
@@ -3926,6 +3992,7 @@ checkDayReset();
 render();
 syncMenuState();
 showVerseSplash();
+showRestoreScreenIfNeeded();
 if(state.verseSeenDate===todayStr()) processFailedTaskQueue();
 if(state.pendingCovenant){
   const rank=getCurrentRank(state.totalXP);
