@@ -483,6 +483,58 @@
 
   .restore-amt { font-family:'Oswald',sans-serif; font-size:16px; font-weight:600; color:var(--gold); border:1px solid var(--gold-dim); background:none; padding:12px 0; border-radius:8px; cursor:pointer; width:70px; }
   .restore-amt:hover { background:rgba(201,168,76,0.1); }
+
+  /* ── GUIDE / INFO OVERLAY ── */
+  .guide-overlay { display:none; position:fixed; inset:0; background:#070709; z-index:480; flex-direction:column; }
+  .guide-overlay.open { display:flex; }
+  .guide-header { display:flex; align-items:center; justify-content:space-between; padding:18px 20px 14px; border-bottom:1px solid var(--border); flex-shrink:0; }
+  .guide-header-title { font-family:'Oswald',sans-serif; font-size:18px; font-weight:600; letter-spacing:0.16em; text-transform:uppercase; color:var(--gold); }
+  .guide-close { background:none; border:none; color:var(--text-dim); font-size:22px; cursor:pointer; padding:0 4px; line-height:1; }
+  .guide-close:hover { color:var(--gold); }
+  .guide-scroll { overflow-y:auto; padding:20px; -webkit-overflow-scrolling:touch; }
+  .guide-section-label { font-family:'Oswald',sans-serif; font-size:12px; letter-spacing:0.2em; text-transform:uppercase; color:var(--gold-dim); margin:24px 0 12px; padding-bottom:8px; border-bottom:1px solid var(--border); }
+  .guide-section-label:first-child { margin-top:0; }
+  .guide-intro { font-size:14px; color:#9aacbc; line-height:1.7; margin-bottom:16px; }
+  .guide-intro em { color:#c0a870; font-style:italic; }
+  /* Collapsible items */
+  .guide-item { border:1px solid var(--border); border-radius:9px; margin-bottom:10px; overflow:hidden; }
+  .guide-item-head { display:flex; align-items:center; justify-content:space-between; padding:14px 16px; cursor:pointer; background:var(--card); }
+  .guide-item-head:hover { background:var(--card2); }
+  .guide-item-titles { display:flex; flex-direction:column; gap:2px; }
+  .guide-item-name { font-family:'Oswald',sans-serif; font-size:15px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; color:var(--gold); }
+  .guide-item-sub { font-size:12px; color:var(--text-dim); letter-spacing:0.04em; }
+  .guide-item-arrow { color:var(--gold-dim); font-size:13px; transition:transform 0.2s; flex-shrink:0; margin-left:10px; }
+  .guide-item.open .guide-item-arrow { transform:rotate(180deg); }
+  .guide-item-body { display:none; padding:4px 16px 16px; }
+  .guide-item.open .guide-item-body { display:block; }
+  .guide-item-body p { font-size:14px; color:#c2ccd6; line-height:1.7; margin:12px 0; }
+  .guide-item-body p:first-child { margin-top:4px; }
+  .guide-begin { margin-top:14px; padding:12px 14px; background:rgba(201,168,76,0.06); border-left:2px solid var(--gold-dim); border-radius:6px; }
+  .guide-begin-label { font-family:'Oswald',sans-serif; font-size:11px; letter-spacing:0.14em; text-transform:uppercase; color:var(--gold-dim); margin-bottom:6px; }
+  .guide-begin-text { font-size:13px; color:#9aacbc; line-height:1.6; }
+  .guide-note { font-size:13px; color:#7a8a9a; font-style:italic; line-height:1.6; margin-top:10px; }
+
+  /* ── SUMMER FORGE weekly check-off ── */
+  .forge-rewards { margin:10px 0; padding:11px 13px; background:var(--card2); border-radius:8px; }
+  .forge-reward-line { font-size:13px; color:#c2ccd6; line-height:1.5; }
+  .forge-reward-line strong { color:var(--gold); font-family:'Oswald',sans-serif; font-size:12px; letter-spacing:0.06em; text-transform:uppercase; }
+  .forge-reward-line.forge-boost { margin-top:5px; color:#7abf8a; font-size:12px; }
+  .forge-reason { margin:12px 0; border:1px solid var(--border); border-radius:8px; overflow:hidden; }
+  .forge-reason-head { width:100%; display:flex; align-items:center; justify-content:space-between; padding:11px 13px; background:none; border:none; cursor:pointer; font-family:'Oswald',sans-serif; font-size:13px; letter-spacing:0.08em; text-transform:uppercase; color:var(--gold-dim); }
+  .forge-reason-arrow { transition:transform 0.2s; font-size:12px; }
+  .forge-reason-body { padding:0 13px 13px; font-size:13px; color:#9aacbc; line-height:1.65; font-style:italic; }
+  .forge-weeks { display:flex; flex-direction:column; gap:8px; margin-top:8px; }
+  .forge-week { display:flex; align-items:center; gap:12px; padding:13px 14px; border-radius:9px; border:1px solid var(--border); background:var(--card); cursor:pointer; text-align:left; width:100%; }
+  .forge-week-check { width:26px; height:26px; border-radius:50%; border:1px solid var(--border); display:flex; align-items:center; justify-content:center; font-family:'Oswald',sans-serif; font-size:13px; color:#5a6a7a; flex-shrink:0; }
+  .forge-week-text { font-size:14px; color:var(--text); display:flex; flex-direction:column; gap:2px; }
+  .forge-week-num { font-family:'Oswald',sans-serif; font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-dim); }
+  .forge-week.active { border-color:var(--gold-dim); background:rgba(201,168,76,0.06); }
+  .forge-week.active .forge-week-check { border-color:var(--gold); color:var(--gold); }
+  .forge-week.done .forge-week-check { background:var(--gold-dim); border-color:var(--gold); color:#000; }
+  .forge-week.done .forge-week-text { color:var(--text-dim); }
+  .forge-week.locked { opacity:0.4; cursor:default; }
+  .forge-week:disabled { cursor:default; }
+  .forge-week.done { cursor:default; }
   ::-webkit-scrollbar { width:4px; }
   ::-webkit-scrollbar-track { background:transparent; }
   ::-webkit-scrollbar-thumb { background:#2a2a2a; border-radius:2px; }
@@ -498,7 +550,7 @@
       <div class="header-date-col">
         <div class="date-label" id="dateLabel"></div>
         <div style="display:flex;align-items:center;gap:6px;justify-content:flex-end;">
-          <div class="build-version">v0.8</div>
+          <div class="build-version">v0.9</div>
           <button class="header-menu-btn" onclick="toggleHeaderMenu()" aria-label="Menu">&#9776;</button>
         </div>
       </div>
@@ -507,6 +559,10 @@
 
   <!-- HEADER MENU PANEL -->
   <div class="header-menu-panel" id="headerMenuPanel">
+    <div class="hmp-row" style="flex-direction:column;align-items:stretch;gap:8px;">
+      <button class="hmp-action" onclick="openGuide()">Guide &amp; The Seven Disciplines</button>
+    </div>
+    <div class="hmp-divider"></div>
     <div class="hmp-row">
       <span class="hmp-label">Sound</span>
       <div class="hmp-toggle">
@@ -533,6 +589,15 @@
       <span class="hmp-label" style="color:#a05050;">Start Fresh</span>
       <button class="hmp-action hmp-danger" onclick="startFresh()">Wipe &amp; Reset to Defaults</button>
     </div>
+  </div>
+
+  <!-- GUIDE / INFO OVERLAY -->
+  <div class="guide-overlay" id="guideOverlay">
+    <div class="guide-header">
+      <div class="guide-header-title">Guide</div>
+      <button class="guide-close" onclick="closeGuide()">✕</button>
+    </div>
+    <div class="guide-scroll" id="guideScroll"></div>
   </div>
 
   <!-- TAB: TODAY -->
@@ -1387,6 +1452,7 @@ function load(){
   setTimeout(()=>{ try{ updateXPFloor(); save(); }catch(e){} }, 100);
   if(state.playerRace===undefined) state.playerRace=null;
   if(state.raceTier===undefined) state.raceTier=0;
+  if(typeof state.forgeWeeksDone!=='number') state.forgeWeeksDone=0;
   if(state.raceLockedIn===undefined) state.raceLockedIn=false;
   if(state.pendingRaceSelect===undefined) state.pendingRaceSelect=false;
   // Auto-migrate: add any missing deadly sins without removing custom penalties
@@ -2465,6 +2531,88 @@ function renderRiteBanner(raceIndex){
   banner.style.display='none';
 }
 
+// ── SUMMER FORGE: progressive weekly check-off ──
+const SUMMER_FORGE_WEEKS = 4;         // first challenge = fast one meal/week for four weeks
+const SUMMER_FORGE_XP_PER_WEEK = 10;
+const SUMMER_FORGE_PTS_PER_WEEK = 1;
+const FASTING_REASON = "Fasting cultivates longing for God. Hunger shows us longing in a way we don't often come across in daily life, and our longing increases our desire for God and our spiritual hunger, which in turn brings our desires closer to God and builds our spirit and our understanding.";
+
+function getForgeProgress(){
+  if(typeof state.forgeWeeksDone!=='number') state.forgeWeeksDone=0;
+  return state.forgeWeeksDone;
+}
+
+function completeForgeWeek(weekIdx){
+  const done=getForgeProgress();
+  // Only the next sequential week can be completed
+  if(weekIdx!==done) return;
+  state.forgeWeeksDone=done+1;
+  state.totalXP=(state.totalXP||0)+SUMMER_FORGE_XP_PER_WEEK;
+  state.points=(state.points||0)+SUMMER_FORGE_PTS_PER_WEEK;
+  SFX.riteTask();
+  // On the final week, mark the rite complete and show the completion screen
+  if(state.forgeWeeksDone>=SUMMER_FORGE_WEEKS){
+    if(!state.completedRites) state.completedRites={};
+    state.completedRites['rite-fast']=true;
+    SFX.riteComplete();
+    save(); render();
+    const rite=RITE_DATA.find(r=>r.id==='rite-fast');
+    document.getElementById('rcTitle').textContent=rite.name;
+    document.getElementById('rcDiscipline').textContent=rite.discipline;
+    document.getElementById('rcPts').textContent='+'+(SUMMER_FORGE_XP_PER_WEEK*SUMMER_FORGE_WEEKS)+' XP · +'+(SUMMER_FORGE_PTS_PER_WEEK*SUMMER_FORGE_WEEKS)+' points';
+    document.getElementById('riteCompleteScreen').classList.add('open');
+    return;
+  }
+  save(); render();
+}
+
+function toggleFastingReason(){
+  const box=document.getElementById('fastingReasonBody');
+  const arrow=document.getElementById('fastingReasonArrow');
+  if(!box) return;
+  const open=box.style.display!=='none';
+  box.style.display=open?'none':'block';
+  if(arrow) arrow.style.transform=open?'':'rotate(180deg)';
+}
+
+function buildSummerForgeCard(rite,rank,daysLeft,startFmt,endFmt){
+  const done=getForgeProgress();
+  const div=document.createElement('div');
+  div.className='rite-item running';
+  let weeksHtml='';
+  for(let i=0;i<SUMMER_FORGE_WEEKS;i++){
+    const isDone=i<done;
+    const isActive=i===done;
+    const state_cls=isDone?'done':(isActive?'active':'locked');
+    weeksHtml+=`<button class="forge-week ${state_cls}" ${isActive?'':'disabled'} onclick="completeForgeWeek(${i})">
+      <span class="forge-week-check">${isDone?'\u2713':(i+1)}</span>
+      <span class="forge-week-text">Fast one meal this week<span class="forge-week-num">Week ${i+1} of ${SUMMER_FORGE_WEEKS}</span></span>
+    </button>`;
+  }
+  div.innerHTML=`
+    <div class="rite-header">
+      <div><div class="rite-name">${rite.name}</div><div class="rite-discipline">${rite.discipline}</div></div>
+      <span class="rite-status running">Running</span>
+    </div>
+    <div class="rite-meta">${rite.ref} · ${startFmt} – ${endFmt} · ${daysLeft} day${daysLeft===1?'':'s'} left</div>
+    <div class="forge-rewards">
+      <div class="forge-reward-line"><strong>Each week:</strong> +${SUMMER_FORGE_XP_PER_WEEK} XP · +${SUMMER_FORGE_PTS_PER_WEEK} point</div>
+      <div class="forge-reward-line forge-boost">While the rite is active: ${rite.bonus}</div>
+    </div>
+    <div class="rite-verse">"${rite.verse}"</div>
+    <div class="forge-reason">
+      <button class="forge-reason-head" onclick="toggleFastingReason()">
+        <span>Why fasting?</span><span id="fastingReasonArrow" class="forge-reason-arrow">\u25be</span>
+      </button>
+      <div class="forge-reason-body" id="fastingReasonBody" style="display:none;">${FASTING_REASON}</div>
+    </div>
+    <div class="rite-challenge-label">Your Challenge — ${done} of ${SUMMER_FORGE_WEEKS} weeks</div>
+    <div class="forge-weeks">${weeksHtml}</div>
+  `;
+  return div;
+}
+
+
 function renderRitesList(){
   const list=document.getElementById('ritesList');
   if(!list) return;
@@ -2481,6 +2629,13 @@ function renderRitesList(){
     const startFmt=new Date(year+'-'+active.start+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'});
     const endFmt=new Date(year+'-'+active.end+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'});
     const challenge=active.challenges[Math.min(rank.raceIndex,active.challenges.length-1)];
+
+    // ── Summer Forge: progressive weekly check-off ──
+    if(active.id==='rite-fast'){
+      list.appendChild(buildSummerForgeCard(active,rank,daysLeft,startFmt,endFmt));
+      return;
+    }
+
     const div=document.createElement('div');
     div.className='rite-item running';
     div.innerHTML=`
@@ -3940,6 +4095,7 @@ function restoreState(){
     alert('Restored. The app will now reload.');
     location.reload();
 
+
   } catch(e){ alert('That code could not be read. Make sure you copied the whole thing.'); }
 }
 
@@ -3982,6 +4138,156 @@ function dismissRestore(){
   state.consecratedRestoreDone=true;
   save();
   document.getElementById('restoreScreen').classList.remove('open');
+}
+
+
+// ══════════════════════════════════════════
+// GUIDE / INFO PAGE
+// ══════════════════════════════════════════
+const GUIDE_TABS = [
+  { name:'Today', icon:'\u2295', body:[
+    "This is your daily ground. Your class, rank, and progress sit at the top, followed by your habits, your calling's discipline, and your penalties.",
+    "Check off each habit as you do it \u2014 each one earns XP toward your next rank. Habits build streaks: the more days in a row, the more each is worth, up to a ceiling. Penalties are the seven deadly sins; tap one honestly when you fall, and it costs you XP.",
+    "What I want from you here: show up every day. Consistency is the whole engine. A 70% week done faithfully will carry you further than a perfect week you burn out chasing."
+  ]},
+  { name:'Tasks', icon:'\u25ce', body:[
+    "Tasks are one-off or time-bound things, separate from daily habits. One-time tasks you do once and clear. Timed tasks carry a deadline \u2014 miss it and the task is lost.",
+    "At the top sits the Limited-Time Tasks area, where special tasks are pinned: your Rank Inscription task appears here each time you reach a new rank. Its goal is simple \u2014 use your rank inscription verse in a real conversation.",
+    "What I want from you here: let the inscription tasks pull scripture off the screen and into your actual life and speech."
+  ]},
+  { name:'Rites', icon:'\u263d', body:[
+    "Rites are seasonal challenges \u2014 longer arcs of practice that run across a stretch of time rather than a single day.",
+    "Use them when you want a focused season of growth in one area. They sit alongside your daily rhythm, not instead of it."
+  ]},
+  { name:'Rewards', icon:'\u2726', body:[
+    "Points are a separate currency from XP. You earn them through the Consecrated vigil and other moments, and you spend them here.",
+    "Create your own rewards \u2014 real things you'll actually give yourself \u2014 and set a point cost for each. When you've earned enough, redeem. This is the loop that ties spiritual discipline to real-life reward, so the work feels like it pays.",
+    "What I want from you here: set rewards that genuinely motivate you, and actually take them when you've earned them."
+  ]},
+  { name:'The Record (Vigils)', icon:'\u263c', body:[
+    "The Record is the weekly spiritual rhythm of the app. Each week, a vigil rotates in \u2014 We Who Remember, We Who Abide, or We Who Prevail \u2014 anchored to Mondays. You choose whether to join that week's vigil.",
+    "We Who Are Being Consecrated runs every week underneath: it measures whether your habits kept your word, and swings your points up or down by how faithful the week was.",
+    "We Who Wrestle With God is a perpetual opt-in for whatever you're contending with before God \u2014 you can hold up to three at once. It is not for everyone, and that is by design.",
+    "Completing a vigil fully earns a limited-time title that carries a small XP bonus into the next week. Three weak weeks in a row brings Akrasia \u2014 the mark of weakened will \u2014 which one faithful week lifts.",
+    "What I want from you here: let the weekly rhythm shape you. The vigils are where the app stops being a habit tracker and becomes formation."
+  ]},
+];
+
+// Maps calling id -> teaching from the Seven Languages document
+const DISCIPLINE_TEACHING = {
+  ascetic:{
+    body:[
+      "Fasting is abstaining from food \u2014 the biblical model \u2014 to cultivate longing for God. When you fast, you create a physical void. Real hunger. And when that appetite rises, you redirect it: everything I have, everything I need, comes from the Lord. In that moment of wanting, you learn to desire God with the same intensity you desire food.",
+      "Fasting teaches two things at once. First, your dependence \u2014 life, sustenance, breath all flow from God. Second, your capacity for longing itself. Most of us don't know what it is to truly yearn for anything, let alone for God. The hunger becomes the prayer. The wanting becomes the conversation.",
+      "There is a secondary layer with real spiritual weight \u2014 biblical tradition connects fasting to spiritual conflict. But that power flows from the first layer. You fast for longing first, aligning your desire toward God, and from that place fasting becomes a tool for engaging spiritually."
+    ],
+    begin:"If you have never fasted, start with food \u2014 that is the biblical anchor. If that feels overwhelming, pick something else you genuinely want, abstain from it, and learn what denial and redirect feel like. Build the muscle, then move toward the biblical practice."
+  },
+  almoner:{
+    body:[
+      "Giving is recognizing that nothing you have is ultimately yours. You are a steward, not an owner. Your money, time, skills, resources \u2014 all of it flows through you, but none of it belongs to you.",
+      "The trap is attachment. When you treat what you have as yours to keep, you try to make permanent what is temporary \u2014 Ecclesiastes calls this vanity, dust in the wind. Giving breaks that grip. When you give, you actively practice the truth of stewardship, and you are freed from the weight of possession.",
+      "Giving starts with tithing \u2014 ten percent, concrete and measurable, where you learn to release your grip on money, because money is where we feel ownership most acutely. But the real work begins when you ask: what hurts to give up? That is where the grip is strongest, and where giving becomes radical \u2014 learning to release what costs you most."
+    ],
+    begin:"Start with the tithe \u2014 ten percent of your increase. Then ask what would hurt most to give, because that is where the next growth is."
+  },
+  penitent:{
+    body:[
+      "Repentance is recognizing that your sin is not merely a broken rule or harm to others \u2014 it is an offense against God himself. \u201CAgainst you, you only, have I sinned,\u201D David writes. Repentance is remembering that reality: not just \u201CI messed up,\u201D but \u201CI have sinned against God.\u201D",
+      "But repentance alone is incomplete. Confession brings another person into your darkest moments \u2014 you speak the darkness into light, and in that vulnerability you receive the gospel anew: someone knows the worst of you and does not turn away.",
+      "Confession is not therapy or venting. It is confession for the gospel and for accountability. Real repentance means you stop \u2014 you change direction \u2014 and accountability makes that turning real. James tells us we are healed through confession: healed by being known, by having another witness our turning and receive us anyway."
+    ],
+    begin:"Begin by praying through your day and asking the Holy Spirit to reveal your patterns. Then, when you are ready, confess something specific to a trusted person \u2014 not to feel better, but to turn and be held accountable."
+  },
+  recluse:{ // Monk
+    body:[
+      "Biblical meditation is not passive reflection \u2014 it is active, repetitive engagement with Scripture. You take the words of God, turn them over, ponder them, let them work on you over time. The whole Bible is meditation literature: designed to be pondered, to twist your thinking, to make you sit with tension and mystery.",
+      "But this cannot happen in noise and distraction. Solitude is setting apart time and space \u2014 quiet, uncluttered, protected \u2014 where it is just you and God and His Word. No competing voices.",
+      "In that solitude you hide God's words in your heart through repetition until they become part of how you think and act. You also rest. You listen. You create space to hear God beyond what is written. Solitude is not about feeling spiritual \u2014 it is the necessary condition where real transformation through God's Word can happen."
+    ],
+    begin:"Start with ten minutes of silence before God \u2014 no phone, no music, no input. Bring a verse that confuses or troubles you, and simply sit with it. Let it reshape you slowly."
+  },
+  intercessor:{
+    body:[
+      "Prayer is the expression of who you are \u2014 your wants, hopes, desires, needs \u2014 to God who knows and loves you. There is something about naming your need aloud that opens you to your own longing and lets God meet you there.",
+      "But the Intercessor practices a specific form: intercession \u2014 talking to God about other people. When you become aware of someone's need, you have both a privilege and a responsibility to go before God on their behalf: \u201CRemember them. Know them. Act for them.\u201D Paul prays for his churches; Moses stands in the gap for an entire people.",
+      "There is real weight to praying when the other cannot. There are moments you are too broken to pray for yourself \u2014 and in those moments you ask someone to carry your case before God. That is the weight of intercession: you become another's voice before God, an act of love and solidarity."
+    ],
+    begin:"Begin by praying specifically for one named person each day. Then widen it \u2014 a community, a nation \u2014 and when you can, pray with someone, not just for them."
+  },
+  sabbatarian:{
+    body:[
+      "Sabbath is the fourth commandment, set apart and holy. God rested on the seventh day, and so can you. But Sabbath is not passive \u2014 it is an active, embodied practice of trust.",
+      "Sabbath is a picture of shalom, but living it requires work. You must plan ahead, avoid scheduling, prepare beforehand so that when the day arrives you are not scrambling. And there is a deeper layer: when your mind is anxious and grasping for control, surrendering a whole day feels dangerous. That is exactly what Sabbath asks.",
+      "But Sabbath only works if you have lived in alignment with God the other six days. A random day off collapses under your anxiety. But if you have worked faithfully and stewarded well, the seventh day becomes a real act of trust: \u201CI have done my part. Now I will rest, and trust that the world you made is meant to work this way.\u201D Sabbath is surrender made possible through preceding obedience."
+    ],
+    begin:"Begin by naming one thing beyond your capacity and explicitly giving it to God. Then guard one day \u2014 prepare for it in advance so the rest is real."
+  },
+  scribe:{
+    body:[
+      "The Scribe is a storyteller. Your practice is recognizing the grand narrative of God \u2014 who he is, what he is doing \u2014 through the reading and study of his Word. When you engage Scripture you ask: Who is God, and what is he doing?",
+      "The Bible is a testimony of God's character and deeds across history. Through study you learn his patterns \u2014 his faithfulness, his mercy, his redemptive work \u2014 and you begin to recognize his fingerprints.",
+      "Then you carry that knowledge into the world. You begin to recognize those same patterns unfolding in real time, in real lives. Scripture teaches you how to read reality. Hebrews speaks of a great cloud of witnesses \u2014 study connects you to that cloud and teaches you to see it everywhere."
+    ],
+    begin:"Begin by reading your rank inscription verse aloud. Then move toward reciting it from memory and meditating on it \u2014 let the words embed until they become part of how you think."
+  },
+};
+
+function buildGuideHTML(){
+  let h='';
+  // ── FOUNDATION ──
+  h+=`<div class="guide-section-label">The Foundation</div>`;
+  h+=`<div class="guide-intro">Worship is right response to God \u2014 embodied positioning before him, and upward-facing proclamation of his worth. <em>The Imago Protocol is a system for developing seven languages of worship</em> \u2014 seven ways of responding rightly to God, seven tools in a spiritual toolkit.</div>`;
+  h+=`<div class="guide-intro">You have a primary language \u2014 your Calling \u2014 the one you are gifted for in this season. Your work is developing it until you speak it with fluency, until your worship becomes deeply yours. The other languages stay in your toolkit: you learn them, practice them seasonally, but your primary work is mastering the one you are made for.</div>`;
+
+  // ── FUNCTIONAL TUTORIAL ──
+  h+=`<div class="guide-section-label">How Each Tab Works</div>`;
+  GUIDE_TABS.forEach((t,i)=>{
+    h+=`<div class="guide-item" id="gtab${i}">
+      <div class="guide-item-head" onclick="toggleGuideItem('gtab${i}')">
+        <div class="guide-item-titles"><div class="guide-item-name">${t.icon}  ${t.name}</div></div>
+        <span class="guide-item-arrow">\u25be</span>
+      </div>
+      <div class="guide-item-body">${t.body.map(p=>`<p>${p}</p>`).join('')}</div>
+    </div>`;
+  });
+
+  // ── THE SEVEN DISCIPLINES ──
+  h+=`<div class="guide-section-label">The Seven Disciplines</div>`;
+  RACES_DATA.forEach((r,i)=>{
+    const teach=DISCIPLINE_TEACHING[r.id];
+    if(!teach) return;
+    h+=`<div class="guide-item" id="gdisc${i}">
+      <div class="guide-item-head" onclick="toggleGuideItem('gdisc${i}')">
+        <div class="guide-item-titles">
+          <div class="guide-item-name">${r.name}</div>
+          <div class="guide-item-sub">${r.discipline}</div>
+        </div>
+        <span class="guide-item-arrow">\u25be</span>
+      </div>
+      <div class="guide-item-body">
+        ${teach.body.map(p=>`<p>${p}</p>`).join('')}
+        ${teach.begin?`<div class="guide-begin"><div class="guide-begin-label">How to begin</div><div class="guide-begin-text">${teach.begin}</div></div>`:''}
+      </div>
+    </div>`;
+  });
+
+  return h;
+}
+
+function openGuide(){
+  const sc=document.getElementById('guideScroll');
+  if(sc) sc.innerHTML=buildGuideHTML();
+  document.getElementById('guideOverlay').classList.add('open');
+  const panel=document.getElementById('headerMenuPanel');
+  if(panel) panel.classList.remove('open');
+}
+function closeGuide(){
+  document.getElementById('guideOverlay').classList.remove('open');
+}
+function toggleGuideItem(id){
+  const el=document.getElementById(id);
+  if(el) el.classList.toggle('open');
 }
 
 // ══════════════════════════════════════════
