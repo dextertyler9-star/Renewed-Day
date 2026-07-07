@@ -535,6 +535,23 @@
   .forge-week.locked { opacity:0.4; cursor:default; }
   .forge-week:disabled { cursor:default; }
   .forge-week.done { cursor:default; }
+
+  /* ── BIBLE READER ── */
+  .bible-overlay { display:none; position:fixed; inset:0; background:#0a0a0c; z-index:490; flex-direction:column; }
+  .bible-overlay.open { display:flex; }
+  .bible-header { display:flex; align-items:center; justify-content:space-between; padding:16px 20px 12px; border-bottom:1px solid var(--border); flex-shrink:0; background:#0a0a0c; }
+  .bible-header-ref { font-family:'Oswald',sans-serif; font-size:15px; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; color:var(--gold); }
+  .bible-close { background:none; border:none; color:var(--text-dim); font-size:20px; cursor:pointer; padding:0 4px; line-height:1; }
+  .bible-close:hover { color:var(--gold); }
+  .bible-scroll { overflow-y:auto; padding:24px 22px 40px; -webkit-overflow-scrolling:touch; flex:1; }
+  .bible-chapter-head { font-family:'Oswald',sans-serif; font-size:20px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; color:var(--gold); margin:28px 0 14px; padding-bottom:8px; border-bottom:1px solid var(--border); }
+  .bible-chapter-head:first-child { margin-top:0; }
+  .bible-text { font-size:17px; line-height:1.85; color:#d6dde4; font-family:Georgia, 'Times New Roman', serif; }
+  .bible-vnum { font-size:11px; color:var(--gold-dim); vertical-align:super; font-family:'Oswald',sans-serif; margin:0 3px 0 1px; font-weight:600; }
+  .bible-footer { flex-shrink:0; padding:14px 20px calc(14px + env(safe-area-inset-bottom)); border-top:1px solid var(--border); background:#0a0a0c; }
+  .bible-complete-btn { width:100%; font-family:'Oswald',sans-serif; font-size:15px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--gold); border:1px solid var(--gold-dim); background:rgba(201,168,76,0.06); padding:15px; border-radius:10px; cursor:pointer; }
+  .bible-complete-btn:hover { background:rgba(201,168,76,0.12); }
+  .bible-complete-btn.done { color:#7abf8a; border-color:#3a5a3a; background:rgba(122,191,138,0.06); }
   ::-webkit-scrollbar { width:4px; }
   ::-webkit-scrollbar-track { background:transparent; }
   ::-webkit-scrollbar-thumb { background:#2a2a2a; border-radius:2px; }
@@ -550,7 +567,7 @@
       <div class="header-date-col">
         <div class="date-label" id="dateLabel"></div>
         <div style="display:flex;align-items:center;gap:6px;justify-content:flex-end;">
-          <div class="build-version">v0.9</div>
+          <div class="build-version">v0.10</div>
           <button class="header-menu-btn" onclick="toggleHeaderMenu()" aria-label="Menu">&#9776;</button>
         </div>
       </div>
@@ -670,6 +687,15 @@
     </div>
     <div class="habits-list" id="habitsList"></div>
 
+    <!-- PRACTICES SECTION -->
+    <div id="practicesSection" style="display:none;">
+      <div class="divider"></div>
+      <div class="section-header">
+        <div class="section-title" style="color:var(--gold-dim);">Practices</div>
+      </div>
+      <div class="habits-list" id="practicesList"></div>
+    </div>
+
     <div class="divider"></div>
     <!-- RACE HABITS SECTION -->
     <div id="raceHabitsSection" style="display:none;">
@@ -778,6 +804,18 @@
     <input class="field-input" id="restoreCustomInput" type="number" min="1" max="500" placeholder="Or enter an amount" autocomplete="off" data-1p-ignore data-lpignore="true" data-form-type="other" style="max-width:200px;text-align:center;margin-bottom:12px;">
     <button class="ts-btn" onclick="restorePointsCustom()">Restore Custom Amount</button>
     <button class="ts-btn" style="border:none;color:var(--text-dim);margin-top:8px;" onclick="dismissRestore()">No points were lost</button>
+  </div>
+
+  <!-- BIBLE READER OVERLAY -->
+  <div class="bible-overlay" id="bibleOverlay">
+    <div class="bible-header">
+      <div class="bible-header-ref" id="bibleHeaderRef">Genesis 1</div>
+      <button class="bible-close" onclick="closeBibleReader()">✕</button>
+    </div>
+    <div class="bible-scroll" id="bibleScroll"></div>
+    <div class="bible-footer">
+      <button class="bible-complete-btn" id="bibleCompleteBtn" onclick="completeBibleReading()">Mark Completed Today</button>
+    </div>
   </div>
 
   <!-- THE RECORD -->
@@ -1042,6 +1080,7 @@
   </div>
 </div>
 
+<script src="darby.js"></script>
 <script>
 // ══════════════════════════════════════════
 // CLASS & RANK DATA
@@ -1783,8 +1822,11 @@ function renderHabits(){
   const list=document.getElementById('habitsList');
   list.innerHTML='';
   renderRaceHabitsSection();
-  if(!state.habits||state.habits.length===0){ list.innerHTML=`<div class="empty-state"><strong>No Habits</strong></div>`; return; }
-  for(const h of state.habits){
+  renderPractices();
+  const bibleHabit=getBibleHabit();
+  const shown=(state.habits||[]).filter(h=>!(bibleHabit&&h.id===bibleHabit.id));
+  if(shown.length===0){ list.innerHTML=`<div class="empty-state"><strong>No Habits</strong></div>`; return; }
+  for(const h of shown){
     const done=!!state.today[h.id];
     const effectiveXP=habitEffectiveXP(h);
     const div=document.createElement('div');
@@ -3179,52 +3221,37 @@ const SFX = {
 // ══════════════════════════════════════════
 // THE RECORD — data constants
 // ══════════════════════════════════════════
+const GALATIANS_FRUIT = 'But the fruit of the Spirit is love, joy, peace, long-suffering, kindness, goodness, faithfulness, meekness, self-control: against such things there is no law.';
+const GALATIANS_REF = 'Galatians 5:22-23';
+
 const FRUITS = [
   { id:'love', name:'Love',
-    notice:'Where today did you receive love you did not earn?',
-    practice:'Do one concrete act of love today for someone who cannot repay it.',
-    test:'Who in your life is hardest to love right now \u2014 and what would loving them look like today?',
-    harvest:'What did love cost you this week, and what did it produce?' },
+    morning:'Pray that the love of God may be seen in your actions today.',
+    evening:'Reflect on where the love of God was or was not today.' },
   { id:'joy', name:'Joy',
-    notice:'Where did joy show up today in something ordinary?',
-    practice:'Name one thing today and give thanks for it out loud.',
-    test:'What circumstance is currently working against your joy \u2014 and can joy coexist with it?',
-    harvest:'What did you learn about the difference between joy and happiness this week?' },
+    morning:'Pray for the joy of the Lord today.',
+    evening:'Remember that joy is found in knowing you have eternal life.' },
   { id:'peace', name:'Peace',
-    notice:'Where in your body or mind is there a lack of peace right now?',
-    practice:'Take one concrete step today to make peace with someone or something.',
-    test:'What is the actual source of the anxiety you are carrying \u2014 and have you brought it to God?',
-    harvest:'What peace, if any, did you find this week that you did not have before?' },
+    morning:'Pray for the grace to remain peaceful today.',
+    evening:'Reflect on moments of peace today and what made them peaceful.' },
   { id:'patience', name:'Patience',
-    notice:'What are you currently waiting for, and how are you waiting?',
-    practice:'Today, when you feel rushed, choose to slow down deliberately at least once.',
-    test:'What is currently testing your patience the most \u2014 and how did you respond?',
-    harvest:'What did the waiting produce in you this week?' },
+    morning:'Pray for opportunities to be patient today.',
+    evening:'When was I patient today, and when did I rush?' },
   { id:'kindness', name:'Kindness',
-    notice:'Who did you overlook today who needed to be seen?',
-    practice:'Do one small kindness today for someone who is not expecting it.',
-    test:'Who has been unkind to you recently \u2014 and what would kindness toward them look like?',
-    harvest:'What act of kindness this week mattered most, given or received?' },
+    morning:'Pray for opportunities to be kind today.',
+    evening:'Where did the Lord show me kindness today?' },
   { id:'goodness', name:'Goodness',
-    notice:'Where did you choose the harder right thing today instead of the easier wrong thing?',
-    practice:'Do one good thing today that no one will ever know about.',
-    test:'What temptation toward a shortcut did you face \u2014 and what did you choose?',
-    harvest:'What does goodness look like in your life right now that it did not a year ago?' },
+    morning:'Pray for the strength to remain in the goodness of God.',
+    evening:'How did you show the Lord\u2019s goodness?' },
   { id:'faithfulness', name:'Faithfulness',
-    notice:'What small commitment did you keep today that no one was watching?',
-    practice:'Follow through today on something you said you would do.',
-    test:'What long obligation are you tempted to abandon \u2014 and why are you still here?',
-    harvest:'What has your faithfulness this week been evidence of?' },
+    morning:'Pray for the strength to remain faithful through all trials and temptations.',
+    evening:'Have you been faithful today?' },
   { id:'gentleness', name:'Gentleness',
-    notice:'Where did you respond with more force than the moment required?',
-    practice:'Choose a gentle response today in a moment that would normally provoke you.',
-    test:'Who in your life needs your strength held gently rather than asserted?',
-    harvest:'What did gentleness cost you this week \u2014 and what did it protect?' },
+    morning:'Pray for the strength to be gentle, soft, and lowly.',
+    evening:'Were you welcoming and gentle today?' },
   { id:'selfcontrol', name:'Self-Control',
-    notice:'What appetite or impulse asked for more than it needed today?',
-    practice:'Say no today to one thing your appetite wants but your formation does not need.',
-    test:'What is the hardest "no" you are currently living inside of?',
-    harvest:'What did restraint this week reveal about what you actually want?' },
+    morning:'Pray to be self-controlled even when you don\u2019t want to.',
+    evening:'Were you self-controlled in the face of temptation today?' },
 ];
 
 function abidePrompt(fruitName, stage){
@@ -3232,11 +3259,10 @@ function abidePrompt(fruitName, stage){
   if(!f) return '';
   return f[stage]||'';
 }
+// New rhythm: Days 1,3,5 = morning (preemptive); Days 2,4,6 = evening (reflective); Day 7 = verse only
 function abideStageForDay(day){
-  if(day<=2) return 'notice';
-  if(day<=4) return 'practice';
-  if(day<=6) return 'test';
-  return 'harvest';
+  if(day===7) return 'verse';
+  return (day % 2 === 1) ? 'morning' : 'evening';
 }
 
 // Title tiers by completion percentage
@@ -3786,8 +3812,13 @@ function renderVigilTaskSection(){
     }
     const fruit=FRUITS.find(f=>f.id===rec.abide.fruitId);
     const stage=abideStageForDay(day);
-    taskName=fruit?fruit.name:'Abide';
-    verse=abidePrompt(fruit.name, stage);
+    if(stage==='verse'){
+      taskName=fruit?fruit.name:'Abide';
+      verse=`"${GALATIANS_FRUIT}" \u2014 ${GALATIANS_REF}`;
+    } else {
+      taskName=fruit?fruit.name:'Abide';
+      verse=abidePrompt(fruit.name, stage);
+    }
     done=rec.abide.engagedDays[day-1];
     onClick='engageAbide()';
     titleEl.textContent='Vigil — We Who Abide';
@@ -3975,12 +4006,14 @@ function renderRecordPanel(){
       } else {
         const fruit=FRUITS.find(f=>f.id===rec.abide.fruitId);
         const stage=abideStageForDay(day);
-        const stageLabels={notice:'Notice',practice:'Practice',test:'Test',harvest:'Harvest'};
+        const stageLabels={morning:'Morning',evening:'Evening',verse:'The Fruit of the Spirit'};
         html+=`<div class="record-fruit-grid"><div class="record-fruit-pill selected">${fruit.name}</div></div>
-        <div class="record-stage-label">${stageLabels[stage]} \u2014 Day ${day}</div>
-        <div class="record-prompt">${abidePrompt(fruit.name, stage)}</div>`;
-        if(stage==='harvest'){
-          html+=`<textarea class="record-input" id="harvestInput" placeholder="What grew this week?" autocomplete="off" autocorrect="off" autocapitalize="sentences" spellcheck="false" data-1p-ignore data-lpignore="true" data-form-type="other" onblur="saveHarvestText(this.value)">${rec.abide.harvestText}</textarea>`;
+        <div class="record-stage-label">${stageLabels[stage]} \u2014 Day ${day}</div>`;
+        if(stage==='verse'){
+          html+=`<div class="record-prompt" style="font-style:italic;">"${GALATIANS_FRUIT}"</div>
+          <div class="record-stage-label" style="margin-top:6px;">${GALATIANS_REF}</div>`;
+        } else {
+          html+=`<div class="record-prompt">${abidePrompt(fruit.name, stage)}</div>`;
         }
         html+=`<div class="record-dots">`;
         for(let i=0;i<7;i++){
@@ -4288,6 +4321,171 @@ function closeGuide(){
 function toggleGuideItem(id){
   const el=document.getElementById(id);
   if(el) el.classList.toggle('open');
+}
+
+
+// ══════════════════════════════════════════
+// BIBLE READER (Practice)
+// ══════════════════════════════════════════
+// Reading position: index into the flat chapter list + scroll offset.
+// state.bibleReader = { chapterIdx: N, scrollTop: N, lastReadDate: 'YYYY-MM-DD' }
+const BIBLE_CHUNK = 3; // render this many chapters at a time around the position for performance
+
+function getBibleState(){
+  if(!state.bibleReader){ state.bibleReader={ chapterIdx:0, scrollTop:0, lastReadDate:null }; }
+  return state.bibleReader;
+}
+
+function bibleAvailable(){
+  return typeof window.DARBY_BIBLE!=='undefined' && Array.isArray(window.DARBY_BIBLE) && window.DARBY_BIBLE.length>0;
+}
+
+function renderBibleChapters(startIdx){
+  const scroll=document.getElementById('bibleScroll');
+  if(!bibleAvailable()){
+    scroll.innerHTML='<div style="color:var(--text-dim);padding:40px 0;text-align:center;">The Bible text could not be loaded. Make sure darby.js is in the same folder as the app.</div>';
+    return;
+  }
+  const bible=window.DARBY_BIBLE;
+  // Render from startIdx to the end (continuous scroll). To keep DOM reasonable, render a large
+  // window forward; more load as you scroll near the bottom.
+  const endIdx=Math.min(startIdx+40, bible.length);
+  let html='';
+  for(let i=startIdx;i<endIdx;i++){
+    const ch=bible[i];
+    html+=`<div class="bible-chapter-block" data-idx="${i}">
+      <div class="bible-chapter-head">${ch.b} ${ch.c}</div>
+      <div class="bible-text">`;
+    ch.v.forEach(pair=>{
+      html+=`<span class="bible-vnum">${pair[0]}</span>${pair[1]} `;
+    });
+    html+=`</div></div>`;
+  }
+  scroll.innerHTML=html;
+  scroll.dataset.rendered=endIdx;
+  scroll.dataset.start=startIdx;
+}
+
+function openBibleReader(){
+  const bs=getBibleState();
+  const overlay=document.getElementById('bibleOverlay');
+  overlay.classList.add('open');
+  // Render starting a few chapters BEFORE saved position so there's a little context, then scroll to saved.
+  const startIdx=Math.max(0, bs.chapterIdx);
+  renderBibleChapters(startIdx);
+  const scroll=document.getElementById('bibleScroll');
+  // Restore scroll position
+  requestAnimationFrame(()=>{ scroll.scrollTop=bs.scrollTop||0; updateBibleHeader(); });
+  // Update the complete button state
+  const btn=document.getElementById('bibleCompleteBtn');
+  const bibleHabit=getBibleHabit();
+  const doneToday=bibleHabit && state.today[bibleHabit.id];
+  btn.textContent=doneToday?'Completed Today \u2713':'Mark Completed Today';
+  btn.classList.toggle('done', !!doneToday);
+  // Attach scroll listener (throttled) to remember position, load more, update header
+  scroll.onscroll=throttleBibleScroll;
+}
+
+let _bibleScrollTimer=null;
+function throttleBibleScroll(){
+  const scroll=document.getElementById('bibleScroll');
+  updateBibleHeader();
+  // Lazy-load more chapters when near the bottom
+  if(scroll.scrollHeight - scroll.scrollTop - scroll.clientHeight < 1200){
+    const rendered=parseInt(scroll.dataset.rendered||'0',10);
+    if(bibleAvailable() && rendered<window.DARBY_BIBLE.length){
+      appendMoreChapters(rendered);
+    }
+  }
+  if(_bibleScrollTimer) clearTimeout(_bibleScrollTimer);
+  _bibleScrollTimer=setTimeout(saveBiblePosition, 400);
+}
+
+function appendMoreChapters(fromIdx){
+  const scroll=document.getElementById('bibleScroll');
+  const bible=window.DARBY_BIBLE;
+  const endIdx=Math.min(fromIdx+20, bible.length);
+  let html='';
+  for(let i=fromIdx;i<endIdx;i++){
+    const ch=bible[i];
+    html+=`<div class="bible-chapter-block" data-idx="${i}"><div class="bible-chapter-head">${ch.b} ${ch.c}</div><div class="bible-text">`;
+    ch.v.forEach(pair=>{ html+=`<span class="bible-vnum">${pair[0]}</span>${pair[1]} `; });
+    html+=`</div></div>`;
+  }
+  scroll.insertAdjacentHTML('beforeend', html);
+  scroll.dataset.rendered=endIdx;
+}
+
+function updateBibleHeader(){
+  const scroll=document.getElementById('bibleScroll');
+  const blocks=scroll.querySelectorAll('.bible-chapter-block');
+  const top=scroll.scrollTop;
+  let currentRef='';
+  let currentIdx=0;
+  for(const b of blocks){
+    if(b.offsetTop - scroll.offsetTop <= top + 60){
+      const idx=parseInt(b.dataset.idx,10);
+      currentIdx=idx;
+      if(bibleAvailable()){ const ch=window.DARBY_BIBLE[idx]; currentRef=`${ch.b} ${ch.c}`; }
+    } else break;
+  }
+  if(currentRef){ document.getElementById('bibleHeaderRef').textContent=currentRef; }
+  scroll.dataset.currentIdx=currentIdx;
+}
+
+function saveBiblePosition(){
+  const scroll=document.getElementById('bibleScroll');
+  const bs=getBibleState();
+  bs.chapterIdx=parseInt(scroll.dataset.currentIdx||'0',10);
+  bs.scrollTop=scroll.scrollTop;
+  save();
+}
+
+function closeBibleReader(){
+  saveBiblePosition();
+  document.getElementById('bibleOverlay').classList.remove('open');
+  render();
+}
+
+// The Bible reading habit — the existing "Read Bible or listened to sermon" habit becomes the Practice.
+function getBibleHabit(){
+  return (state.habits||[]).find(h=>h.name==='Read Bible or listened to sermon' || h.isBiblePractice===true);
+}
+
+function completeBibleReading(){
+  saveBiblePosition();
+  const h=getBibleHabit();
+  if(h && !state.today[h.id]){
+    toggleHabit(h.id); // reuse normal habit completion (XP, streak, points)
+  }
+  const bs=getBibleState();
+  bs.lastReadDate=todayStr();
+  save();
+  const btn=document.getElementById('bibleCompleteBtn');
+  btn.textContent='Completed Today \u2713';
+  btn.classList.add('done');
+  SFX.habitCheck();
+}
+
+// Render the Practices section (currently: the Bible reader)
+function renderPractices(){
+  const section=document.getElementById('practicesSection');
+  const list=document.getElementById('practicesList');
+  const h=getBibleHabit();
+  if(!h){ section.style.display='none'; return; }
+  section.style.display='block';
+  const done=state.today[h.id];
+  const bs=getBibleState();
+  let placeStr='Begin in Genesis';
+  if(bibleAvailable() && bs.chapterIdx>0){ const ch=window.DARBY_BIBLE[bs.chapterIdx]; if(ch) placeStr='Resume at '+ch.b+' '+ch.c; }
+  list.innerHTML=`<div class="habit-item${done?' done':''}" onclick="openBibleReader()">
+    <div class="habit-check">${done?'\u2713':'\u2632'}</div>
+    <div class="habit-info">
+      <div class="habit-name">Read the Word</div>
+      <div class="habit-meta">${done?'Completed today':placeStr}</div>
+    </div>
+    <div class="habit-xp">${done?'':'+'+habitStreakXP(h)+' XP'}</div>
+  </div>`;
 }
 
 // ══════════════════════════════════════════
