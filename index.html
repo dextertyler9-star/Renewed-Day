@@ -481,8 +481,7 @@
   .hmp-input { width:100%; background:#0c0c0e; border:1px solid var(--border); border-radius:7px; padding:9px 11px; color:var(--text); font-size:13px; font-family:'Inter',sans-serif; resize:vertical; min-height:54px; box-sizing:border-box; }
   .hmp-input:focus { outline:none; border-color:var(--gold-dim); }
 
-  .restore-amt { font-family:'Oswald',sans-serif; font-size:16px; font-weight:600; color:var(--gold); border:1px solid var(--gold-dim); background:none; padding:12px 0; border-radius:8px; cursor:pointer; width:70px; }
-  .restore-amt:hover { background:rgba(201,168,76,0.1); }
+  .restore-amt-removed {}
 
   /* ── GUIDE / INFO OVERLAY ── */
   .guide-overlay { display:none; position:fixed; inset:0; background:#070709; z-index:480; flex-direction:column; }
@@ -572,6 +571,10 @@
   ::-webkit-scrollbar-track { background:transparent; }
   ::-webkit-scrollbar-thumb { background:#2a2a2a; border-radius:2px; }
 </style>
+<!-- Firebase (compat CDN build for single-file apps) -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 </head>
 <body>
 <div class="app">
@@ -583,7 +586,7 @@
       <div class="header-date-col">
         <div class="date-label" id="dateLabel"></div>
         <div style="display:flex;align-items:center;gap:6px;justify-content:flex-end;">
-          <div class="build-version">v0.12</div>
+          <div class="build-version">v0.13</div>
           <button class="header-menu-btn" onclick="toggleHeaderMenu()" aria-label="Menu">&#9776;</button>
         </div>
       </div>
@@ -594,6 +597,27 @@
   <div class="header-menu-panel" id="headerMenuPanel">
     <div class="hmp-row" style="flex-direction:column;align-items:stretch;gap:8px;">
       <button class="hmp-action" onclick="openGuide()">Guide &amp; The Seven Disciplines</button>
+    </div>
+    <div class="hmp-divider"></div>
+    <!-- ACCOUNT / CLOUD -->
+    <div class="hmp-row" style="flex-direction:column;align-items:stretch;gap:8px;">
+      <span class="hmp-label">Account &amp; Cloud Backup</span>
+      <div id="accountLoggedOut">
+        <input class="hmp-input" id="authEmail" type="email" placeholder="Email" autocomplete="email" autocapitalize="off" spellcheck="false" style="margin-bottom:6px;">
+        <input class="hmp-input" id="authPassword" type="password" placeholder="Password (6+ characters)" autocomplete="current-password" style="margin-bottom:6px;">
+        <div style="display:flex;gap:8px;">
+          <button class="hmp-action" onclick="authSignIn()" style="flex:1;">Sign In</button>
+          <button class="hmp-action" onclick="authSignUp()" style="flex:1;">Sign Up</button>
+        </div>
+        <div id="authMsg" style="font-size:12px;color:var(--text-dim);margin-top:6px;line-height:1.4;"></div>
+      </div>
+      <div id="accountLoggedIn" style="display:none;">
+        <div style="font-size:13px;color:var(--text-dim);margin-bottom:8px;line-height:1.4;">Signed in as <span id="accountEmail" style="color:var(--gold);"></span></div>
+        <button class="hmp-action" onclick="cloudBackup()" style="margin-bottom:6px;">Back Up to Cloud</button>
+        <button class="hmp-action" onclick="cloudRestore()" style="margin-bottom:6px;">Restore from Cloud</button>
+        <div id="cloudMsg" style="font-size:12px;color:var(--text-dim);margin:4px 0 8px;line-height:1.4;"></div>
+        <button class="hmp-action" onclick="authSignOut()" style="color:var(--text-dim);">Sign Out</button>
+      </div>
     </div>
     <div class="hmp-divider"></div>
     <div class="hmp-row">
@@ -609,13 +633,6 @@
         <button class="hmp-opt" id="hapticsOnBtn" onclick="setHaptics(true)">On</button>
         <button class="hmp-opt" id="hapticsOffBtn" onclick="setHaptics(false)">Off</button>
       </div>
-    </div>
-    <div class="hmp-divider"></div>
-    <div class="hmp-row" style="flex-direction:column;align-items:stretch;gap:8px;">
-      <span class="hmp-label">Backup &amp; Restore</span>
-      <button class="hmp-action" onclick="backupState()">Copy Backup Code</button>
-      <textarea class="hmp-input" id="restoreInput" placeholder="Paste backup code here to restore..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-1p-ignore data-lpignore="true" data-form-type="other"></textarea>
-      <button class="hmp-action" onclick="restoreState()">Restore from Code</button>
     </div>
     <div class="hmp-divider"></div>
     <div class="hmp-row" style="flex-direction:column;align-items:stretch;gap:8px;">
@@ -791,26 +808,6 @@
     <div class="ts-bonus" id="tsBonus">+10% XP</div>
     <div class="ts-why" id="tsWhy"></div>
     <button class="ts-btn" onclick="closeTitleScreen()">Accept</button>
-  </div>
-
-  <!-- ONE-TIME POINT RESTORATION (consecrated bug) -->
-  <div class="title-screen" id="restoreScreen">
-    <div class="ts-eyebrow">A Correction</div>
-    <div class="ts-name" style="font-size:24px;">Points Restored</div>
-    <div class="ts-why" style="margin-top:16px;max-width:340px;">A bug in the weekly vigil evaluation took points from some accounts at the Sunday reset. Pick the amount closest to what you lost, or enter your own. I trust you.</div>
-    <div id="restoreBtnGrid" style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-width:330px;margin:22px 0 14px;">
-      <button class="restore-amt" onclick="restorePoints(15)">+15</button>
-      <button class="restore-amt" onclick="restorePoints(20)">+20</button>
-      <button class="restore-amt" onclick="restorePoints(25)">+25</button>
-      <button class="restore-amt" onclick="restorePoints(30)">+30</button>
-      <button class="restore-amt" onclick="restorePoints(35)">+35</button>
-      <button class="restore-amt" onclick="restorePoints(40)">+40</button>
-      <button class="restore-amt" onclick="restorePoints(45)">+45</button>
-      <button class="restore-amt" onclick="restorePoints(50)">+50</button>
-    </div>
-    <input class="field-input" id="restoreCustomInput" type="number" min="1" max="500" placeholder="Or enter an amount" autocomplete="off" data-1p-ignore data-lpignore="true" data-form-type="other" style="max-width:200px;text-align:center;margin-bottom:12px;">
-    <button class="ts-btn" onclick="restorePointsCustom()">Restore Custom Amount</button>
-    <button class="ts-btn" style="border:none;color:var(--text-dim);margin-top:8px;" onclick="dismissRestore()">No points were lost</button>
   </div>
 
   <!-- BIBLE READER OVERLAY -->
@@ -1101,6 +1098,185 @@
 
 <script src="darby.js"></script>
 <script>
+
+// ══════════════════════════════════════════
+// FIREBASE — accounts + cloud backup (stage 1)
+// ══════════════════════════════════════════
+const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyDRucvs4bAHGNWcZmtYeRllYAfQCUGgXx8",
+  authDomain: "renewed-day-e6e85.firebaseapp.com",
+  projectId: "renewed-day-e6e85",
+  storageBucket: "renewed-day-e6e85.firebasestorage.app",
+  messagingSenderId: "448951480207",
+  appId: "1:448951480207:web:58cdd83279bae4cfd3e5fa"
+};
+let _fbAuth=null, _fbDb=null, _fbReady=false;
+function initFirebase(){
+  try{
+    if(typeof firebase==='undefined'){ console.warn('Firebase SDK not loaded'); return; }
+    firebase.initializeApp(FIREBASE_CONFIG);
+    _fbAuth=firebase.auth();
+    _fbDb=firebase.firestore();
+    _fbReady=true;
+    // Keep the user signed in across sessions
+    _fbAuth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(()=>{});
+    // React to auth state changes (updates the menu UI + syncs)
+    _fbAuth.onAuthStateChanged(user=>{
+      updateAccountUI(user);
+      if(user){ setTimeout(cloudSyncOnOpen, 300); } // sync shortly after sign-in / app open
+    });
+  }catch(e){ console.warn('Firebase init failed', e); }
+}
+function updateAccountUI(user){
+  const out=document.getElementById('accountLoggedOut');
+  const inn=document.getElementById('accountLoggedIn');
+  if(!out||!inn) return;
+  if(user){
+    out.style.display='none'; inn.style.display='block';
+    const em=document.getElementById('accountEmail'); if(em) em.textContent=user.email;
+  } else {
+    out.style.display='block'; inn.style.display='none';
+  }
+}
+function authMsg(text, isError){
+  const el=document.getElementById('authMsg');
+  if(el){ el.textContent=text; el.style.color=isError?'#c07070':'var(--text-dim)'; }
+}
+function cloudMsg(text, isError){
+  const el=document.getElementById('cloudMsg');
+  if(el){ el.textContent=text; el.style.color=isError?'#c07070':'#7abf8a'; }
+}
+function authSignUp(){
+  if(!_fbReady){ authMsg('Cloud not available. Check your connection.', true); return; }
+  const email=(document.getElementById('authEmail').value||'').trim();
+  const pw=document.getElementById('authPassword').value||'';
+  if(!email||pw.length<6){ authMsg('Enter an email and a password of at least 6 characters.', true); return; }
+  authMsg('Creating account...');
+  _fbAuth.createUserWithEmailAndPassword(email, pw)
+    .then(()=>{ authMsg('Account created. You are signed in.'); })
+    .catch(e=>{ authMsg(friendlyAuthError(e), true); });
+}
+function authSignIn(){
+  if(!_fbReady){ authMsg('Cloud not available. Check your connection.', true); return; }
+  const email=(document.getElementById('authEmail').value||'').trim();
+  const pw=document.getElementById('authPassword').value||'';
+  if(!email||!pw){ authMsg('Enter your email and password.', true); return; }
+  authMsg('Signing in...');
+  _fbAuth.signInWithEmailAndPassword(email, pw)
+    .then(()=>{ authMsg('Signed in.'); })
+    .catch(e=>{ authMsg(friendlyAuthError(e), true); });
+}
+function authSignOut(){
+  if(!_fbReady) return;
+  _fbAuth.signOut().then(()=>{ authMsg(''); cloudMsg(''); });
+}
+function friendlyAuthError(e){
+  const code=(e&&e.code)||'';
+  if(code.includes('email-already-in-use')) return 'That email already has an account. Try signing in.';
+  if(code.includes('invalid-email')) return 'That email address looks invalid.';
+  if(code.includes('weak-password')) return 'Password should be at least 6 characters.';
+  if(code.includes('wrong-password')||code.includes('invalid-credential')) return 'Incorrect email or password.';
+  if(code.includes('user-not-found')) return 'No account found for that email. Try signing up.';
+  if(code.includes('too-many-requests')) return 'Too many attempts. Wait a moment and try again.';
+  if(code.includes('network')) return 'Network error. Check your connection.';
+  return (e&&e.message)||'Something went wrong.';
+}
+// ── AUTO-SYNC (newest wins) ─────────────────────────────
+// Local truth of when this device's data last changed is state.dataUpdatedAt.
+// Cloud stores {state, updatedAt}. On open we compare; during use we debounce-push.
+let _syncing=false;
+let _pushTimer=null;
+
+function touchDataTimestamp(){
+  state.dataUpdatedAt=Date.now();
+}
+
+// Called on app open (during splash) and after sign-in: reconcile local vs cloud by timestamp.
+function cloudSyncOnOpen(){
+  if(!_fbReady||!_fbAuth.currentUser){ return; }
+  if(_syncing) return;
+  _syncing=true;
+  const uid=_fbAuth.currentUser.uid;
+  _fbDb.collection('users').doc(uid).get()
+    .then(doc=>{
+      const localTs=state.dataUpdatedAt||0;
+      if(!doc.exists||!doc.data().state){
+        // No cloud data yet → push local up as the first backup
+        return _pushNow().then(()=>cloudMsg('Synced to cloud.'));
+      }
+      const cloudTs=doc.data().updatedAt||0;
+      if(cloudTs>localTs){
+        // Cloud is newer → pull it down and re-render in place (no jarring page reload)
+        try{
+          const restored=JSON.parse(doc.data().state);
+          _suppressSync=true;
+          state=restored;
+          if(!state.dataUpdatedAt) state.dataUpdatedAt=cloudTs;
+          save();
+          _suppressSync=false;
+          // Smoothly refresh the whole UI from the new state
+          checkDayReset();
+          render();
+          syncMenuState();
+          cloudMsg('Updated from another device.');
+        }catch(err){ _suppressSync=false; cloudMsg('Cloud data could not be read.', true); }
+      } else if(localTs>cloudTs){
+        // Local is newer → push up
+        return _pushNow().then(()=>cloudMsg('Synced to cloud.'));
+      } else {
+        cloudMsg('Up to date.');
+      }
+    })
+    .catch(e=>{ /* silent: never block the app on sync */ console.warn('sync check failed', e); })
+    .finally(()=>{ _syncing=false; });
+}
+
+// Internal: write current state to cloud with a fresh timestamp
+function _pushNow(){
+  if(!_fbReady||!_fbAuth.currentUser) return Promise.resolve();
+  const uid=_fbAuth.currentUser.uid;
+  const ts=state.dataUpdatedAt||Date.now();
+  return _fbDb.collection('users').doc(uid).set({ state: JSON.stringify(state), updatedAt: ts })
+    .catch(e=>{ console.warn('cloud push failed', e); });
+}
+
+// Called after any data change; debounced so we push once after activity settles.
+function cloudSyncPush(){
+  if(!_fbReady||!_fbAuth.currentUser) return;
+  touchDataTimestamp();
+  if(_pushTimer) clearTimeout(_pushTimer);
+  _pushTimer=setTimeout(()=>{ _pushNow().then(()=>cloudMsg('Synced.')); }, 2500);
+}
+
+// Manual buttons still available as a fallback
+function cloudBackup(){
+  if(!_fbReady||!_fbAuth.currentUser){ cloudMsg('Sign in first.', true); return; }
+  cloudMsg('Backing up...');
+  touchDataTimestamp();
+  _pushNow().then(()=>cloudMsg('Backed up to cloud just now.'))
+    .catch(e=>cloudMsg('Backup failed.', true));
+}
+function cloudRestore(){
+  if(!_fbReady||!_fbAuth.currentUser){ cloudMsg('Sign in first.', true); return; }
+  cloudMsg('Checking cloud...');
+  const uid=_fbAuth.currentUser.uid;
+  _fbDb.collection('users').doc(uid).get()
+    .then(doc=>{
+      if(!doc.exists||!doc.data().state){ cloudMsg('No cloud backup found for this account.', true); return; }
+      if(!confirm('Restore from cloud? This replaces the data currently on this device with your last cloud backup.')) { cloudMsg(''); return; }
+      try{
+        _suppressSync=true;
+        state=JSON.parse(doc.data().state);
+        if(!state.dataUpdatedAt) state.dataUpdatedAt=doc.data().updatedAt||Date.now();
+        save();
+        _suppressSync=false;
+        cloudMsg('Restored from cloud. Reloading...');
+        setTimeout(()=>location.reload(), 800);
+      }catch(err){ _suppressSync=false; cloudMsg('Cloud data could not be read.', true); }
+    })
+    .catch(e=>{ cloudMsg('Restore failed.', true); });
+}
+
 // ══════════════════════════════════════════
 // CLASS & RANK DATA
 // ══════════════════════════════════════════
@@ -1441,14 +1617,19 @@ const DEFAULT_STATE = {
   todayTasksCompleted:0, failedTasks:[], pendingCovenant:false,
   earnedTitles:[], equippedTitle:null, completedRites:{}, riteTaskCounts:{}, taskLog:[], highestRankXP:0,
   playerRace:null, raceTier:0, raceLockedIn:false, pendingRaceSelect:false,
-  yesterdayFullCompletion:false,
+  yesterdayFullCompletion:false, dataUpdatedAt:0,
 };
 let state = {...DEFAULT_STATE};
 let currentTaskType = 'onetime';
 let failedTaskQueue = [];
 let pendingRecreateTask = null;
 
-function save(){localStorage.setItem('rd_state_v2',JSON.stringify(state));}
+function save(){
+  localStorage.setItem('rd_state_v2',JSON.stringify(state));
+  // Auto-sync: schedule a debounced cloud push (no-op if signed out or suppressed during a pull)
+  if(!_suppressSync && typeof cloudSyncPush==='function') cloudSyncPush();
+}
+let _suppressSync=false;
 function load(){
   const raw=localStorage.getItem('rd_state_v2');
   if(raw){try{state={...DEFAULT_STATE,...JSON.parse(raw)};}catch(e){}}
@@ -4391,36 +4572,6 @@ function startFresh(){
 
 
 // ── One-time point restoration (consecrated bug, v0.8) ──
-function showRestoreScreenIfNeeded(){
-  if(state.consecratedRestoreDone) return;
-  // Defer if another overlay is currently open (e.g. the daily verse splash);
-  // it will show on a later open once the screen is clear.
-  const verseOpen=document.getElementById('verseSplash')&&document.getElementById('verseSplash').classList.contains('open');
-  const anyTitleOpen=Array.from(document.querySelectorAll('.title-screen.open')).length>0;
-  if(verseOpen||anyTitleOpen) return;
-  const s=document.getElementById('restoreScreen');
-  if(s) s.classList.add('open');
-}
-function restorePoints(amount){
-  state.points=(state.points||0)+amount;
-  state.consecratedRestoreDone=true;
-  SFX.redeem();
-  save();
-  document.getElementById('restoreScreen').classList.remove('open');
-  render();
-}
-function restorePointsCustom(){
-  const inp=document.getElementById('restoreCustomInput');
-  const v=parseInt(inp&&inp.value,10);
-  if(!v||v<1){ if(inp) inp.focus(); return; }
-  restorePoints(Math.min(v,500));
-}
-function dismissRestore(){
-  state.consecratedRestoreDone=true;
-  save();
-  document.getElementById('restoreScreen').classList.remove('open');
-}
-
 
 // ══════════════════════════════════════════
 // GUIDE / INFO PAGE
@@ -4757,7 +4908,7 @@ checkDayReset();
 render();
 syncMenuState();
 showVerseSplash();
-showRestoreScreenIfNeeded();
+initFirebase();
 if(state.verseSeenDate===todayStr()) processFailedTaskQueue();
 if(state.pendingCovenant){
   const rank=getCurrentRank(state.totalXP);
