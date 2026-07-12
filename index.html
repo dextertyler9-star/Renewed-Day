@@ -2,10 +2,10 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Renewed Day</title>
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#0a0a0c">
+<meta name="theme-color" content="#0D0D0D">
 <link rel="icon" type="image/png" sizes="32x32" href="icon-32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="icon-16.png">
 <link rel="apple-touch-icon" href="icon-180.png">
@@ -25,10 +25,10 @@
     --blue-dim: #1a2a3a; --blue-bright: #5a9fd4;
   }
   html, body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; min-height: 100vh; font-size: 15px; line-height: 1.5; }
-  .app { max-width: 480px; margin: 0 auto; padding: 0 0 80px 0; }
+  .app { max-width: 480px; margin: 0 auto; padding: 0 0 calc(80px + env(safe-area-inset-bottom, 0px)) 0; }
 
   /* ── TAB BAR ── */
-  .tab-bar { position:fixed; bottom:0; left:50%; transform:translateX(-50%); width:100%; max-width:480px; background:#111; border-top:1px solid var(--border); display:flex; z-index:50; }
+  .tab-bar { position:fixed; bottom:0; left:50%; transform:translateX(-50%); width:100%; max-width:480px; background:#111; border-top:1px solid var(--border); display:flex; z-index:50; padding-bottom:env(safe-area-inset-bottom, 0px); }
   .tab-btn { flex:1; padding:14px 4px 16px; background:none; border:none; color:var(--text-dim); font-size:22px; line-height:1; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:color 0.15s; }
   .tab-btn.active { color:var(--gold); }
   .tab-panel { display:none; }
@@ -594,7 +594,7 @@
       <div class="header-date-col">
         <div class="date-label" id="dateLabel"></div>
         <div style="display:flex;align-items:center;gap:6px;justify-content:flex-end;">
-          <div class="build-version">v0.14</div>
+          <div class="build-version">v0.16</div>
           <button class="header-menu-btn" onclick="toggleHeaderMenu()" aria-label="Menu">&#9776;</button>
         </div>
       </div>
@@ -816,6 +816,17 @@
     <div class="ts-bonus" id="tsBonus">+10% XP</div>
     <div class="ts-why" id="tsWhy"></div>
     <button class="ts-btn" onclick="closeTitleScreen()">Accept</button>
+  </div>
+
+  <!-- ONE-TIME: SAM PROGRESS RESTORATION (iOS reinstall data loss) -->
+  <div class="title-screen" id="samScreen">
+    <div class="ts-eyebrow">A Question</div>
+    <div class="ts-name" style="font-size:24px;">Are you Sam?</div>
+    <div class="ts-why" style="margin-top:16px;max-width:340px;">An iPhone reinstall wiped one tester's progress. If that was you, Sam, this restores your rank and calling.</div>
+    <div style="display:flex;gap:10px;margin-top:24px;">
+      <button class="ts-btn" onclick="samRestore()">Yes, I'm Sam</button>
+      <button class="ts-btn" style="border:none;color:var(--text-dim);" onclick="samDismiss()">No</button>
+    </div>
   </div>
 
   <!-- BIBLE READER OVERLAY -->
@@ -4581,6 +4592,35 @@ function startFresh(){
 
 // ── One-time point restoration (consecrated bug, v0.8) ──
 
+// ── ONE-TIME: Sam restoration (remove in a future build once answered) ──
+function showSamScreenIfNeeded(){
+  if(state.samRestoreDone) return;
+  const verseOpen=document.getElementById('verseSplash')&&document.getElementById('verseSplash').classList.contains('open');
+  const anyTitleOpen=Array.from(document.querySelectorAll('.title-screen.open')).length>0;
+  if(verseOpen||anyTitleOpen) return;
+  const s=document.getElementById('samScreen');
+  if(s) s.classList.add('open');
+}
+function samRestore(){
+  // Watching the Master (Apprentice rank 3), halfway through: 1650 + 412
+  state.totalXP=2062;
+  state.highestRankXP=2062;
+  state.points=20;
+  state.playerRace='ascetic';
+  state.raceLockedIn=true;
+  if(state.raceTier===undefined) state.raceTier=0;
+  state.samRestoreDone=true;
+  SFX.redeem();
+  save();
+  document.getElementById('samScreen').classList.remove('open');
+  render();
+}
+function samDismiss(){
+  state.samRestoreDone=true;
+  save();
+  document.getElementById('samScreen').classList.remove('open');
+}
+
 // ══════════════════════════════════════════
 // GUIDE / INFO PAGE
 // ══════════════════════════════════════════
@@ -4916,6 +4956,7 @@ checkDayReset();
 render();
 syncMenuState();
 showVerseSplash();
+showSamScreenIfNeeded();
 initFirebase();
 if(state.verseSeenDate===todayStr()) processFailedTaskQueue();
 if(state.pendingCovenant){
