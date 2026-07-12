@@ -2,16 +2,16 @@
   "name": "Renewed Day",
   "short_name": "Renewed Day",
   "description": "The Imago Protocol — a daily rhythm of formation.",
-  "start_url": "/Renewed-Day/renewed-day.html",
-  "scope": "/Renewed-Day/",
+  "start_url": "./",
+  "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#0a0a0c",
   "theme_color": "#0a0a0c",
   "icons": [
-    { "src": "/Renewed-Day/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
-    { "src": "/Renewed-Day/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
-    { "src": "/Renewed-Day/icon-maskable-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
-    { "src": "/Renewed-Day/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-maskable-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
   ]
 }
