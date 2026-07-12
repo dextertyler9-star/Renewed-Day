@@ -637,13 +637,6 @@
     </div>
     <div class="hmp-divider"></div>
     <div class="hmp-row" style="flex-direction:column;align-items:stretch;gap:8px;">
-      <span class="hmp-label">Backup &amp; Restore</span>
-      <button class="hmp-action" onclick="backupState()">Copy Backup Code</button>
-      <textarea class="hmp-input" id="restoreInput" placeholder="Paste backup code here to restore..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-1p-ignore data-lpignore="true" data-form-type="other"></textarea>
-      <button class="hmp-action" onclick="restoreState()">Restore from Code</button>
-    </div>
-    <div class="hmp-divider"></div>
-    <div class="hmp-row" style="flex-direction:column;align-items:stretch;gap:8px;">
       <span class="hmp-label" style="color:#a05050;">Start Fresh</span>
       <button class="hmp-action hmp-danger" onclick="startFresh()">Wipe &amp; Reset to Defaults</button>
     </div>
@@ -1148,8 +1141,11 @@ function initFirebase(){
     _fbReady=true;
     // Keep the user signed in across sessions
     _fbAuth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(()=>{});
-    // React to auth state changes (updates the menu UI)
-    _fbAuth.onAuthStateChanged(user=>{ updateAccountUI(user); });
+    // React to auth state changes (updates the menu UI + syncs)
+    _fbAuth.onAuthStateChanged(user=>{
+      updateAccountUI(user);
+      if(user){ setTimeout(cloudSyncOnOpen, 300); } // sync shortly after sign-in / app open
+    });
   }catch(e){ console.warn('Firebase init failed', e); }
 }
 function updateAccountUI(user){
@@ -1206,17 +1202,78 @@ function friendlyAuthError(e){
   if(code.includes('network')) return 'Network error. Check your connection.';
   return (e&&e.message)||'Something went wrong.';
 }
-// Push current local state to the cloud under this user's document
+// ── AUTO-SYNC (newest wins) ─────────────────────────────
+// Local truth of when this device's data last changed is state.dataUpdatedAt.
+// Cloud stores {state, updatedAt}. On open we compare; during use we debounce-push.
+let _syncing=false;
+let _pushTimer=null;
+
+function touchDataTimestamp(){
+  state.dataUpdatedAt=Date.now();
+}
+
+// Called on app open (during splash) and after sign-in: reconcile local vs cloud by timestamp.
+function cloudSyncOnOpen(){
+  if(!_fbReady||!_fbAuth.currentUser){ return; }
+  if(_syncing) return;
+  _syncing=true;
+  const uid=_fbAuth.currentUser.uid;
+  _fbDb.collection('users').doc(uid).get()
+    .then(doc=>{
+      const localTs=state.dataUpdatedAt||0;
+      if(!doc.exists||!doc.data().state){
+        // No cloud data yet → push local up as the first backup
+        return _pushNow().then(()=>cloudMsg('Synced to cloud.'));
+      }
+      const cloudTs=doc.data().updatedAt||0;
+      if(cloudTs>localTs){
+        // Cloud is newer → pull it down
+        try{
+          const restored=JSON.parse(doc.data().state);
+          _suppressSync=true;
+          state=restored;
+          if(!state.dataUpdatedAt) state.dataUpdatedAt=cloudTs;
+          save();
+          _suppressSync=false;
+          cloudMsg('Updated from another device. Reloading...');
+          setTimeout(()=>location.reload(), 700);
+        }catch(err){ _suppressSync=false; cloudMsg('Cloud data could not be read.', true); }
+      } else if(localTs>cloudTs){
+        // Local is newer → push up
+        return _pushNow().then(()=>cloudMsg('Synced to cloud.'));
+      } else {
+        cloudMsg('Up to date.');
+      }
+    })
+    .catch(e=>{ /* silent: never block the app on sync */ console.warn('sync check failed', e); })
+    .finally(()=>{ _syncing=false; });
+}
+
+// Internal: write current state to cloud with a fresh timestamp
+function _pushNow(){
+  if(!_fbReady||!_fbAuth.currentUser) return Promise.resolve();
+  const uid=_fbAuth.currentUser.uid;
+  const ts=state.dataUpdatedAt||Date.now();
+  return _fbDb.collection('users').doc(uid).set({ state: JSON.stringify(state), updatedAt: ts })
+    .catch(e=>{ console.warn('cloud push failed', e); });
+}
+
+// Called after any data change; debounced so we push once after activity settles.
+function cloudSyncPush(){
+  if(!_fbReady||!_fbAuth.currentUser) return;
+  touchDataTimestamp();
+  if(_pushTimer) clearTimeout(_pushTimer);
+  _pushTimer=setTimeout(()=>{ _pushNow().then(()=>cloudMsg('Synced.')); }, 2500);
+}
+
+// Manual buttons still available as a fallback
 function cloudBackup(){
   if(!_fbReady||!_fbAuth.currentUser){ cloudMsg('Sign in first.', true); return; }
   cloudMsg('Backing up...');
-  const uid=_fbAuth.currentUser.uid;
-  const payload={ state: JSON.stringify(state), updatedAt: Date.now() };
-  _fbDb.collection('users').doc(uid).set(payload)
-    .then(()=>{ cloudMsg('Backed up to cloud just now.'); })
-    .catch(e=>{ cloudMsg('Backup failed: '+(e.message||e.code||'error'), true); });
+  touchDataTimestamp();
+  _pushNow().then(()=>cloudMsg('Backed up to cloud just now.'))
+    .catch(e=>cloudMsg('Backup failed.', true));
 }
-// Pull cloud state down and replace local (with confirm, to avoid accidental overwrite)
 function cloudRestore(){
   if(!_fbReady||!_fbAuth.currentUser){ cloudMsg('Sign in first.', true); return; }
   cloudMsg('Checking cloud...');
@@ -1226,14 +1283,16 @@ function cloudRestore(){
       if(!doc.exists||!doc.data().state){ cloudMsg('No cloud backup found for this account.', true); return; }
       if(!confirm('Restore from cloud? This replaces the data currently on this device with your last cloud backup.')) { cloudMsg(''); return; }
       try{
-        const restored=JSON.parse(doc.data().state);
-        state=restored;
-        save(); 
+        _suppressSync=true;
+        state=JSON.parse(doc.data().state);
+        if(!state.dataUpdatedAt) state.dataUpdatedAt=doc.data().updatedAt||Date.now();
+        save();
+        _suppressSync=false;
         cloudMsg('Restored from cloud. Reloading...');
         setTimeout(()=>location.reload(), 800);
-      }catch(err){ cloudMsg('Cloud data could not be read.', true); }
+      }catch(err){ _suppressSync=false; cloudMsg('Cloud data could not be read.', true); }
     })
-    .catch(e=>{ cloudMsg('Restore failed: '+(e.message||e.code||'error'), true); });
+    .catch(e=>{ cloudMsg('Restore failed.', true); });
 }
 
 // ══════════════════════════════════════════
@@ -1576,14 +1635,19 @@ const DEFAULT_STATE = {
   todayTasksCompleted:0, failedTasks:[], pendingCovenant:false,
   earnedTitles:[], equippedTitle:null, completedRites:{}, riteTaskCounts:{}, taskLog:[], highestRankXP:0,
   playerRace:null, raceTier:0, raceLockedIn:false, pendingRaceSelect:false,
-  yesterdayFullCompletion:false,
+  yesterdayFullCompletion:false, dataUpdatedAt:0,
 };
 let state = {...DEFAULT_STATE};
 let currentTaskType = 'onetime';
 let failedTaskQueue = [];
 let pendingRecreateTask = null;
 
-function save(){localStorage.setItem('rd_state_v2',JSON.stringify(state));}
+function save(){
+  localStorage.setItem('rd_state_v2',JSON.stringify(state));
+  // Auto-sync: schedule a debounced cloud push (no-op if signed out or suppressed during a pull)
+  if(!_suppressSync && typeof cloudSyncPush==='function') cloudSyncPush();
+}
+let _suppressSync=false;
 function load(){
   const raw=localStorage.getItem('rd_state_v2');
   if(raw){try{state={...DEFAULT_STATE,...JSON.parse(raw)};}catch(e){}}
