@@ -1227,7 +1227,7 @@ function cloudSyncOnOpen(){
       }
       const cloudTs=doc.data().updatedAt||0;
       if(cloudTs>localTs){
-        // Cloud is newer → pull it down
+        // Cloud is newer → pull it down and re-render in place (no jarring page reload)
         try{
           const restored=JSON.parse(doc.data().state);
           _suppressSync=true;
@@ -1235,8 +1235,11 @@ function cloudSyncOnOpen(){
           if(!state.dataUpdatedAt) state.dataUpdatedAt=cloudTs;
           save();
           _suppressSync=false;
-          cloudMsg('Updated from another device. Reloading...');
-          setTimeout(()=>location.reload(), 700);
+          // Smoothly refresh the whole UI from the new state
+          checkDayReset();
+          render();
+          syncMenuState();
+          cloudMsg('Updated from another device.');
         }catch(err){ _suppressSync=false; cloudMsg('Cloud data could not be read.', true); }
       } else if(localTs>cloudTs){
         // Local is newer → push up
