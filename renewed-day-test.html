@@ -2,8 +2,17 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Renewed Day</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0D0D0D">
+<meta name="color-scheme" content="dark">
+<link rel="icon" type="image/png" sizes="32x32" href="icon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="icon-16.png">
+<link rel="apple-touch-icon" href="icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="Renewed Day">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -17,10 +26,10 @@
     --blue-dim: #1a2a3a; --blue-bright: #5a9fd4;
   }
   html, body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; min-height: 100vh; font-size: 15px; line-height: 1.5; }
-  .app { max-width: 480px; margin: 0 auto; padding: 0 0 80px 0; }
+  .app { max-width: 480px; margin: 0 auto; padding: 0 0 calc(80px + env(safe-area-inset-bottom, 0px)) 0; }
 
   /* ── TAB BAR ── */
-  .tab-bar { position:fixed; bottom:0; left:50%; transform:translateX(-50%); width:100%; max-width:480px; background:#111; border-top:1px solid var(--border); display:flex; z-index:50; }
+  .tab-bar { position:fixed; bottom:0; left:50%; transform:translateX(-50%); width:100%; max-width:480px; background:#111; border-top:1px solid var(--border); display:flex; z-index:50; padding-bottom:env(safe-area-inset-bottom, 0px); }
   .tab-btn { flex:1; padding:14px 4px 16px; background:none; border:none; color:var(--text-dim); font-size:22px; line-height:1; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:color 0.15s; }
   .tab-btn.active { color:var(--gold); }
   .tab-panel { display:none; }
@@ -481,8 +490,7 @@
   .hmp-input { width:100%; background:#0c0c0e; border:1px solid var(--border); border-radius:7px; padding:9px 11px; color:var(--text); font-size:13px; font-family:'Inter',sans-serif; resize:vertical; min-height:54px; box-sizing:border-box; }
   .hmp-input:focus { outline:none; border-color:var(--gold-dim); }
 
-  .restore-amt { font-family:'Oswald',sans-serif; font-size:16px; font-weight:600; color:var(--gold); border:1px solid var(--gold-dim); background:none; padding:12px 0; border-radius:8px; cursor:pointer; width:70px; }
-  .restore-amt:hover { background:rgba(201,168,76,0.1); }
+  .restore-amt-removed {}
 
   /* ── GUIDE / INFO OVERLAY ── */
   .guide-overlay { display:none; position:fixed; inset:0; background:#070709; z-index:480; flex-direction:column; }
@@ -587,7 +595,7 @@
       <div class="header-date-col">
         <div class="date-label" id="dateLabel"></div>
         <div style="display:flex;align-items:center;gap:6px;justify-content:flex-end;">
-          <div class="build-version">v0.12</div>
+          <div class="build-version">v0.18</div>
           <button class="header-menu-btn" onclick="toggleHeaderMenu()" aria-label="Menu">&#9776;</button>
         </div>
       </div>
@@ -626,6 +634,13 @@
       <div class="hmp-toggle">
         <button class="hmp-opt" id="soundOnBtn" onclick="setSound(true)">On</button>
         <button class="hmp-opt" id="soundOffBtn" onclick="setSound(false)">Off</button>
+      </div>
+    </div>
+    <div class="hmp-row">
+      <span class="hmp-label">Ambient Music <span style="opacity:0.6;font-size:11px;">(test)</span></span>
+      <div class="hmp-toggle">
+        <button class="hmp-opt" id="ambientOnBtn" onclick="setAmbient(true)">On</button>
+        <button class="hmp-opt" id="ambientOffBtn" onclick="setAmbient(false)">Off</button>
       </div>
     </div>
     <div class="hmp-row">
@@ -811,27 +826,20 @@
     <button class="ts-btn" onclick="closeTitleScreen()">Accept</button>
   </div>
 
-  <!-- ONE-TIME POINT RESTORATION (consecrated bug) -->
-  <div class="title-screen" id="restoreScreen">
-    <div class="ts-eyebrow">A Correction</div>
-    <div class="ts-name" style="font-size:24px;">Points Restored</div>
-    <div class="ts-why" style="margin-top:16px;max-width:340px;">A bug in the weekly vigil evaluation took points from some accounts at the Sunday reset. Pick the amount closest to what you lost, or enter your own. I trust you.</div>
-    <div id="restoreBtnGrid" style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-width:330px;margin:22px 0 14px;">
-      <button class="restore-amt" onclick="restorePoints(15)">+15</button>
-      <button class="restore-amt" onclick="restorePoints(20)">+20</button>
-      <button class="restore-amt" onclick="restorePoints(25)">+25</button>
-      <button class="restore-amt" onclick="restorePoints(30)">+30</button>
-      <button class="restore-amt" onclick="restorePoints(35)">+35</button>
-      <button class="restore-amt" onclick="restorePoints(40)">+40</button>
-      <button class="restore-amt" onclick="restorePoints(45)">+45</button>
-      <button class="restore-amt" onclick="restorePoints(50)">+50</button>
+  <!-- ONE-TIME: SAM PROGRESS RESTORATION (iOS reinstall data loss) -->
+  <div class="title-screen" id="samScreen">
+    <div class="ts-eyebrow">A Question</div>
+    <div class="ts-name" style="font-size:24px;">Are you Sam?</div>
+    <div class="ts-why" style="margin-top:16px;max-width:340px;">An iPhone reinstall wiped one tester's progress. If that was you, Sam, this restores your rank and calling.</div>
+    <div style="display:flex;gap:10px;margin-top:24px;">
+      <button class="ts-btn" onclick="samRestore()">Yes, I'm Sam</button>
+      <button class="ts-btn" style="border:none;color:var(--text-dim);" onclick="samDismiss()">No</button>
     </div>
-    <input class="field-input" id="restoreCustomInput" type="number" min="1" max="500" placeholder="Or enter an amount" autocomplete="off" data-1p-ignore data-lpignore="true" data-form-type="other" style="max-width:200px;text-align:center;margin-bottom:12px;">
-    <button class="ts-btn" onclick="restorePointsCustom()">Restore Custom Amount</button>
-    <button class="ts-btn" style="border:none;color:var(--text-dim);margin-top:8px;" onclick="dismissRestore()">No points were lost</button>
   </div>
 
   <!-- BIBLE READER OVERLAY -->
+  <audio id="ambientAudio" src="ambient.mp3" preload="none"></audio>
+
   <div class="bible-overlay" id="bibleOverlay">
     <div class="bible-header">
       <div class="bible-header-ref" id="bibleHeaderRef">Genesis 1</div>
@@ -1856,6 +1864,8 @@ function switchTab(name,btn){
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
   document.getElementById('tab-'+name).classList.add('active');
   btn.classList.add('active');
+  _currentTabName=name;
+  if(ambientOn()) playDrone(name);
 }
 
 // ══════════════════════════════════════════
@@ -3554,6 +3564,7 @@ function warmAudio(){
   _audioWarmed=true;
   startAudioKeepAlive();
   try{ const ctx=getAudioCtx(); const o=ctx.createOscillator(); const g=ctx.createGain(); g.gain.value=0; o.connect(g); g.connect(ctx.destination); o.start(); o.stop(ctx.currentTime+0.01); }catch(e){}
+  if(ambientOn()) playDrone(_currentTabName);
 }
 document.addEventListener('touchstart', warmAudio, {once:false, passive:true});
 document.addEventListener('mousedown', warmAudio, {once:false, passive:true});
@@ -3571,6 +3582,56 @@ function startAudioKeepAlive(){
 }
 
 function soundOn(){ return state.soundEnabled!==false; }
+
+// ══════════════════════════════════════════
+// AMBIENT SOUND — real audio track, continuous loop (test feature)
+// ══════════════════════════════════════════
+// A single ambient soundscape file, looping continuously regardless of tab.
+// Uses a plain <audio> element (not Web Audio buffers) since decoding a
+// multi-minute track into memory would be heavy on phones; the browser
+// streams/decodes it natively instead.
+let _ambientEl=null;
+
+function ambientOn(){ return state.ambientEnabled===true; } // opt-in; default off since this is a test feature
+
+function getAmbientEl(){
+  if(!_ambientEl){
+    _ambientEl=document.getElementById('ambientAudio');
+    if(_ambientEl){ _ambientEl.volume=0.4; _ambientEl.loop=true; }
+  }
+  return _ambientEl;
+}
+
+function playAmbientTrack(){
+  const el=getAmbientEl();
+  if(!el) return;
+  el.play().catch(()=>{}); // ignore autoplay-block errors; warmAudio()'s user-gesture tie-in handles this
+}
+
+function stopAmbientTrack(){
+  const el=getAmbientEl();
+  if(!el) return;
+  // Gentle fade out rather than an abrupt stop
+  const steps=12, stepMs=40;
+  let i=0;
+  const startVol=el.volume;
+  const fade=setInterval(()=>{
+    i++;
+    el.volume=Math.max(0, startVol*(1-i/steps));
+    if(i>=steps){ clearInterval(fade); el.pause(); el.currentTime=0; el.volume=0.4; }
+  }, stepMs);
+}
+
+function setAmbient(on){
+  state.ambientEnabled=on;
+  save();
+  syncMenuState();
+  if(on){ warmAudio(); playAmbientTrack(); }
+  else { stopAmbientTrack(); }
+}
+
+// Tab switching no longer changes anything about the ambient track (single continuous file)
+function playDrone(tabName){ /* no-op: kept so existing calls in switchTab/warmAudio don't error */ }
 
 function playTone(opts){
   if(!soundOn()) return;
@@ -4539,10 +4600,13 @@ function toggleHeaderMenu(){
 function syncMenuState(){
   const soundOn=state.soundEnabled!==false;
   const hapticsOn=state.hapticsEnabled===true;
+  const ambOn=state.ambientEnabled===true;
   const so=document.getElementById('soundOnBtn'), sf=document.getElementById('soundOffBtn');
   const ho=document.getElementById('hapticsOnBtn'), hf=document.getElementById('hapticsOffBtn');
+  const ao=document.getElementById('ambientOnBtn'), af=document.getElementById('ambientOffBtn');
   if(so&&sf){ so.classList.toggle('active',soundOn); sf.classList.toggle('active',!soundOn); }
   if(ho&&hf){ ho.classList.toggle('active',hapticsOn); hf.classList.toggle('active',!hapticsOn); }
+  if(ao&&af){ ao.classList.toggle('active',ambOn); af.classList.toggle('active',!ambOn); }
 }
 function setSound(on){ state.soundEnabled=on; save(); syncMenuState(); if(on){ warmAudio(); SFX.habitCheck(); } }
 function setHaptics(on){ state.hapticsEnabled=on; save(); syncMenuState(); if(on) buzz(20); }
@@ -4593,36 +4657,36 @@ function startFresh(){
 
 
 // ── One-time point restoration (consecrated bug, v0.8) ──
-function showRestoreScreenIfNeeded(){
-  if(state.consecratedRestoreDone) return;
-  // Defer if another overlay is currently open (e.g. the daily verse splash);
-  // it will show on a later open once the screen is clear.
+
+// ── ONE-TIME: Sam restoration (remove in a future build once answered) ──
+function showSamScreenIfNeeded(){
+  const forceRetry=new URLSearchParams(location.search).get('samretry')==='1';
+  if(state.samRestoreDone && !forceRetry) return;
   const verseOpen=document.getElementById('verseSplash')&&document.getElementById('verseSplash').classList.contains('open');
   const anyTitleOpen=Array.from(document.querySelectorAll('.title-screen.open')).length>0;
   if(verseOpen||anyTitleOpen) return;
-  const s=document.getElementById('restoreScreen');
+  const s=document.getElementById('samScreen');
   if(s) s.classList.add('open');
 }
-function restorePoints(amount){
-  state.points=(state.points||0)+amount;
-  state.consecratedRestoreDone=true;
+function samRestore(){
+  // Watching the Master (Apprentice rank 3), halfway through: 1650 + 412
+  state.totalXP=2062;
+  state.highestRankXP=2062;
+  state.points=20;
+  state.playerRace='ascetic';
+  state.raceLockedIn=true;
+  if(state.raceTier===undefined) state.raceTier=0;
+  state.samRestoreDone=true;
   SFX.redeem();
   save();
-  document.getElementById('restoreScreen').classList.remove('open');
+  document.getElementById('samScreen').classList.remove('open');
   render();
 }
-function restorePointsCustom(){
-  const inp=document.getElementById('restoreCustomInput');
-  const v=parseInt(inp&&inp.value,10);
-  if(!v||v<1){ if(inp) inp.focus(); return; }
-  restorePoints(Math.min(v,500));
-}
-function dismissRestore(){
-  state.consecratedRestoreDone=true;
+function samDismiss(){
+  state.samRestoreDone=true;
   save();
-  document.getElementById('restoreScreen').classList.remove('open');
+  document.getElementById('samScreen').classList.remove('open');
 }
-
 
 // ══════════════════════════════════════════
 // GUIDE / INFO PAGE
@@ -4959,7 +5023,7 @@ checkDayReset();
 render();
 syncMenuState();
 showVerseSplash();
-showRestoreScreenIfNeeded();
+showSamScreenIfNeeded();
 initFirebase();
 if(state.verseSeenDate===todayStr()) processFailedTaskQueue();
 if(state.pendingCovenant){
